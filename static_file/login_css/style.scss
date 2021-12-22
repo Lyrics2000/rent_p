@@ -1,0 +1,140 @@
+@import './variables/variables.scss';
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: none;
+    border: none;
+    text-decoration: none;
+    text-transform: capitalize;
+    font-weight: normal;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+
+
+
+}
+
+.container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    padding-bottom: 70px;
+    background: $background;
+    min-height: 100vh;
+
+    form{
+        width: 600px;
+        box-shadow: 0 10px 15px $box_shadow;
+        border-radius: 15px;
+        overflow: hidden;
+        text-align: center;
+
+        .links{
+            background: $white;
+            padding: 30px  15px;
+
+            .buttons{
+                .btn{
+                    font-size: 17px;
+                    margin: 5px;
+                    display: inline-block;
+                    background: $light_blue;
+                    border: $border;
+                    border-radius: 5px;
+                    padding: 10px 30px;
+                    color: $text-color;
+
+                    &:hover{
+                        background: $blue_color;
+                        color: $white;
+
+                        i{
+                            color: $white;
+                        }
+                    }
+
+                    i{
+                        color: $text-color;
+                        padding-right: 5px;
+
+                      
+
+                    }
+                }
+            }
+
+        }
+
+        .title{
+            font-size: 17px;
+            padding-bottom: 15px;
+            color: $paragraph_color;
+
+        }
+
+        .input-box{
+            padding: 30px;
+            background: $light_blue;
+
+            .input{
+                margin: 15px auto;
+                display: flex;
+                align-items: center;
+                height: 50px;
+                width: 100%;
+                border-radius: 5px;
+                background: $white;
+                box-shadow: 0 5px 10px $box_shadow;
+                border: $border;
+
+                input{
+                    height: 100%;
+                    width: 100%;
+                    padding: 10px;
+                    font-size: 16px;
+                    color: $text-color;
+                    text-transform: none;
+                }
+
+                span{
+                    color: $span_color;
+                    padding-left: 15px;
+                    font-size: 20px;
+
+
+
+                }
+            }
+        }
+
+        .checkbox{
+            text-align: left;
+            padding: 10px 0;
+
+            label{
+                font-size: 17px;
+                color: $text-color;
+                cursor: pointer;
+            }
+        }
+
+        .sign-in-btn{
+            padding: 10px 14px;
+            margin-top: 10px;
+            font-size: 17px;
+            color: $white;
+            border-radius: 5px;
+            background: $blue_color;
+            cursor: pointer;
+            transition: .2s linear;
+
+            &:hover{
+                letter-spacing: 2px;
+            }
+        }
+
+    }
+
+}

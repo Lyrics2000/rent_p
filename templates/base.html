@@ -1,0 +1,99 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rentobay</title>
+
+  
+      <!-- font awesome cdn link  -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+          <!-- custom css file link  -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    {% block extra_head %} 
+
+    {% endblock extra_head %}
+
+
+</head>
+<body>
+
+
+    <!-- header section starts  -->
+
+<header>
+
+    <a href="#" class="logo">
+        <img src="{% static '/images/background.png' %}" alt="">
+    </a>
+
+    <nav class="navbar">
+
+        <ul>
+
+            <li><a href="/">home</a></li>
+            <li><a href="#">services</a></li>
+            <li><a href="#">featured</a></li>
+            <li><a href="{% url 'homepage:map_search' %}">all houses</a></li>
+            <li><a href="#contact">contact</a></li>
+        </ul>
+        
+        
+        
+        
+        
+        
+    </nav>
+
+    <div class="icons">
+        <div id="menu-bars" class="fas fa-bars"></div>
+        <ul>
+            
+            <li><a href="#" class="fas fa-user"> </a>
+                <ol class="droptwo">
+                    {% if user.is_authenticated %}
+                    <li>Profile</li>
+
+                    {% else %}
+                    <li><a href="{% url 'account:sign_in' %}">Login</a></li>
+
+                    {% endif %}
+                    
+                    <li>Saved rentals</li>
+                    <li><hr></li>
+                    <li>Applications</li>
+                    <li>Payment</li>
+                    <li><br></li>
+    
+                </ol></li>
+            
+        </ul>
+        
+        
+    </div>
+
+</header>
+
+<!-- header section ends -->
+
+{% block content %}{% endblock content %}
+
+
+<!-- javascript part  -->
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="{% static '/js/custome.js' %}"></script>
+{% block extra_js %}{% endblock extra_js %}
+
+</body>
+</html>
+
+

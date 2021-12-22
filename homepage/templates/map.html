@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block extra_head %}
+
+  <!-- leflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+  integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+  crossorigin=""/>
+
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+  integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+  crossorigin=""></script>
+
+  <link rel="stylesheet" href="{% static '/dist/MarkerCluster.css' %}" />
+  <link rel="stylesheet" href="{% static '/dist/MarkerCluster.Default.css' %}" />
+
+
+
+{% endblock extra_head %}
+
+{% block content %}
+
+   
+
+<!-- breadbrump -->
+<section class="breadbrump">
+    <div>
+       <div >
+          <h1 class="page-title">Map View</h1>
+          <div>
+             <ul>
+                <li><a href="#/"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="#/"><i class="fas fa-angle-double-right"></i> map view </a></li>
+             </ul>
+          </div>
+       </div>
+    </div>
+    </div>
+  </section>
+  
+<!-- endbread brump -->
+
+
+<section class="map" id="contact">
+
+  
+    {% if formatted %}
+    <p style="font-size:2rem;color:black; margin-bottom:2rem;"> search near : {{formatted}} </p>
+    {% endif %}
+    
+    
+    <div class="row">
+    
+        <div class="list-property">
+            <div class="box-container" id="card-container">
+
+         
+           
+            </div>
+    
+        </div>
+    
+        <div id="map"></div>
+    </div>
+    
+    </section>
+
+
+<!-- footer section starts  -->
+
+
+
+{% endblock content %}
+
+
+{% block extra_js %}
+
+<!-- markercluster  -->
+<script src="{% static '/dist/leaflet.markercluster.js' %}"></script>
+
+
+<script>
+
+    // map
+    var map = L.map( 'map', {
+        center: [-1.286389, 36.817223],
+        minZoom: 2,
+        zoom: 5,
+        zoomControl: true
+    
+        });
+    L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
+        maxZoom: 20,
+        subdomains:['mt0','mt1','mt2','mt3']
+    }).addTo(map);
+
+  
+
+     var smallIcon = new L.Icon({
+        iconSize: [27, 27],
+        iconAnchor: [13, 27],
+        popupAnchor:  [1, -24],
+        iconUrl: '{% static "images/mk.png" %}'
+    });
+    
+     const markers = L.markerClusterGroup();
+
+    
+    $.getJSON("{% url 'homepage:all_buildings' %}", function(data){
+        
+        var geojson = L.geoJson(data, {
+        onEachFeature: function(feature, layer) {
+            layer.bindPopup('pop-up content');
+        },
+        pointToLayer: function (feature, latlng) {
+            return markers.addLayer(L.marker(latlng, {icon: smallIcon}));
+          }
+     });
+     geojson.addTo(map);
+     
+     });
+     // marker clustering
+    map.addLayer(markers);
+
+
+
+</script>
+
+
+<script>
+
+    var card_container  =  $('#card-container')
+
+    $.ajax({
+        type: 'GET',
+        url: "{% url 'homepage:get_all_data' %}",
+        success: function (response) {
+            // on successfull creating object
+             // 1. clear the form.
+            var dataa = response.features
+
+            for (let j = 0; j < dataa.length; j++) {
+                var building = dataa[j];
+                console.log(building)
+               
+                    
+                    var element = `
+                    <div class="box">
+                    <div class="image-container">
+                        <img src="${building.properties.building_main_pic}" alt="">
+                              <div class="info">
+                           
+                            <h3>for rent</h3>
+                        </div>
+                      
+                    </div>
+                    <div class="content">
+                        <div class="price">
+                            
+                            <a href="#" class="fas fa-heart"></a>
+                            <a href="#" class="fas fa-envelope"></a>
+                            <a href="#" class="fas fa-phone"></a>
+                        </div>
+                        <div class="location">
+                            <h3>${building.properties.building_name}</h3>
+                            <p>${building.properties.location_name}</p>
+                        </div>
+                       
+                        <div class="buttons">
+                            <a href="#" class="btn">request info</a>
+                            <a href="/map_detailed/${building.id}/" class="btn">view details</a>
+                        </div>
+                    </div>
+                </div>
+                `
+                card_container.append(element)
+
+                
+
+                
+                
+
+                //card_container.append(element)
+              }
+
+            
+            // display the newly friend to table.
+            // var instance = JSON.parse(response);
+
+
+          
+           
+            
+
+          
+          
+        },
+        error: function (response) {
+            // alert the error if any error occured
+            alert(response["responseJSON"]["error"]);
+        }
+    })
+
+</script>
+
+
+{% endblock extra_js %}
+

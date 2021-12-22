@@ -1,0 +1,43 @@
+{% load static %}
+  <!-- Listing Start -->
+  <section id="listing_layout" class="listing1 maplisting">
+    <div class="container-fluid">
+       <div class="row">
+         
+          <div class="ol-md-12 col-sm-12 col-xs-12 pull-right">
+             <div class="property-query-area top20">
+                <div class="row">
+                   <form class="callus" method="POST" action = "{% url 'account:sign_in' %}">
+                    {% csrf_token %}
+                      <div class="col-sm-8">
+                          <label> Email </label>
+                         <div class="form-group">
+                            <input name="username" type="text" class="" placeholder="Enter Email">
+                         </div>
+
+                      </div>
+                     
+                      <div class="col-sm-8">
+                          <label> Password </label>
+                        <div class=" form-group">
+                            <input name="password" style="padding:10px;" type="password" class="" placeholder="Enter Password">
+                         </div>
+                         
+                       
+                      </div>
+                     
+                     
+                      <a href="{% url 'account:forgot_password' %}"  style="margin-left:20px;margin-bottom:20px;fonr-size:20px;" class="col-sm-6"><i>  Forgot password? </i></a>
+                      <button style="margin-left:20px;margin-bottom:20px" type="Submit" class="btn btn-primary col-sm-6">Sign In</button>
+                      <a style="margin-left:20px;margin-bottom:20px" href="{% url 'account:sign_up' %}"  class="btn btn-success col-sm-6">Sign Up</a>
+                   
+                    </form>
+                </div>
+              
+             </div>
+           
+          </div>
+       </div>
+    </div>
+ </section>
+ <!-- Listing end --

@@ -1,0 +1,31 @@
+{% load static %}
+  <!-- Listing Start -->
+  <section id="listing_layout" class="listing1 maplisting">
+    <div class="container-fluid">
+       <div class="row">
+         
+          <div class="ol-md-12 col-sm-12 col-xs-12 pull-right">
+             <div class="property-query-area top20">
+               <div class="row">
+                  <form class="callus" method="POST" action="{% url 'account:change_user' %}">
+                     {% csrf_token %}
+                     <div class="col-sm-6">
+                        <div class="single-query form-group">
+                           <label stye="font-weight: 400;font-size:10px;color:black;">New Password</label>
+                           <input style="text-transform: None;" name="password" type="password" class="keyword-input" placeholder="Enter New Password">
+                        </div>
+                     </div>
+                    
+               
+                     <button style="margin-left:20px;margin-bottom:20px" type="Submit" class="btn btn-primary col-sm-6">Submit</button>
+                    
+                  
+                  </form>
+               </div>
+             </div>
+           
+          </div>
+       </div>
+    </div>
+ </section>
+ <!-- Listing end --
