@@ -89,14 +89,26 @@ SOCIAL_AUTH_FACEBOOK_SECRET = "4edaa433cf9a77e4e8f147eea0cfd710"
 #     }
 # }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.contrib.gis.db.backends.postgis',
+#         'NAME': 'rentb',
+#         'USER': 'rudi',
+#         'PASSWORD': 'Lyrics254',
+#         'HOST': '127.0.0.1',
+#         'POST': '',
+#     }
+# }
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'rentb',
-        'USER': 'rudi',
-        'PASSWORD': 'Lyrics254',
-        'HOST': '127.0.0.1',
-        'POST': '',
+        'NAME': 'dfdhevlih6k24d',
+        'USER': 'zrjgbpazsocwgv',
+        'PASSWORD': '8a156a110b452e1e335362bb04ecf0f877f8ef05c5ebdffff5cc19d226df52ca',
+        'HOST': 'ec2-54-204-99-176.compute-1.amazonaws.com',
+        'POST': 5432,
     }
 }
 
