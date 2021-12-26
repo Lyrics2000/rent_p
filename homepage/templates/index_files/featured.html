@@ -27,8 +27,7 @@
                 <div class="price">
                     <h3>Ksh : {{r.rent}}/mo</h3>
                     <a href="#" class="fas fa-heart"></a>
-                    <a href="#" class="fas fa-envelope"></a>
-                    <a href="#" class="fas fa-phone"></a>
+                    
                 </div>
                 <div class="location">
                     <h3>{{r.building.building_name}}({{r.room_name}})</h3>
@@ -64,7 +63,7 @@
                 </div>
                 <div class="buttons">
                     <a href="#" class="btn">request info</a>
-                    <a href="#" class="btn">view details</a>
+                    <a href="/map_detailed/{{r.id}}/" class="btn">view details</a>
                 </div>
             </div>
         </div>

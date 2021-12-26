@@ -1,6 +1,6 @@
 
 
-from django.urls import path
+from django.urls import path,include
 from .views import (index,signup,activate_account,logout_user,
 password_reset,
 reset,
@@ -17,7 +17,8 @@ urlpatterns = [
     path("forgot_password/",password_reset,name="forgot_password"),
     path('reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         reset, name='reset'),
-        path("change_user_password/",change_user,name="change_user")
+        path("change_user_password/",change_user,name="change_user"),
+    
 ]
 
 

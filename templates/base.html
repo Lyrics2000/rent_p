@@ -58,16 +58,17 @@
                 <ol class="droptwo">
                     {% if user.is_authenticated %}
                     <li>Profile</li>
+                    <li>Saved rentals</li>
+                    <li><hr></li>
+                    <li>Applications</li>
+                    <li>Payment</li>
 
                     {% else %}
                     <li><a href="{% url 'account:sign_in' %}">Login</a></li>
 
                     {% endif %}
                     
-                    <li>Saved rentals</li>
-                    <li><hr></li>
-                    <li>Applications</li>
-                    <li>Payment</li>
+                    
                     <li><br></li>
     
                 </ol></li>

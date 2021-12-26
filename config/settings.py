@@ -15,7 +15,7 @@ SECRET_KEY = 'django-insecure-r6=r%x@ga9$si=_d9=1!i!yg@h5kh%2v3knfbna##y9d_njmo3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.herokuapp.com','127.0.0.1']
+ALLOWED_HOSTS = ['.herokuapp.com','127.0.0.1','localhost']
 
 
 # Application definition
@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'social_django', # add this
     'django.contrib.gis',
     'djgeojson',
     'homepage',
@@ -68,7 +69,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+# add this
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.linkedin.LinkedinOAuth2',
+    'social_core.backends.instagram.InstagramOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
+SOCIAL_AUTH_FACEBOOK_KEY = "511593623354651"        # App ID
+SOCIAL_AUTH_FACEBOOK_SECRET = "4edaa433cf9a77e4e8f147eea0cfd710"
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
