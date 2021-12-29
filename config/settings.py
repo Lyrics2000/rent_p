@@ -167,6 +167,8 @@ LEAFLET_CONFIG = {
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 # development
+
+
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static_file'),
