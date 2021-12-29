@@ -15,4 +15,5 @@ class BuildingSerializer(GeoFeatureModelSerializer):
 class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
+        depth = 1
         fields = '__all__'

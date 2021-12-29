@@ -17,13 +17,101 @@
 
   <style>
       .button_container{
+          position: fixed;
+          z-index: 1;
+          width: 100%;
+          height: 74px;
           display: flex;
-          margin-bottom: 2rem;
-          margin-top: 1rem;
           align-items: center;
+          padding-top: 10px;
+          padding-bottom: 16px;
+          margin-left: 3rem;
+
       }
 
-      .button_container .select{
+      .button_container .unordered1{
+          display: flex;
+          list-style: none;
+          align-items: center;
+          position: fixed;
+
+      }
+
+      .button_container .unordered1 .unorderd_list{
+          display: inline-block;
+          border-style: none;
+          margin-right: 8px;
+
+      }
+
+      .button_container .unordered1 .unorderd_list select{
+            margin: 0px;
+            border-radius: 8px;
+            border-width: 1px;
+            border-style: solid;
+            cursor: pointer;
+            display: inline-block;
+            text-align: center;
+            font-weight: bold;
+            transition: top 0.1s ease 0s, box-shadow 0.1s ease 0s, border-color 0.1s ease 0s, background-color 0.1s ease 0s, color 0.1s ease 0s;
+            white-space: nowrap;
+            text-decoration: none;
+            font-size: 16px;
+            line-height: 1.5;
+            padding: 8px 16px;
+            outline: none;
+            color: rgb(59, 65, 68);
+            background-color: rgb(255, 255, 255);
+            border-color:hsl(9, 96%, 58%) ;
+        }
+
+        .btn_submit{
+
+            padding: 5px;
+          font-size: 18px;
+          color: #fb4e2e;
+          border: 1px solid hsl(9, 96%, 58%);
+          background: #fff;
+          margin-left: 5px;
+          width: 150px;
+          cursor: pointer;
+
+        }
+
+        .btn_submit:hover{
+            background: #fb4e2e;
+          color: #fff;
+          letter-spacing: 2px;
+        }
+
+        .selecthover:hover .dropd{
+            display: block;
+        }
+
+        .dropd{
+           
+            position: absolute;
+            margin-top: 5px;
+            display:none;
+            min-width: 160px;
+            padding: 12px 16px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            border-radius: 20px;
+            background-color: #f9f9f9;
+            
+
+        }
+
+        .dropd .selecttt{
+            
+            position: relative;
+            z-index: 1;
+            display: inline-block;
+           
+
+        }
+
+      /* .button_container .select{
           margin-left: 0.5rem;
           padding: 5px;
           border: 1px solid #fb4e2e;
@@ -33,9 +121,9 @@
           font-weight: 400;
           cursor: pointer;
           width: 150px;
-      }
+      } */
 
-      .button_container button{
+      /* .button_container button{
           padding: 5px;
           font-size: 18px;
           color: #fb4e2e;
@@ -44,13 +132,13 @@
           margin-left: 5px;
           width: 150px;
           cursor: pointer;
-      }
+      } */
 
-      .button_container button:hover{
+      /* .button_container button:hover{
           background: #fb4e2e;
           color: #fff;
           letter-spacing: 2px;
-      }
+      } */
   </style>
 
   <style>
@@ -163,7 +251,7 @@
         padding:1rem 0;
     
     }
-
+   
     .box-icon .content .location h3{
         font-size: 2.5rem;
         color:#333;
@@ -215,22 +303,54 @@
 
     <div class="button_container">
 
-        <select class="select" name="price" id="price">
-            <option value="volvo">Volvo</option>
-            <option value="saab">Saab</option>
-            <option value="mercedes">Mercedes</option>
-            <option value="audi">Audi</option>
-          </select>
+        <ul class="unordered1">
+            <li class="unorderd_list selecthover">
 
-          <select class="select" name="beds" id="beds">
-            <option value="volvo">Volvo</option>
-            <option value="saab">Saab</option>
-            <option value="mercedes">Mercedes</option>
-            <option value="audi">Audi</option>
-          </select>
+                <select class="selecthover" name="price" onChange="myNewFunction(this);"id="price">
+                    <option value="volvo">Any price</option>
+                    
+                  </select>
 
-        <button type="button"> Save </button>
+                  <ul class="dropd">
+                    <select class="selecttt dropd" name="price" onChange="myNewFunction(this);"id="price">
+                        <option value="volvo">Minimum Price</option>
+                        <option value="saab">Saab</option>
+                        <option value="mercedes">Mercedes</option>
+                        <option value="audi">Audi</option>
+                      </select>
 
+                      <select class="selecttt dropd" name="price" onChange="myNewFunction(this);"id="price">
+                        <option value="volvo">Maximum Price</option>
+                        <option value="saab">Saab</option>
+                        <option value="mercedes">Mercedes</option>
+                        <option value="audi">Audi</option>
+                      </select>
+                  </ul>
+
+            </li>
+
+            <li class="unorderd_list">
+                <select class="select" name="beds" id="beds">
+                    <option value="volvo">Volvo</option>
+                    <option value="saab">Saab</option>
+                    <option value="mercedes">Mercedes</option>
+                    <option value="audi">Audi</option>
+                  </select>
+            </li>
+
+            <li>
+                <button class="btn_submit" type="button"> Save </button>
+
+            </li>
+
+
+        </ul>
+
+        
+
+         
+
+        
 
     </div>
 
@@ -466,8 +586,9 @@
 
 
 <script>
-    const selectedd =    $("#myselect :selected").text();
-
+    function myNewFunction(sel) {
+  alert(sel.options[sel.selectedIndex].text);
+}
 
 </script>
 
