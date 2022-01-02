@@ -157,15 +157,14 @@
           <aside>
             <div class="widget">
               <div class="text-center">
-                <img src="{% static '/images/4.jpg' %}" alt="" srcset="">
-                <h5>William K. Margret</h5>
-                <small>Travle/nnna</small>
-                {{building.agent}}
-
-                
-
-                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit suscipit soluta eos repellendus laboriosam velit odio beatae, fugiat minus numquam eum dignissimos molestiae repellat ut harum asperiores voluptates tempora. Quas?</p>
-  
+                {% if building.agent.agent_profile_picture %}
+                <img src="{{building.agent.agent_profile_picture.url}}" alt="" srcset="">
+                {% else %}
+                <img src="{% static 'images/place_holder.jpeg' %}" alt="" srcset="">
+                {% endif %}
+                <h5><i style="color:#fb4e2e;padding:0 1rem" class="fa fa-user" aria-hidden="true"></i>{{building.agent.agent_name}}</h5>
+                <small><i style="color:#fb4e2e;padding:0 1rem" class="fa fa-envelope" aria-hidden="true"></i>{{building.agent.email}}</small>
+                <small><i style="color:#fb4e2e;padding:0 1rem" class="fa fa-phone" aria-hidden="true"></i>{{building.agent.mobile_number}} </small>
               
               </div>
   
