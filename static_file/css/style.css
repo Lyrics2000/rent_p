@@ -696,6 +696,7 @@ header .icons #menu-bars {
       -ms-flex: 1 1 30rem;
           flex: 1 1 30rem;
   width: 100%;
+  height: 100%;
   padding: 1rem;
 }
 
