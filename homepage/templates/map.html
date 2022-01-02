@@ -312,29 +312,36 @@
                   </select>
 
                   <ul class="dropd">
-                    <select class="selecttt dropd" name="price" onChange="myNewFunction(this);"id="price">
-                        <option value="volvo">Minimum Price</option>
-                        <option value="saab">Saab</option>
-                        <option value="mercedes">Mercedes</option>
-                        <option value="audi">Audi</option>
+                    <select class="selecttt dropd" id="minprice" onChange="minimumPrice(this);">
+                        <option>Minimum Price</option>
+                        {% if all_rooms %}
+                        {% for f in all_rooms %}
+                        <option value="{{f.rent}}">Ksh {{f.rent}}</option>
+                        {% endfor %}
+                        {% endif %}
                       </select>
 
-                      <select class="selecttt dropd" name="price" onChange="myNewFunction(this);"id="price">
-                        <option value="volvo">Maximum Price</option>
-                        <option value="saab">Saab</option>
-                        <option value="mercedes">Mercedes</option>
-                        <option value="audi">Audi</option>
+                      <select class="selecttt dropd" id="maxprice" onChange="maximumPrice(this);">
+                        <option>Maximum Price</option>
+                        {% if all_rooms %}
+                        {% for f in all_rooms %}
+                        <option value="{{f.rent}}">Ksh {{f.rent}}</option>
+                        {% endfor %}
+                        {% endif %}
                       </select>
                   </ul>
 
             </li>
 
             <li class="unorderd_list">
-                <select class="select" name="beds" id="beds">
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
+                <select class="select" name="beds" id="beds"  onChange="changeRoom(this);">
+                    <option value="Single Room">Single Room</option>
+                    <option value="Bouble Room">Bouble Room</option>
+                    <option value="BedSitter">BedSitter</option>
+                    <option value="1 Bedroom">1 Bedroom</option>
+                    <option value="2 Bedroom">2 Bedroom</option>
+                    <option value="3 Bedroom">3 Bedroom</option>
+                    <option value="4 Bedroom">4 Bedroom</option>
                   </select>
             </li>
 
@@ -455,7 +462,7 @@
             layer.bindPopup( customPopup);
         },
         pointToLayer: function (feature, latlng) {
-            return markers.addLayer(L.marker(latlng, {icon: smallIcon}).on('mouseover',(e)=>{
+            return markers.addLayer(L.marker(latlng, {icon: smallIcon}).on('click',(e)=>{
                 console.log(latlng)
                 var element = `
                     <div id="box" class="box">
@@ -487,11 +494,9 @@
                 </div>
                 `
                 
-                var card_container  =  $('#card-container')
-                card_container.empty();
-                card_container.append(element)
-
-
+                // var card_container  =  $('#card-container')
+                // {% comment %} card_container.empty();
+                // card_container.append(element) {% endcomment %}
 
             }));
           }
@@ -510,6 +515,7 @@
 <script>
 
     var card_container  =  $('#card-container')
+
 
     $.ajax({
         type: 'GET',
@@ -586,10 +592,184 @@
 
 
 <script>
-    function myNewFunction(sel) {
-  alert(sel.options[sel.selectedIndex].text);
+    function maximumPrice(sel) {
+            // make POST ajax call
+            var min_p =  document.getElementById('minprice');
+
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'homepage:filtered_data' %}",
+                data: {min:min_p.value, max:sel.options[sel.selectedIndex].value},
+                success: function (response) {
+                    console.log(response) ;
+                    var card_containe  =  $('#card-container')
+              
+                    card_containe.empty();
+
+                    for (let i = 0; i < response.length; i++) {
+                        const resp =  response[i];
+                        var els =`
+                    <div class="box">
+            <div class="image-container">
+                <img src="${resp.room_picture}" alt="">
+                <div class="info">
+                    <h3>3 days ago</h3>
+                    <h3>for rent</h3>
+                </div>
+                <div class="icons">
+                    <a href="#" class="fas fa-film"><h3>1</h3></a>
+                      
+                    <a href="#" class="fas fa-camera"><h3>4</h3></a>
+                    
+                </div>
+            </div>
+            <div class="content">
+                <div class="price">
+                    <h3>Ksh : ${resp.rent}/mo</h3>
+                    <a href="#" class="fas fa-heart"></a>
+                    
+                </div>
+                <div class="location">
+                    <h3>${resp.building.building_name}(${resp.room_name})</h3>
+                    <p>${resp.building.location_name}</p>
+                </div>
+                <div class="details">
+                    
+
+                    
+                    ${resp.room_size ? `<h3> <i class="fas fa-expand"></i> ${resp.room_size} sqft </h3>` : null }
+                    ${resp.room_type ? `<h3> <i class="fas fa-bed"></i> ${resp.room_type} </h3>` : null}
+                    ${resp.bathtab_np ? `<h3> <i class="fas fa-bath"></i> ${resp.bathtab_np} bathtab </h3>` : null } 
+                    ${resp.balcony ? `<h3> <i class="fas fa-door-closed"></i>balcony </h3>` : null} 
+                    ${resp.building.tv_connection? `<h3> <i class="fas fa-tv"></i> tv connection </h3>` : null}
+                    ${resp.building.security ? `<h3> <i class="fas fa-key"></i> security </h3>`:null}
+                    
+                  
+                
+                </div>
+                <div class="buttons">
+                    <a href="#" class="btn">request info</a>
+                    <a href="/map_detailed/${1}/" class="btn">view details</a>
+                </div>
+            </div>
+        </div>`;
+                    // on successfull creating object
+                  
+                   
+                card_containe.append(els) 
+                        console.log(resp);
+
+                    };
+                    
+                    // display the newly friend to table.
+                    
+                },
+                error: function (response) {
+                    // alert the error if any error occured
+                    console.log(response["responseJSON"]["error"]);
+                }
+            })
+        
+
+       
+
 }
 
+
+
+</script>
+
+<script>
+    function minimumPrice(sel) {
+            // make POST ajax call
+            var min_p =  document.getElementById('maxprice');
+
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'homepage:filtered_data' %}",
+                data: {max:min_p.value, min:sel.options[sel.selectedIndex].value},
+                success: function (response) {
+                    console.log(response) ;
+                    var card_containe  =  $('#card-container')
+              
+                    card_containe.empty();
+
+                    for (let i = 0; i < response.length; i++) {
+                        const resp =  response[i];
+                        var els =`
+                    <div class="box">
+            <div class="image-container">
+                <img src="${resp.room_picture}" alt="">
+                <div class="info">
+                    <h3>3 days ago</h3>
+                    <h3>for rent</h3>
+                </div>
+                <div class="icons">
+                    <a href="#" class="fas fa-film"><h3>1</h3></a>
+                      
+                    <a href="#" class="fas fa-camera"><h3>4</h3></a>
+                    
+                </div>
+            </div>
+            <div class="content">
+                <div class="price">
+                    <h3>Ksh : ${resp.rent}/mo</h3>
+                    <a href="#" class="fas fa-heart"></a>
+                    
+                </div>
+                <div class="location">
+                    <h3>${resp.building.building_name}(${resp.room_name})</h3>
+                    <p>${resp.building.location_name}</p>
+                </div>
+                <div class="details">
+                    
+
+                    
+                    ${resp.room_size ? `<h3> <i class="fas fa-expand"></i> ${resp.room_size} sqft </h3>` : null }
+                    ${resp.room_type ? `<h3> <i class="fas fa-bed"></i> ${resp.room_type} </h3>` : null}
+                    ${resp.bathtab_np ? `<h3> <i class="fas fa-bath"></i> ${resp.bathtab_np} bathtab </h3>` : null } 
+                    ${resp.balcony ? `<h3> <i class="fas fa-door-closed"></i>balcony </h3>` : null} 
+                    ${resp.building.tv_connection? `<h3> <i class="fas fa-tv"></i> tv connection </h3>` : null}
+                    ${resp.building.security ? `<h3> <i class="fas fa-key"></i> security </h3>`:null}
+                    
+                  
+                
+                </div>
+                <div class="buttons">
+                    <a href="#" class="btn">request info</a>
+                    <a href="/map_detailed/${1}/" class="btn">view details</a>
+                </div>
+            </div>
+        </div>`;
+                    // on successfull creating object
+                  
+                   
+                card_containe.append(els) 
+                        console.log(resp);
+
+                    };
+                    
+                    // display the newly friend to table.
+                    
+                },
+                error: function (response) {
+                    // alert the error if any error occured
+                    console.log(response["responseJSON"]["error"]);
+                }
+            })
+        
+
+       
+
+}
+
+</script>
+
+
+<script>
+    function changeRoom(sel){
+        alert(sel.options[sel.selectedIndex].value)
+    }
 </script>
 
 

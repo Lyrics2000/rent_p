@@ -49,9 +49,11 @@ def map_search_view(request):
             radius =  100
             point = Point(longitude,latitude)
             buildings =  Building.objects.filter(geom__distance_lt=(point, Distance(km=radius)))
+            all_rooms =  Room.objects.all()
             context= {
                 'building':buildings,
-                'formatted' : results
+                'formatted' : results,
+                'all_rooms'  : all_rooms
             }
             
             return render(request,'map.html',context)
@@ -82,6 +84,46 @@ class GetRoom(APIView):
         # the many param informs the serializer that it will be serializing more than a single article.
         serializer = RoomSerializer(rooms, many=True)
         return Response(serializer.data)
+
+
+
+class FilterRoom(APIView):
+    def post(self, request):
+
+        max_price =  request.data['max'] 
+        min_price =  request.data['min']
+        print("min price :",min_price)
+        print("max price :",max_price)
+        if min_price != "Minimum Price" and max_price != "Maximum Price":
+            print("running 1")
+            all_roo =  Room.objects.filter(rent__range = [float(min_price),float(max_price)])
+            serializer = RoomSerializer(all_roo, many=True)
+            return Response(serializer.data)
+
+        elif min_price == "Minimum Price" and max_price != "Maximum Price":
+            print("running 2")
+            all_roo =  Room.objects.filter(rent__lte = float(max_price) )
+            serializer = RoomSerializer(all_roo, many=True)
+            return Response(serializer.data)
+
+        
+        elif max_price == "Maximum Price" and min_price != "Minimum Price" :
+            print("running 4")
+            all_roo =  Room.objects.filter(rent__gte = float(min_price) )
+            serializer = RoomSerializer(all_roo, many=True)
+            return Response(serializer.data)
+
+
+
+
+        # print("min price :",min_price)
+        # print("max price :",max_price)
+        # rooms = Room.objects.all()
+        # # the many param informs the serializer that it will be serializing more than a single article.
+        # serializer = RoomSerializer(rooms, many=True)
+        # return Response(serializer.data)
+
+
 
 
 def map_detailed_page(request,id):
