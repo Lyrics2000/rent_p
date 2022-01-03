@@ -9,7 +9,8 @@ from .views import (
     GetBUildingAPIVIEW,
     GetRoom,
     map_detailed_page,
-    FilterRoom
+    FilterRoom,
+    room_detailed_page
 )
 
 app_name = "homepage"
@@ -20,7 +21,8 @@ urlpatterns = [
     path('get_all_data/',GetBUildingAPIVIEW.as_view(),name="get_all_data"),
     path('room_name/',GetRoom.as_view(),name="get_room"),
     path('map_detailed/<id>/',map_detailed_page,name="map_detailed"),
-    path('filter_room/',FilterRoom.as_view(),name="filtered_data")
+    path('filter_room/',FilterRoom.as_view(),name="filtered_data"),
+    path('room_detailed/<id>/',room_detailed_page,name="room_detailed"),
   
 ]
 

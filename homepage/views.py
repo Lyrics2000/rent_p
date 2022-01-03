@@ -1,23 +1,19 @@
-from django.forms.models import model_to_dict
-from django.shortcuts import redirect, render
-from django.http import JsonResponse
 import json
-from django.http import HttpResponse
-from django.core import serializers
-from .serializers import RoomSerializer,BuildingSerializer
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from .LOc import LocationQuery
+
+from account.models import Agent
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import Distance
-from account.models import (
-    Agent
-)
-from .models import (Building, BuildingMorePic, Room,
-SlidingImages,
-RoomMorePic,
+from django.core import serializers
+from django.forms.models import model_to_dict
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import redirect, render
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-)
+from .LOc import LocationQuery
+from .models import Building, BuildingMorePic, Room, RoomMorePic, SlidingImages
+from .serializers import BuildingSerializer, RoomSerializer
+
 
 # Create your views here.
 def index(request):
@@ -137,3 +133,22 @@ def map_detailed_page(request,id):
         'building_more_pic' :  more_building_pic
     }
     return render(request,'map_detailed.html',context)
+
+
+def room_detailed_page(request,id):
+    
+    all_rooms =  Room.objects.get(id = id )
+    other_images =  RoomMorePic.objects.filter(room_id =  all_rooms)
+    all_rooms_b =  Room.objects.all()
+    
+    print(model_to_dict(all_rooms))
+    
+    context = {
+       
+        'rooms_data' :all_rooms,
+        'other_images':other_images,
+        'all_rooms':all_rooms_b
+
+      
+    }
+    return render(request,'room_detailed.html',context)

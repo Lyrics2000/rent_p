@@ -79,6 +79,7 @@ class Room(BaseModel):
     bathtab_np =  models.IntegerField(help_text="The number of bathtab for the room if non input 0 ")
     balcony =  models.BooleanField(default=False,help_text="if true means the room has a balcony ")
     room_size =  models.CharField(max_length=255,help_text="The total area in room example 1000sqm ")
+    description = models.TextField(blank=True,null=True,help_text="The description of the room")
     room_picture =  models.ImageField(upload_to = upload_image_path,help_text="The picture of the room ")
     # featured =  models.BooleanField(default=False)
     room_video = models.FileField(upload_to = upload_image_path,help_text="The video of room ",blank=True,null=True)
@@ -86,6 +87,12 @@ class Room(BaseModel):
     
     def __str__(self):
         return self.room_name
+
+
+    def get_absolute_url(self):
+        return reverse("homepage:room_detailed", kwargs={
+            'id': self.id
+        })
 
 
 
