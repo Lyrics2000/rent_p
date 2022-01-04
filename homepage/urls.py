@@ -10,7 +10,8 @@ from .views import (
     GetRoom,
     map_detailed_page,
     FilterRoom,
-    room_detailed_page
+    room_detailed_page,
+    request_booking
 )
 
 app_name = "homepage"
@@ -23,6 +24,7 @@ urlpatterns = [
     path('map_detailed/<id>/',map_detailed_page,name="map_detailed"),
     path('filter_room/',FilterRoom.as_view(),name="filtered_data"),
     path('room_detailed/<id>/',room_detailed_page,name="room_detailed"),
+    path('booking_request/<room_id>/<agent_id>/<user_id>/',request_booking,name="request_booking"),
   
 ]
 

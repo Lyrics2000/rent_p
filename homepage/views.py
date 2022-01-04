@@ -152,3 +152,7 @@ def room_detailed_page(request,id):
       
     }
     return render(request,'room_detailed.html',context)
+
+
+def request_booking(request,room_id,agent_id,user_id):
+    return render(request,'booking_request.html')

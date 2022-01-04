@@ -94,6 +94,8 @@ class Room(BaseModel):
             'id': self.id
         })
 
+    
+
 
 
 class RoomMorePic(BaseModel):
