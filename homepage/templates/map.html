@@ -146,7 +146,7 @@
         width: 30rem;
         border:.1rem solid rgba(0,0,0,.1);
         box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
-        border-radius: .5rem;
+        border-radius: .5absoluterem;
         overflow:hidden;
         background:rgba(0,0,0,.1);
         align-items: center;
@@ -178,7 +178,7 @@
         display: flex;
     }
 
-    .box-icon .image-container-icon .info h3{
+    .box-icon .image-connate got keystainer-icon .info h3{
         font-weight: 500;
         font-size: 1.4rem;
         color:#fff;
@@ -195,7 +195,7 @@
     }
 
     .box-icon .image-container-icon .icons a{
-        font-size: 1.4rem;
+        font-size: 1.4remabsolute;
         color:#fff;
         display: flex;
         border-radius: .5rem;
@@ -367,7 +367,7 @@
     
         
         <div class="list-property">
-            <div class="box-container" id="card-container">
+            <div style = "overflow-y: scroll; height:700px;"class="box-container" id="card-container">
 
          
            
@@ -375,7 +375,7 @@
     
         </div>
     
-        <div style="height:100vh;" id="map"></div>
+        <div style="height: 700px;" id="map"></div>
     </div>
     
     </section>
@@ -462,8 +462,10 @@
             layer.bindPopup( customPopup);
         },
         pointToLayer: function (feature, latlng) {
-            return markers.addLayer(L.marker(latlng, {icon: smallIcon}).on('click',(e)=>{
+            return markers.addLayer(L.marker(latlng, {icon: smallIcon}).on('mouseover',(e)=>{
                 console.log(latlng)
+                this.target.openPopup()
+                
                 var element = `
                     <div id="box" class="box">
                     <div style="cursor:pointer;" id="image_cont" class="image-container">
@@ -493,7 +495,7 @@
                     </div>
                 </div>
                 `
-                
+                // e.bindPopup(element)
                 // var card_container  =  $('#card-container')
                 // {% comment %} card_container.empty();
                 // card_container.append(element) {% endcomment %}
@@ -506,6 +508,8 @@
      });
      // marker clustering
     map.addLayer(markers);
+
+    
 
 
 
@@ -770,6 +774,10 @@
     function changeRoom(sel){
         alert(sel.options[sel.selectedIndex].value)
     }
+</script>
+
+<script>
+
 </script>
 
 
