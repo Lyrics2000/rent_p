@@ -1,0 +1,638 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<section class="ltn__breadcrumb-area text-left bg-overlay-white-30 bg-image">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ltn__breadcrumb-inner">
+                    <h1 class="page-title">All Listings</h1>
+                    <div class="ltn__breadcrumb-list">
+                        <ul>
+                            <li><a href="/"><span class="ltn__secondary-color"><i class="fas fa-home"></i></span> Home</a></li>
+                            <li>ALl Listings</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+
+<section class="listing_properties">
+    <div  class="row">
+        <div class="col-md-8">
+            <div class="ltn__search-widget">
+                <form  action="#">
+                    <input style="width: 60%; margin-left: 20px;" type="text" name="search" placeholder="Search your keyword...">
+                    <button style="height: 60px;margin-left: 5px;" type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+
+            <div class="real_listing">
+               
+                {% if all_rooms %}
+                {% for f in all_rooms %}
+                <div class="col-xl-6 col-sm-6 col-12">
+                    <div class="ltn__product-item ltn__product-item-4 ltn__product-item-5 text-center---">
+                        <div class="one">
+                            <div class="product-img">
+                                <a href="product-details.html"><img src="{{f.room_picture.url}}" alt="#"></a>
+                               
+                            </div>
+
+                        </div>
+                        
+                        <div class="two">
+                            <div class="product-info">
+                                <div class="product-badge">
+                                    <ul>
+                                        <li class="sale-badg">For Rent</li>
+                                        <li class="sale-badg">Ksh {{f.rent}} <span>/month</span></li>
+                                    </ul>
+                                </div>
+                               
+                                <h2 class="product-title"><a href="product-details.html">{{f.building.building_name}} - {{f.room_name}}</a></h2>
+                                <div class="product-img-location">
+                                    <ul>
+                                        <li>
+                                            <a href=""><i class="fas fa-map-pin"></i>{{f.building.location_name}}</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="details">
+                                    {% if f.room_size %}
+                                    <h3> <i class="fas fa-expand"></i> {{f.room_size}} sqft </h3>
+                                    {% endif %}
+                                    {% if f.room_type %}
+                
+                                    <h3> <i class="fas fa-bed"></i> {{f.room_type}} </h3>
+                                    {% endif %}
+                                    {% if f.bathtab_np != 0 %}
+                                    <h3> <i class="fas fa-bath"></i> {{ f.bathtab_np}} bathtab </h3>
+                                    {% endif %}
+                                    {% if f.balcony %}
+                                    <h3> <i class="fas fa-door-closed"></i>balcony </h3>
+                
+                                    {% endif %}
+                
+                                    {% if f.building.tv_connection  %}
+                                    
+                                    <h3> <i class="fas fa-tv"></i> tv connection </h3>
+                
+                                    {% endif %}
+                
+                                    {% if f.building.security  %}
+                                    
+                                    <h3> <i class="fas fa-key"></i> security </h3>
+                
+                                    {% endif %}
+                                </div>
+
+                                <div class="buttons">
+                                    <a href="#" class="btn">request info</a>
+                                    <a href="#" class="btn">view details</a>
+                                </div>
+                               
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+
+          
+
+
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="filter">
+                <h1 style="margin-top: 20px;" class="heading">Filter Room</h1>
+                <form action="">
+                 
+                    <select  name="minprice" id="minprice" onChange="minimumPrice(this);">
+                        <option value="Minimum Price">Minimum Price</option>
+                        {% if all_rooms %}
+                        {% for f in all_rooms %}
+                        <option value="{{f.rent}}">Ksh {{f.rent}}</option>
+                        {% endfor %}
+                        {% endif %}
+                      </select>
+
+                      <select name="maxprice" id="maxprice" onChange="maximumPrice(this);"  >
+                        <option value="Maximum Price">Maximum Price</option>
+                        {% if all_rooms %}
+                        {% for f in all_rooms %}
+                        <option value="{{f.rent}}">Ksh {{f.rent}}</option>
+                        {% endfor %}
+                        {% endif %} 
+                      </select>
+
+                      <select class="select" name="beds" id="beds"  onChange="changeRoom(this);">
+                        <option value="Single Room">Single Room</option>
+                        <option value="Bouble Room">Bouble Room</option>
+                        <option value="BedSitter">BedSitter</option>
+                        <option value="1 Bedroom">1 Bedroom</option>
+                        <option value="2 Bedroom">2 Bedroom</option>
+                        <option value="3 Bedroom">3 Bedroom</option>
+                        <option value="4 Bedroom">4 Bedroom</option>
+                      </select>
+
+                      <button  class="btn">Submit</button>
+                </form>
+                
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{% endblock content %}
+
+
+{% block extra_js %}
+
+
+<script>
+    function minimumPrice(sel) {
+            // make POST ajax call
+            var min_p =  document.getElementById('maxprice');
+            var bb = document.getElementById('beds')
+            console.log(bb.value)
+            var card_containe  =  $('.real_listing')
+                   
+              
+            card_containe.empty();
+
+            const holder = `<div class="col-xl-6 col-sm-6 col-12">
+                        <div style="display: flex; flex-wrap: wrap;background: white;width :53rem;align-items: center;justify-content: space-evenly;">
+                            <div style="height: inherit;margin-top: 10px;">
+                                <div style="width: 25rem;">
+                                    <div class="skeleton" style="width: inherit; height: 110px" ></div>
+                                   
+                                </div>
+
+                            </div>
+                            
+                            <div >
+                                <div class="product-info">
+                                    <div  class="product-badge">
+                                        <ul style="display: flex;flex-wrap: wrap;list-style: none;margin-top: 3px;align-items: center;justify-content: space-between;">
+                                            <li style="width: 70px; height: 20px ;border-radius: 5%;" class="sale-badg skeleton"></li>
+                                            <li style="width: 70px; height: 20px ;border-radius: 5%;margin-left: 10px;" class="sale-badg skeleton"></li>
+                                        </ul>
+                                    </div>
+                                   
+                                    <h2 class="product-title"><div style="width: 250px; height: 20px ;border-radius: 5%;margin-top: 5px;" class="skeleton" ></div></h2>
+                                    <div class="product-img-location">
+                                        <ul style="list-style: none;">
+                                            <li>
+                                                <div style="width: 250px; height: 20px ;border-radius: 5%;margin-top: 5px;" class="skeleton" ></div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div style="display: flex;flex-wrap: wrap;align-items: center;justify-content: space-between;" class="details">
+                                        <div style="width: 50px; height: 20px ;border-radius: 5%;margin-top: 5px;" class="skeleton" ></div>
+                                        <div style="width: 50px; height: 20px ;border-radius: 5%;margin-top: 5px;margin-left: 5px;" class="skeleton" ></div>
+                                        <div style="width: 50px; height: 20px ;border-radius: 5%;margin-top: 5px; margin-left: 5px;" class="skeleton" ></div>
+                                    </div>
+
+                                    <div style="display: flex;flex-wrap: wrap;align-items: center;justify-content: space-between;">
+                                        <div style="width: 100px; height: 20px ;border-radius: 5%;margin-top: 5px;" class="skeleton" ></div>
+                                        <div style="width: 100px; height: 20px ;border-radius: 5%;margin-top: 5px; margin-left: 5px; margin-bottom: 10px;" class="skeleton" ></div>
+                                    </div>
+                                   
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>`
+
+            for(let i = 0;i<5;i++){
+                card_containe.append(holder)
+            } 
+
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'homepage:filtered_data' %}",
+                data: {max:min_p.value, min:sel.options[sel.selectedIndex].value,beds:bb.value},
+                success: function (response) {
+                    console.log(response) ;
+                    var card_containe  =  $('.real_listing')
+                   
+              
+                    card_containe.empty();
+
+                    for (let i = 0; i < response.length; i++) {
+                        const resp =  response[i];
+                        const mm = `
+                        
+                        <div class="col-xl-6 col-sm-6 col-12">
+                            <div class="ltn__product-item ltn__product-item-4 ltn__product-item-5 text-center---">
+                                <div class="one">
+                                    <div class="product-img">
+                                        <a href="product-details.html"><img src="${resp.room_picture}" alt="#"></a>
+                                       
+                                    </div>
+    
+                                </div>
+                                
+                                <div class="two">
+                                    <div class="product-info">
+                                        <div class="product-badge">
+                                            <ul>
+                                                <li class="sale-badg">For Rent</li>
+                                                <li class="sale-badg">Ksh ${resp.rent} <span>/month</span></li>
+                                            </ul>
+                                        </div>
+                                       
+                                        <h2 class="product-title"><a href="product-details.html">${resp.building.building_name} - ${resp.room_name}</a></h2>
+                                        <div class="product-img-location">
+                                            <ul>
+                                                <li>
+                                                    <a href=""><i class="fas fa-map-pin"></i>${resp.building.location_name}</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="details">
+            
+                                            ${resp.room_size ? `<h3> <i class="fas fa-expand"></i> ${resp.room_size} sqft </h3>` : null }
+                                            ${resp.room_type ? `<h3> <i class="fas fa-bed"></i> ${resp.room_type} </h3>` : null}
+                                            ${resp.bathtab_np ? `<h3> <i class="fas fa-bath"></i> ${resp.bathtab_np} bathtab </h3>` : null } 
+                                            ${resp.balcony ? `<h3> <i class="fas fa-door-closed"></i>balcony </h3>` : null} 
+                                            ${resp.building.tv_connection? `<h3> <i class="fas fa-tv"></i> tv connection </h3>` : null}
+                                            ${resp.building.security ? `<h3> <i class="fas fa-key"></i> security </h3>`:null}
+                                            
+                                          
+                                        
+                                        </div>
+    
+                                        <div class="buttons">
+                                            <a href="#" class="btn">request info</a>
+                                            <a href="/room_detailed/${resp.id}/" class="btn">view details</a>
+                                        </div>
+                                       
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+    
+                        
+                        
+                        `
+
+
+
+    
+                    // on successfull creating object
+                  
+                   
+                card_containe.append(mm) 
+                        console.log(resp);
+
+                    };
+                    
+                    // display the newly friend to table.
+                    
+                },
+                error: function (response) {
+                    // alert the error if any error occured
+                    console.log(response["responseJSON"]["error"]);
+                }
+            })
+        
+
+       
+
+}
+
+</script>
+
+
+
+<script>
+    function maximumPrice(sel) {
+            // make POST ajax call
+            var min_p =  document.getElementById('minprice');
+            var bb = document.getElementById('beds')
+            console.log(bb.value)
+            var card_containe  =  $('.real_listing')
+                   
+              
+            card_containe.empty();
+
+            const holder = `<div class="col-xl-6 col-sm-6 col-12">
+                        <div style="display: flex; flex-wrap: wrap;background: white;width :53rem;align-items: center;justify-content: space-evenly;">
+                            <div style="height: inherit;margin-top: 10px;">
+                                <div style="width: 25rem;">
+                                    <div class="skeleton" style="width: inherit; height: 110px" ></div>
+                                   
+                                </div>
+
+                            </div>
+                            
+                            <div >
+                                <div class="product-info">
+                                    <div  class="product-badge">
+                                        <ul style="display: flex;flex-wrap: wrap;list-style: none;margin-top: 3px;align-items: center;justify-content: space-between;">
+                                            <li style="width: 70px; height: 20px ;border-radius: 5%;" class="sale-badg skeleton"></li>
+                                            <li style="width: 70px; height: 20px ;border-radius: 5%;margin-left: 10px;" class="sale-badg skeleton"></li>
+                                        </ul>
+                                    </div>
+                                   
+                                    <h2 class="product-title"><div style="width: 250px; height: 20px ;border-radius: 5%;margin-top: 5px;" class="skeleton" ></div></h2>
+                                    <div class="product-img-location">
+                                        <ul style="list-style: none;">
+                                            <li>
+                                                <div style="width: 250px; height: 20px ;border-radius: 5%;margin-top: 5px;" class="skeleton" ></div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div style="display: flex;flex-wrap: wrap;align-items: center;justify-content: space-between;" class="details">
+                                        <div style="width: 50px; height: 20px ;border-radius: 5%;margin-top: 5px;" class="skeleton" ></div>
+                                        <div style="width: 50px; height: 20px ;border-radius: 5%;margin-top: 5px;margin-left: 5px;" class="skeleton" ></div>
+                                        <div style="width: 50px; height: 20px ;border-radius: 5%;margin-top: 5px; margin-left: 5px;" class="skeleton" ></div>
+                                    </div>
+
+                                    <div style="display: flex;flex-wrap: wrap;align-items: center;justify-content: space-between;">
+                                        <div style="width: 100px; height: 20px ;border-radius: 5%;margin-top: 5px;" class="skeleton" ></div>
+                                        <div style="width: 100px; height: 20px ;border-radius: 5%;margin-top: 5px; margin-left: 5px; margin-bottom: 10px;" class="skeleton" ></div>
+                                    </div>
+                                   
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>`
+
+            for(let i = 0;i<5;i++){
+                card_containe.append(holder)
+            } 
+
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'homepage:filtered_data' %}",
+                data: {min:min_p.value, max:sel.options[sel.selectedIndex].value,beds:bb.value},
+                success: function (response) {
+                    console.log("room response",response) ;
+                    var card_containe  =  $('.real_listing')
+              
+                    card_containe.empty();
+
+                    for (let i = 0; i < response.length; i++) {
+                        const resp =  response[i];
+                        const mm = `
+                        
+                        <div class="col-xl-6 col-sm-6 col-12">
+                            <div class="ltn__product-item ltn__product-item-4 ltn__product-item-5 text-center---">
+                                <div class="one">
+                                    <div class="product-img">
+                                        <a href="product-details.html"><img src="${resp.room_picture}" alt="#"></a>
+                                       
+                                    </div>
+    
+                                </div>
+                                
+                                <div class="two">
+                                    <div class="product-info">
+                                        <div class="product-badge">
+                                            <ul>
+                                                <li class="sale-badg">For Rent</li>
+                                                <li class="sale-badg">Ksh ${resp.rent} <span>/month</span></li>
+                                            </ul>
+                                        </div>
+                                       
+                                        <h2 class="product-title"><a href="product-details.html">${resp.building.building_name} - ${resp.room_name}</a></h2>
+                                        <div class="product-img-location">
+                                            <ul>
+                                                <li>
+                                                    <a href=""><i class="fas fa-map-pin"></i>${resp.building.location_name}</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="details">
+            
+                                            ${resp.room_size ? `<h3> <i class="fas fa-expand"></i> ${resp.room_size} sqft </h3>` : null }
+                                            ${resp.room_type ? `<h3> <i class="fas fa-bed"></i> ${resp.room_type} </h3>` : null}
+                                            ${resp.bathtab_np ? `<h3> <i class="fas fa-bath"></i> ${resp.bathtab_np} bathtab </h3>` : null } 
+                                            ${resp.balcony ? `<h3> <i class="fas fa-door-closed"></i>balcony </h3>` : null} 
+                                            ${resp.building.tv_connection? `<h3> <i class="fas fa-tv"></i> tv connection </h3>` : null}
+                                            ${resp.building.security ? `<h3> <i class="fas fa-key"></i> security </h3>`:null}
+                                            
+                                          
+                                        
+                                        </div>
+    
+                                        <div class="buttons">
+                                            <a href="#" class="btn">request info</a>
+                                            <a href="/room_detailed/${resp.id}/" class="btn">view details</a>
+                                        </div>
+                                       
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+    
+                        
+                        
+                        `
+
+
+
+    
+                    // on successfull creating object
+                  
+                   
+                card_containe.append(mm) 
+                        console.log(resp);
+
+                    };
+                    
+                    // display the newly friend to table.
+                    
+                },
+                error: function (response) {
+                    // alert the error if any error occured
+                    console.log(response["responseJSON"]["error"]);
+                }
+            })
+        
+
+       
+
+}
+
+
+
+</script>
+
+
+
+
+<script>
+    function changeRoom(sel) {
+            // make POST ajax call
+            var max_p =  document.getElementById('maxprice');
+            var bb = document.getElementById('beds');
+            var min_p =  document.getElementById('minprice');
+            console.log(bb.value)
+            var card_containe  =  $('.real_listing')
+                   
+              
+            card_containe.empty();
+
+            const holder = `<div class="col-xl-6 col-sm-6 col-12">
+                        <div style="display: flex; flex-wrap: wrap;background: white;width :53rem;align-items: center;justify-content: space-evenly;">
+                            <div style="height: inherit;margin-top: 10px;">
+                                <div style="width: 25rem;">
+                                    <div class="skeleton" style="width: inherit; height: 110px" ></div>
+                                   
+                                </div>
+
+                            </div>
+                            
+                            <div >
+                                <div class="product-info">
+                                    <div  class="product-badge">
+                                        <ul style="display: flex;flex-wrap: wrap;list-style: none;margin-top: 3px;align-items: center;justify-content: space-between;">
+                                            <li style="width: 70px; height: 20px ;border-radius: 5%;" class="sale-badg skeleton"></li>
+                                            <li style="width: 70px; height: 20px ;border-radius: 5%;margin-left: 10px;" class="sale-badg skeleton"></li>
+                                        </ul>
+                                    </div>
+                                   
+                                    <h2 class="product-title"><div style="width: 250px; height: 20px ;border-radius: 5%;margin-top: 5px;" class="skeleton" ></div></h2>
+                                    <div class="product-img-location">
+                                        <ul style="list-style: none;">
+                                            <li>
+                                                <div style="width: 250px; height: 20px ;border-radius: 5%;margin-top: 5px;" class="skeleton" ></div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div style="display: flex;flex-wrap: wrap;align-items: center;justify-content: space-between;" class="details">
+                                        <div style="width: 50px; height: 20px ;border-radius: 5%;margin-top: 5px;" class="skeleton" ></div>
+                                        <div style="width: 50px; height: 20px ;border-radius: 5%;margin-top: 5px;margin-left: 5px;" class="skeleton" ></div>
+                                        <div style="width: 50px; height: 20px ;border-radius: 5%;margin-top: 5px; margin-left: 5px;" class="skeleton" ></div>
+                                    </div>
+
+                                    <div style="display: flex;flex-wrap: wrap;align-items: center;justify-content: space-between;">
+                                        <div style="width: 100px; height: 20px ;border-radius: 5%;margin-top: 5px;" class="skeleton" ></div>
+                                        <div style="width: 100px; height: 20px ;border-radius: 5%;margin-top: 5px; margin-left: 5px; margin-bottom: 10px;" class="skeleton" ></div>
+                                    </div>
+                                   
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>`
+
+            for(let i = 0;i<5;i++){
+                card_containe.append(holder)
+            }        
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'homepage:filtered_data' %}",
+                data: {max:max_p.value, beds:sel.options[sel.selectedIndex].value,min:min_p.value},
+                success: function (response) {
+                    console.log(response) ;
+                    var card_containe  =  $('.real_listing')
+                   
+              
+                    card_containe.empty();
+
+                    for (let i = 0; i < response.length; i++) {
+                        const resp =  response[i];
+                        const mm = `
+                        
+                        <div class="col-xl-6 col-sm-6 col-12" style="margin-top:10px;">
+                            <div class="ltn__product-item ltn__product-item-4 ltn__product-item-5 text-center---">
+                                <div class="one">
+                                    <div class="product-img">
+                                        <a href="product-details.html"><img src="${resp.room_picture}" alt="#"></a>
+                                       
+                                    </div>
+    
+                                </div>
+                                
+                                <div class="two">
+                                    <div class="product-info">
+                                        <div class="product-badge">
+                                            <ul>
+                                                <li class="sale-badg">For Rent</li>
+                                                <li class="sale-badg">Ksh ${resp.rent} <span>/month</span></li>
+                                            </ul>
+                                        </div>
+                                       
+                                        <h2 class="product-title"><a href="product-details.html">${resp.building.building_name} - ${resp.room_name}</a></h2>
+                                        <div class="product-img-location">
+                                            <ul>
+                                                <li>
+                                                    <a href=""><i class="fas fa-map-pin"></i>${resp.building.location_name}</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="details">
+            
+                                            ${resp.room_size ? `<h3> <i class="fas fa-expand"></i> ${resp.room_size} sqft </h3>` : null }
+                                            ${resp.room_type ? `<h3> <i class="fas fa-bed"></i> ${resp.room_type} </h3>` : null}
+                                            ${resp.bathtab_np ? `<h3> <i class="fas fa-bath"></i> ${resp.bathtab_np} bathtab </h3>` : null } 
+                                            ${resp.balcony ? `<h3> <i class="fas fa-door-closed"></i>balcony </h3>` : null} 
+                                            ${resp.building.tv_connection? `<h3> <i class="fas fa-tv"></i> tv connection </h3>` : null}
+                                            ${resp.building.security ? `<h3> <i class="fas fa-key"></i> security </h3>`:null}
+                                            
+                                          
+                                        
+                                        </div>
+    
+                                        <div class="buttons">
+                                            <a href="#" class="btn">request info</a>
+                                            <a href="/room_detailed/${resp.id}/" class="btn">view details</a>
+                                        </div>
+                                       
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+    
+                        
+                        
+                        `
+
+
+
+    
+                    // on successfull creating object
+                  
+                   
+                card_containe.append(mm) 
+                        console.log(resp);
+
+                    };
+                    
+                    // display the newly friend to table.
+                    
+                },
+                error: function (response) {
+                    // alert the error if any error occured
+                    console.log(response["responseJSON"]["error"]);
+                }
+            })
+        
+
+       
+
+}
+
+</script>
+
+
+{% endblock extra_js %}

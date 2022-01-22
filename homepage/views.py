@@ -88,26 +88,35 @@ class FilterRoom(APIView):
 
         max_price =  request.data['max'] 
         min_price =  request.data['min']
+        beds =  request.data['beds']
         print("min price :",min_price)
         print("max price :",max_price)
+        print("beds : ",beds)
         if min_price != "Minimum Price" and max_price != "Maximum Price":
             print("running 1")
-            all_roo =  Room.objects.filter(rent__range = [float(min_price),float(max_price)])
+            all_roo =  Room.objects.filter(rent__range = [float(min_price),float(max_price)],room_type = beds)
             serializer = RoomSerializer(all_roo, many=True)
             return Response(serializer.data)
 
         elif min_price == "Minimum Price" and max_price != "Maximum Price":
             print("running 2")
-            all_roo =  Room.objects.filter(rent__lte = float(max_price) )
+            all_roo =  Room.objects.filter(rent__lte = float(max_price) ,room_type = beds)
             serializer = RoomSerializer(all_roo, many=True)
             return Response(serializer.data)
 
         
         elif max_price == "Maximum Price" and min_price != "Minimum Price" :
             print("running 4")
-            all_roo =  Room.objects.filter(rent__gte = float(min_price) )
+            all_roo =  Room.objects.filter(rent__gte = float(min_price) ,room_type = beds)
             serializer = RoomSerializer(all_roo, many=True)
             return Response(serializer.data)
+
+        elif max_price == "Maximum Price" and min_price == "Minimum Price":
+            print("running 5")
+            all_roo =  Room.objects.filter(room_type = beds)
+            serializer = RoomSerializer(all_roo, many=True)
+            return Response(serializer.data)
+
 
 
 
@@ -156,3 +165,15 @@ def room_detailed_page(request,id):
 
 def request_booking(request,room_id,agent_id,user_id):
     return render(request,'booking_request.html')
+
+
+
+
+def listing_listview(request):
+    all_rooms = Room.objects.all()
+
+    context = {
+        'all_rooms':all_rooms
+    }
+    return render(request,'listing_listview.html',context)
+

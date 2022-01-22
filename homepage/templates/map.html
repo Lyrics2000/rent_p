@@ -322,7 +322,7 @@
                       </select>
 
                       <select class="selecttt dropd" id="maxprice" onChange="maximumPrice(this);">
-                        <option>Maximum Price</option>
+                        <option value="Maximum Price">Maximum Price</option>
                         {% if all_rooms %}
                         {% for f in all_rooms %}
                         <option value="{{f.rent}}">Ksh {{f.rent}}</option>
@@ -605,7 +605,7 @@
                 url: "{% url 'homepage:filtered_data' %}",
                 data: {min:min_p.value, max:sel.options[sel.selectedIndex].value},
                 success: function (response) {
-                    console.log(response) ;
+                    console.log("room response",response) ;
                     var card_containe  =  $('#card-container')
               
                     card_containe.empty();
@@ -653,7 +653,7 @@
                 </div>
                 <div class="buttons">
                     <a href="#" class="btn">request info</a>
-                    <a href="/map_detailed/${1}/" class="btn">view details</a>
+                    <a href="/room_detailed/${resp.id}/" class="btn">view details</a>
                 </div>
             </div>
         </div>`;
@@ -741,7 +741,7 @@
                 </div>
                 <div class="buttons">
                     <a href="#" class="btn">request info</a>
-                    <a href="/map_detailed/${1}/" class="btn">view details</a>
+                    <a href="/room_detailed/${resp.id}/" class="btn">view details</a>
                 </div>
             </div>
         </div>`;
