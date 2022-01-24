@@ -28,8 +28,9 @@
     <div  class="row">
         <div class="col-md-8">
             <div class="ltn__search-widget">
-                <form  action="#">
-                    <input style="width: 60%; margin-left: 20px;" type="text" name="search" placeholder="Search your keyword...">
+                <form  action="{% url 'homepage:map_search' %}"  method="POST">
+                    {% csrf_token %}
+                    <input style="width: 60%; margin-left: 20px;" type="text" name="location_search" placeholder="Search by location name...">
                     <button style="height: 60px;margin-left: 5px;" type="submit"><i class="fas fa-search"></i></button>
                 </form>
             </div>
@@ -115,7 +116,7 @@
         <div class="col-md-4">
             <div class="filter">
                 <h1 style="margin-top: 20px;" class="heading">Filter Room</h1>
-                <form action="">
+                <form>
                  
                     <select  name="minprice" id="minprice" onChange="minimumPrice(this);">
                         <option value="Minimum Price">Minimum Price</option>
@@ -145,7 +146,7 @@
                         <option value="4 Bedroom">4 Bedroom</option>
                       </select>
 
-                      <button  class="btn">Submit</button>
+                      <div onclick="on_click_div()"  class="btn">Submit</div>
                 </form>
                 
             </div>
@@ -229,6 +230,14 @@
                    
               
                     card_containe.empty();
+
+                    if(response.length === 0){
+                        var hj = `<h1> Sorry No Listing Found. FIltered  Ksh (${sel.options[sel.selectedIndex].value}) - Ksh (${min_p.value})  and (${bb.value})</h1>`
+                        card_containe.append(hj)
+                    }else{
+                        console.log("updating data")
+                    }
+                    
 
                     for (let i = 0; i < response.length; i++) {
                         const resp =  response[i];
@@ -386,6 +395,14 @@
                     var card_containe  =  $('.real_listing')
               
                     card_containe.empty();
+
+                    if(response.length === 0){
+                        var hj = `<h1> Sorry No Listing Found. FIltered  Ksh (${min_p.value}) - Ksh (${sel.options[sel.selectedIndex].value})  and (${bb.value})</h1>`
+                        card_containe.append(hj)
+                    }else{
+                        console.log("updating data")
+                    }
+                    
 
                     for (let i = 0; i < response.length; i++) {
                         const resp =  response[i];
@@ -548,6 +565,13 @@
               
                     card_containe.empty();
 
+                    if(response.length === 0){
+                        var hj = `<h1> Sorry No Listing Found. FIltered  Ksh (${min_p.value}) - Ksh (${max_p.value})  and (${sel.options[sel.selectedIndex].value})</h1>`
+                        card_containe.append(hj)
+                    }else{
+                        console.log("updating data")
+                    }
+
                     for (let i = 0; i < response.length; i++) {
                         const resp =  response[i];
                         const mm = `
@@ -634,5 +658,170 @@
 
 </script>
 
+
+<script>
+    function on_click_div(){
+
+            // make POST ajax call
+            var max_p =  document.getElementById('maxprice');
+            var bb = document.getElementById('beds');
+            var min_p =  document.getElementById('minprice');
+            console.log(bb.value)
+            var card_containe  =  $('.real_listing')
+                   
+              
+            card_containe.empty();
+
+            const holder = `<div class="col-xl-6 col-sm-6 col-12">
+                        <div style="display: flex; flex-wrap: wrap;background: white;width :53rem;align-items: center;justify-content: space-evenly;">
+                            <div style="height: inherit;margin-top: 10px;">
+                                <div style="width: 25rem;">
+                                    <div class="skeleton" style="width: inherit; height: 110px" ></div>
+                                   
+                                </div>
+
+                            </div>
+                            
+                            <div >
+                                <div class="product-info">
+                                    <div  class="product-badge">
+                                        <ul style="display: flex;flex-wrap: wrap;list-style: none;margin-top: 3px;align-items: center;justify-content: space-between;">
+                                            <li style="width: 70px; height: 20px ;border-radius: 5%;" class="sale-badg skeleton"></li>
+                                            <li style="width: 70px; height: 20px ;border-radius: 5%;margin-left: 10px;" class="sale-badg skeleton"></li>
+                                        </ul>
+                                    </div>
+                                   
+                                    <h2 class="product-title"><div style="width: 250px; height: 20px ;border-radius: 5%;margin-top: 5px;" class="skeleton" ></div></h2>
+                                    <div class="product-img-location">
+                                        <ul style="list-style: none;">
+                                            <li>
+                                                <div style="width: 250px; height: 20px ;border-radius: 5%;margin-top: 5px;" class="skeleton" ></div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div style="display: flex;flex-wrap: wrap;align-items: center;justify-content: space-between;" class="details">
+                                        <div style="width: 50px; height: 20px ;border-radius: 5%;margin-top: 5px;" class="skeleton" ></div>
+                                        <div style="width: 50px; height: 20px ;border-radius: 5%;margin-top: 5px;margin-left: 5px;" class="skeleton" ></div>
+                                        <div style="width: 50px; height: 20px ;border-radius: 5%;margin-top: 5px; margin-left: 5px;" class="skeleton" ></div>
+                                    </div>
+
+                                    <div style="display: flex;flex-wrap: wrap;align-items: center;justify-content: space-between;">
+                                        <div style="width: 100px; height: 20px ;border-radius: 5%;margin-top: 5px;" class="skeleton" ></div>
+                                        <div style="width: 100px; height: 20px ;border-radius: 5%;margin-top: 5px; margin-left: 5px; margin-bottom: 10px;" class="skeleton" ></div>
+                                    </div>
+                                   
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>`
+
+            for(let i = 0;i<5;i++){
+                card_containe.append(holder)
+            }        
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'homepage:filtered_data' %}",
+                data: {max:max_p.value, beds:bb.value,min:min_p.value},
+                success: function (response) {
+                    console.log(response) ;
+                    var card_containe  =  $('.real_listing')
+                   
+              
+                    card_containe.empty();
+
+                    if(response.length === 0){
+                        var hj = `<h1> Sorry No Listing Found. FIltered  Ksh (${min_p.value}) - Ksh (${max_p.value})  and (${bb.value})</h1>`
+                        card_containe.append(hj)
+                    }else{
+                        console.log("updating data")
+                    }
+
+                    for (let i = 0; i < response.length; i++) {
+                        const resp =  response[i];
+                        const mm = `
+                        
+                        <div class="col-xl-6 col-sm-6 col-12" style="margin-top:10px;">
+                            <div class="ltn__product-item ltn__product-item-4 ltn__product-item-5 text-center---">
+                                <div class="one">
+                                    <div class="product-img">
+                                        <a href="product-details.html"><img src="${resp.room_picture}" alt="#"></a>
+                                       
+                                    </div>
+    
+                                </div>
+                                
+                                <div class="two">
+                                    <div class="product-info">
+                                        <div class="product-badge">
+                                            <ul>
+                                                <li class="sale-badg">For Rent</li>
+                                                <li class="sale-badg">Ksh ${resp.rent} <span>/month</span></li>
+                                            </ul>
+                                        </div>
+                                       
+                                        <h2 class="product-title"><a href="product-details.html">${resp.building.building_name} - ${resp.room_name}</a></h2>
+                                        <div class="product-img-location">
+                                            <ul>
+                                                <li>
+                                                    <a href=""><i class="fas fa-map-pin"></i>${resp.building.location_name}</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="details">
+            
+                                            ${resp.room_size ? `<h3> <i class="fas fa-expand"></i> ${resp.room_size} sqft </h3>` : null }
+                                            ${resp.room_type ? `<h3> <i class="fas fa-bed"></i> ${resp.room_type} </h3>` : null}
+                                            ${resp.bathtab_np ? `<h3> <i class="fas fa-bath"></i> ${resp.bathtab_np} bathtab </h3>` : null } 
+                                            ${resp.balcony ? `<h3> <i class="fas fa-door-closed"></i>balcony </h3>` : null} 
+                                            ${resp.building.tv_connection? `<h3> <i class="fas fa-tv"></i> tv connection </h3>` : null}
+                                            ${resp.building.security ? `<h3> <i class="fas fa-key"></i> security </h3>`:null}
+                                            
+                                          
+                                        
+                                        </div>
+    
+                                        <div class="buttons">
+                                            <a href="#" class="btn">request info</a>
+                                            <a href="/room_detailed/${resp.id}/" class="btn">view details</a>
+                                        </div>
+                                       
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+    
+                        
+                        
+                        `
+
+
+
+    
+                    // on successfull creating object
+                  
+                   
+                card_containe.append(mm) 
+                        console.log(resp);
+
+                    };
+                    
+                    // display the newly friend to table.
+                    
+                },
+                error: function (response) {
+                    // alert the error if any error occured
+                    console.log(response["responseJSON"]["error"]);
+                }
+            })
+        
+
+       
+
+
+
+    }
+</script>
 
 {% endblock extra_js %}
