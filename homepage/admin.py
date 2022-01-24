@@ -7,7 +7,8 @@ from .models import (
     Booking,
     Payment,
     BuildingMorePic,
-    SlidingImages
+    SlidingImages,
+    BookTour
 )
 # Register your models here.
 
@@ -24,3 +25,4 @@ admin.site.register(Booking)
 admin.site.register(Payment)
 admin.site.register(BuildingMorePic)
 admin.site.register(SlidingImages)
+admin.site.register(BookTour)

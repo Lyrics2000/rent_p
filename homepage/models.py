@@ -1,6 +1,10 @@
 # from django.db import models
+from email.charset import BASE64
+from operator import mod
+from pyexpat import model
 import random
 import os
+from statistics import mode
 from django.shortcuts import reverse
 from account.models import User,Agent
 from location_field.models.plain import PlainLocationField
@@ -94,6 +98,12 @@ class Room(BaseModel):
             'id': self.id
         })
 
+
+    def get_book_request(self):
+        return reverse("homepage:book_request", kwargs={
+            'id': self.id
+        })
+
     
 
 
@@ -140,7 +150,17 @@ class SlidingImages(BaseModel):
     images =  models.ImageField(upload_to = upload_image_path)
 
 
+class BookTour(BaseModel):
+    room = models.ForeignKey(Room,on_delete=models.CASCADE)
+    day = models.CharField(max_length=255)
+    time = models.CharField(max_length=255)
+    phone = models.CharField(max_length=255)
+    email = models.CharField(max_length=255)
+    reviewed = models.BooleanField(default=False)
 
+
+    def __str__(self):
+        return str(self.email)
 
 
 

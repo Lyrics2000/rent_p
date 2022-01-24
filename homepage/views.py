@@ -1,6 +1,8 @@
+from http.client import HTTPResponse
 import json
-
+from django.http import JsonResponse
 from account.models import Agent
+from django.http import HttpResponse
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import Distance
 from django.core import serializers
@@ -11,7 +13,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .LOc import LocationQuery
-from .models import Building, BuildingMorePic, Room, RoomMorePic, SlidingImages
+from .models import Building, BuildingMorePic, Room, RoomMorePic, SlidingImages,BookTour
 from .serializers import BuildingSerializer, RoomSerializer
 
 
@@ -176,4 +178,32 @@ def listing_listview(request):
         'all_rooms':all_rooms
     }
     return render(request,'listing_listview.html',context)
+
+
+
+def book_request(request,id):
+    
+    if request.method == "POST":
+        date =  request.POST.get("date")
+        time =  request.POST.get("time")
+        phone =  request.POST.get("phone")
+        email =  request.POST.get("email")
+        roo =  Room.objects.get(id =  id)
+        BookTour.objects.create(room = roo,
+        day = date,
+        time =  time,
+        phone =  phone,
+        email =  email
+
+
+        )
+
+        return JsonResponse({"success":"ok"})
+
+    get_room =  Room.objects.get(id = id)
+    context = {
+        'room':get_room
+    }
+    return render(request,'book_request.html',context)
+
 

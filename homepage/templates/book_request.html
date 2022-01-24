@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block content  %} 
+
+<section class="md-container">
+    <div class="container">
+        <div class="image_holder">
+            <img src="{{room.room_picture.url}}" alt="rentobay_image">
+            <div class="details_holder_">
+                <p class="hh_text">{{room.building.building_name}} - {{room.room_name}}</p>
+                <p class="location_request"><i class="fas fa-map-pin"></i>{{room.building.location_name}}</p>
+                <p class="hh_text">Ksh {{room.rent}} <span>/month</span></p>
+            </div>
+
+            
+
+        </div>
+        <hr>
+        <div class="hold_erro"></div>
+
+
+        <form action="">
+            <label >Book Date</label>
+            <div class="date_book">
+              
+            </div>
+
+
+            <label>Tour time</label>
+            <select name="time" id="time">
+                <option value="10:00AM">10:00 AM</option>
+                <option value="11:00AM">11:00 AM</option>
+                <option value="12:01PM">12:01 PM</option>
+                <option value="1:00PM">1:00 PM</option>
+                <option value="2:00PM">2:00 PM</option>
+                <option value="3:00PM">1:00 PM</option>
+              </select>
+
+              <label>Phone</label>
+              <input type="tel" name="phone" id="phone" placeholder="Enter phone number">
+
+              <label>Email</label>
+              <input type="email" name="email" id="email" placeholder="Enter Email">
+
+              <div onclick="on_click_div()" style="margin-left: 10px; margin-right: 10px; margin-bottom: 10px;" class="btn">Submit</div>
+            
+        
+
+        </form>
+        
+    </div>
+</section>
+
+
+
+
+{% endblock content %}
+
+
+{% block extra_js %}
+
+<script>
+
+    var now  =  new Date()
+    var days = ['Sun','Mon','Tue','Wed','Thur','Fri','Sat'];
+    var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    
+    const date_holder = $('.date_book')
+    for(let i = 0;i<5;i++){
+        var day = days[ now.getDay() + i ];
+        var date = now.getDate()+i
+        const ll = `<div class="date_container">
+                        <div class="mm" >
+                            <h1>${day}</h1>
+                            <h1 id="date_day">${date}</h1>
+                        </div>
+                    </div>`
+        date_holder.append(ll)
+    
+    }
+    
+</script>
+
+
+<script>
+    const items = document.querySelectorAll('.date_container');
+    
+    items .forEach(item => {
+      item.addEventListener("click", function() {   
+       items .forEach(a=>{
+          a.classList.remove("active");
+          a.style.display = 'none'; 
+        });
+         item.classList.toggle("active");
+         item.style.display = 'flex'; 
+        
+      });  
+    });
+    </script>
+    
+ 
+    <script>
+
+        function on_click_div(){
+            const items = document.querySelectorAll('.active');
+            const hold_err =  $('.hold_erro')
+            if(items.length  === 0 ){
+                hold_err .append(`<div style="background: red;color: white;width: 100%;"  class="btn btn-danger">Select Date</div>`)
+    
+            }else{
+                const time = $('#time')
+                const date_d = $('.active').find('#date_day').text();
+                const time_option = time.find(":selected").text()
+                const phone = $('#phone').val()
+                if(phone.length === 0){
+                    hold_err.empty()
+    
+                    hold_err .append(`<div style="background: red;color: white;width: 100%;"  class="btn btn-danger">Enter Phone Number</div>`)
+    
+
+                }else{
+                    const email = $('#email').val()
+                    if(email.length == 0){
+                        hold_err.empty()
+                        hold_err .append(`<div style="background: red;color: white;width: 100%;"  class="btn btn-danger">Enter Emailr</div>`)
+
+                    }else{
+                        let dicti = {
+                            date : date_d,
+                            time : time_option,
+                            phone : phone,
+                            email : email,
+                            csrfmiddlewaretoken: '{{ csrf_token }}'
+
+                        }
+                        $.ajax({
+                            type:"POST",
+                            url : "{{room.get_book_request}}",
+                            data:dicti,
+                            success:function (responce){
+                                hold_err.empty()
+                                hold_err .append(`<div style="background: green;color: white;width: 100%;"  class="btn btn-danger">Booked successfully</div>`)
+    
+                            },
+                            error:function(response){
+
+                                response["responseJSON"]["error"]
+                            }
+
+
+
+                        })
+                    }
+
+                }
+
+            }
+           
+        }
+        
+    </script>
+    
+
+
+{% endblock extra_js %}
+    
+   
