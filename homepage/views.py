@@ -76,6 +76,18 @@ class GetBUildingAPIVIEW(APIView):
         serializer = BuildingSerializer(buidlings,many = True)
         return Response(serializer.data)
 
+
+    def post(self,request):
+        id =  request.data['id']
+        print("the id",id)
+        buidlings = Building.objects.get(id = int(id))
+        print("building d",buidlings)
+        # the many param informs the serializer that it will be serializing more than a single article.
+        serializer = BuildingSerializer(buidlings)
+        return Response(serializer.data)
+
+
+
 class GetRoom(APIView):
     def get(self, request):
         rooms = Room.objects.all()

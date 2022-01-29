@@ -1237,6 +1237,68 @@ header .icons #menu-bars {
   margin-bottom: 60px;
 }
 
+.ltn__shop-details-area .row .bigger-column .property-detail-feature-list {
+  margin-bottom: 45px;
+}
+
+.ltn__shop-details-area .row .bigger-column .property-detail-feature-list ul {
+  list-style: none;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.ltn__shop-details-area .row .bigger-column .property-detail-feature-list ul li .property-detail-feature-list-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  line-height: 1;
+}
+
+.ltn__shop-details-area .row .bigger-column .property-detail-feature-list ul li .property-detail-feature-list-item i {
+  margin-right: 12px;
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  line-height: 49px;
+  background-color: var(--light-red);
+  text-align: center;
+  font-size: 22px;
+  color: #fb4e2e;
+}
+
+.ltn__shop-details-area .row .bigger-column .property-detail-feature-list ul li .property-detail-feature-list-item div h6 {
+  color: #262626;
+  clear: both;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
 .ltn__shop-details-area .row .smaller-col {
   width: 30rem;
 }

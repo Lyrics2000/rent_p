@@ -23,11 +23,11 @@
 <section class="breadbrump">
     <div>
        <div >
-          <h1 class="page-title">Product Details</h1>
+          <h1 class="page-title">Room Details</h1>
           <div>
              <ul>
                 <li><a href="#/"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="#/"><i class="fas fa-angle-double-right"></i> Product Details </a></li>
+                <li><a href="#/"><i class="fas fa-angle-double-right"></i> Room Details </a></li>
              </ul>
           </div>
        </div>
@@ -102,11 +102,15 @@
           </ul>
   
           </div>
-          <h1>{{rooms_data.room_name}}({{rooms_data.room_type}})</h1>
+          <h1>{{rooms_data.room_name}}({{rooms_data.room_type}})-(ksh {{rooms_data.rent}})</h1>
           <label><span class="ltn__secondary-color"><i class="fas fa-map-pin"></i></span> {{rooms_data.building.location_name}}</label>
-          <h4 class="title-2">Description</h4>
+          
   
+          {% if rooms_data.description %}
+          <h4 class="title-2">Description</h4>
           <p>{{rooms_data.description}}</p>
+
+          {% endif %}
   
            
               <h4 class="title-2">Property Detail</h4>
@@ -143,6 +147,89 @@
                     
                 </ul>
             </div>
+
+            <h4 class="title-2">Room Features</h4>
+
+          <div class="property-detail-feature-list clearfix mb-45">                            
+            <ul>
+              {% if rooms_data.balcony%}
+                <li>
+                    <div class="property-detail-feature-list-item">
+                        <i class="fas fa-door-closed"></i>
+                        <div>
+                            <h6>Balcony</h6>
+                          
+                           
+                        </div>
+                    </div>
+                </li>
+
+                {% endif %}
+
+                {% if rooms_data.bathtab_np != 0%}
+                <li>
+                    <div class="property-detail-feature-list-item">
+                        <i class="fas fa-bath"></i>
+                        <div>
+                            <h6>{{ rooms_data.bathtab_np}} bathtab</h6>
+                          
+                           
+                        </div>
+                    </div>
+                </li>
+
+                {% endif %}
+
+               
+           
+                {% if rooms_data.room_type %}
+                <li>
+                    <div class="property-detail-feature-list-item">
+                        <i class="fas fa-bed"></i>
+                        <div>
+                            <h6>{{rooms_data.room_type}}</h6>
+                          
+                           
+                        </div>
+                    </div>
+                </li>
+
+                {% endif %}
+
+
+                {% if rooms_data.room_size %}
+                <li>
+                    <div class="property-detail-feature-list-item">
+                        <i class="fas fa-expand"></i>
+                        <div>
+                            <h6>{{rooms_data.room_size}} sqft</h6>
+                          
+                           
+                        </div>
+                    </div>
+                </li>
+
+                {% endif %}
+
+
+                {% if rooms_data.floor%}
+                <li>
+                    <div class="property-detail-feature-list-item">
+                      <i class="fas fa-building"></i>
+                        <div>
+                            <h6>{{ rooms_data.floor}} floor</h6>
+                          
+                           
+                        </div>
+                    </div>
+                </li>
+
+                {% endif %}
+
+        
+         
+            </ul>
+        </div>
             <h4 class="title-2">Location</h4>
 
             
@@ -176,9 +263,9 @@
                   <button style="width: 100%;"  class="btn">Book</button>
                 </form>
 
-                <form action="">
-                  <button style="width: 100%;"  class="btn">Schedule Tour</button>
-                </form>
+                
+                  <a href="{{rooms_data.get_book_request}}" style="width: 100%;"  class="btn">Book Tour</a>
+              
               </div>
             </div>
   
@@ -361,25 +448,6 @@
 
 <script>
 
-    var map = L.map('map_building').setView([51.505, -0.09], 13);
-
-	var tiles = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-		maxZoom: 18,
-		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
-			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-		id: 'mapbox/streets-v11',
-		tileSize: 512,
-		zoomOffset: -1
-	}).addTo(map);
-
-    var smallIcon = new L.Icon({
-        iconSize: [27, 27],
-        iconAnchor: [13, 27],
-        popupAnchor:  [1, -24],
-        iconUrl: '{% static "images/mk.png" %}'
-    });
-
-
     
 </script>
 
@@ -387,32 +455,39 @@
 <script>
 
     $.ajax({
-        type: 'GET',
+        type: 'POST',
         url: "{% url 'homepage:get_all_data' %}",
+        data : {id:{{rooms_data.building.id}}},
         success: function (response) {
             // on successfull creating object
              // 1. clear the form.
-            var dataa = response.features
+            var dataa = response.geometry.coordinates
             console.log(dataa)
 
-            for (let j = 0; j < dataa.length; j++) {
-                var building = dataa[j];
-                console.log(building)
-               
-                    
-    
 
-                
-                
+          var map = L.map('map_building').setView(dataa, 5);
 
-                //card_container.append(element)
-              }
+          var tiles = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+            maxZoom: 18,
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+              'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            id: 'mapbox/streets-v11',
+            tileSize: 512,
+            zoomOffset: -1
+          }).addTo(map);
+        
+            var smallIcon = new L.Icon({
+                iconSize: [27, 27],
+                iconAnchor: [13, 27],
+                popupAnchor:  [1, -24],
+                iconUrl: '{% static "images/mk.png" %}'
+            });
 
-            
-            // display the newly friend to table.
-            // var instance = JSON.parse(response);
+            L.marker(dataa,{icon: smallIcon}).addTo(map).bindPopup(`<h3>ksh {{rooms_data.rent}}</h3>`)
+        
+  
 
-
+        
           
            
             
