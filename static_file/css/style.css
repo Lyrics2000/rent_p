@@ -411,8 +411,7 @@ header .icons #menu-bars {
   line-height: 2;
 }
 
-.fa-heart {
-  background: #fb4e2e;
+.shinning {
   /* Animating heart */
   -webkit-animation: pulse 1s linear infinite;
           animation: pulse 1s linear infinite;

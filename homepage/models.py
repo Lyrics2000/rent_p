@@ -105,6 +105,12 @@ class Room(BaseModel):
             'id': self.id
         })
 
+    def get_saved_rentals(self):
+        return reverse("homepage:saved_rentals", kwargs={
+            'id': self.id
+        })
+
+
     
 
 

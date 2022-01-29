@@ -1,5 +1,6 @@
 
 
+from unicodedata import name
 from django.urls import path
 from djgeojson.views import GeoJSONLayerView
 from .models import Building,Room
@@ -13,7 +14,8 @@ from .views import (
     room_detailed_page,
     request_booking,
     listing_listview,
-    book_request
+    book_request,
+    saved_room
 )
 
 app_name = "homepage"
@@ -28,7 +30,8 @@ urlpatterns = [
     path('room_detailed/<id>/',room_detailed_page,name="room_detailed"),
     path('booking_request/<room_id>/<agent_id>/<user_id>/',request_booking,name="request_booking"),
     path('listing_listview/',listing_listview,name="listing_listview"),
-    path('book_request/<id>/',book_request,name="book_request")
+    path('book_request/<id>/',book_request,name="book_request"),
+    path('saved_rentals/<id>/',saved_room,name="saved_rentals")
 
   
 ]

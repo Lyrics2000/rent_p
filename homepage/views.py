@@ -1,5 +1,6 @@
 from http.client import HTTPResponse
 import json
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from account.models import Agent
 from django.http import HttpResponse
@@ -218,4 +219,6 @@ def book_request(request,id):
     }
     return render(request,'book_request.html',context)
 
-
+@login_required(login_url="account:sign_in")
+def saved_room(request,id):
+    return render(request,'saved_room.html')
