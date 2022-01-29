@@ -5,6 +5,7 @@ from pyexpat import model
 import random
 import os
 from statistics import mode
+from urllib import request
 from django.shortcuts import reverse
 from account.models import User,Agent
 from location_field.models.plain import PlainLocationField
@@ -161,6 +162,17 @@ class BookTour(BaseModel):
 
     def __str__(self):
         return str(self.email)
+
+
+
+class SavedRooms(models.Model):
+    user =  models.ForeignKey(User,on_delete=models.CASCADE)
+    room = models.ForeignKey(Room,on_delete=models.CASCADE)
+    liked = models.BooleanField(default=False)
+
+
+    def __str__(self):
+        return str(self.user)
 
 
 
