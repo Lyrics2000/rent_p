@@ -21,7 +21,59 @@
             <div class="content">
                 <div class="price">
                     <h3>Ksh : {{r.rent}}/mo</h3>
-                    <div href="" class=""><a href="{{r.get_saved_rentals}}" style="color: #fb4e2e;background:#f7f7f7 ;" class="fas fa-heart"></a></div>
+                    <!-- <a href="{{r.get_saved_rentals}}" class="fas fa-heart shinning"></a> -->
+
+                    {% if saved_rentals %}
+
+                    {% for s in saved_rentals  %}
+
+                    {% if s.room.id == r.id %}
+
+                        {% if s.liked == True %}
+                            <a style="background: red;color: white;" href="#" class="fas fa-heart"></a>
+
+                        {% else %}
+                            <a href="{{r.get_saved_rentals}}" class="fas fa-heart shinning"></a>
+
+                        {% endif %}
+
+                    {% else %}
+
+                    <a href="{{r.get_saved_rentals}}" class="fas fa-heart shinning"></a>
+                   
+                    {% endif %}
+
+                 
+
+
+                    
+                    {% comment %} <a href="{{r.get_saved_rentals}}" class="fas fa-heart shinning"></a> {% endcomment %}
+                   
+                    
+                    {% endfor %}
+
+
+                    {% comment %} {% for s in saved_rentals  %}
+
+                    {% if s.room.id is not r.id %}
+                    <a href="{{r.get_saved_rentals}}" class="fas fa-heart shinning"></a>
+                    {% endif %}
+                    
+                    {% endfor %} {% endcomment %}
+
+                    {% comment %} <a href="{{r.get_saved_rentals}}" class="fas fa-heart shinning"></a> {% endcomment %}
+
+                    
+                    {% else %}
+<a href="{{r.get_saved_rentals}}" class="fas fa-heart shinning"></a>
+                   
+                    {% endif %}
+
+
+
+
+
+                    
                   
                 </div>
                 <div class="location">

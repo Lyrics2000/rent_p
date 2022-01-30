@@ -558,7 +558,7 @@ header .icons #menu-bars {
   margin-right: auto;
 }
 
-.featured .box-container .box .content .price div {
+.featured .box-container .box .content .price a {
   color: #666;
   font-size: 1.5rem;
   margin-right: .5rem;
@@ -574,12 +574,12 @@ header .icons #menu-bars {
   user-select: none;
 }
 
-.featured .box-container .box .content .price div:hover {
+.featured .box-container .box .content .price a:hover {
   background: #fb4e2e;
   color: #fff;
 }
 
-.featured .box-container .box .content .price div .popuptext {
+.featured .box-container .box .content .price a .popuptext {
   visibility: visible;
   width: 50rem;
   border: 0.1rem solid rgba(0, 0, 0, 0.1);
@@ -594,7 +594,7 @@ header .icons #menu-bars {
   left: 50%;
 }
 
-.featured .box-container .box .content .price div .show {
+.featured .box-container .box .content .price a .show {
   visibility: visible;
   -webkit-animation: fadeIn 1s;
   animation: fadeIn 1s;

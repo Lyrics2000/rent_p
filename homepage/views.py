@@ -2,7 +2,9 @@ from http.client import HTTPResponse
 import json
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from account.models import Agent
+from account.models import Agent, User
+from django.views.decorators.csrf import csrf_exempt
+
 from django.http import HttpResponse
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import Distance
@@ -14,12 +16,33 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .LOc import LocationQuery
-from .models import Building, BuildingMorePic, Room, RoomMorePic, SlidingImages,BookTour
-from .serializers import BuildingSerializer, RoomSerializer
+from .models import Building, BuildingMorePic, Room, RoomMorePic, SavedRooms, SlidingImages,BookTour
+from .serializers import BuildingSerializer, RoomSerializer, SavedRoomSerializers
 
 
 # Create your views here.
 def index(request):
+
+    if request.user.is_authenticated:
+            all_room =  Room.objects.filter(approved = True)
+            user_obj =  User.objects.get(id = request.user.id)
+            all_sliding =  SlidingImages.objects.first()
+            all_room_pic =  RoomMorePic.objects.all()
+            all_room_pic_count =  RoomMorePic.objects.count()
+            saved_rentals =  SavedRooms.objects.filter(user =  user_obj,liked=True)
+            # get current ip
+            
+            context = {
+                'rooms' :  all_room,
+                'sliding' :  all_sliding,
+                'all_room_pic_count' : all_room_pic_count,
+                'all_room_pic' : all_room_pic,
+                'saved_rentals':saved_rentals
+                
+            }
+            return render(request,'index.html',context)
+
+
     all_room =  Room.objects.filter(approved = True)
     all_sliding =  SlidingImages.objects.first()
     all_room_pic =  RoomMorePic.objects.all()
@@ -30,7 +53,8 @@ def index(request):
         'rooms' :  all_room,
         'sliding' :  all_sliding,
         'all_room_pic_count' : all_room_pic_count,
-        'all_room_pic' : all_room_pic
+        'all_room_pic' : all_room_pic,
+        'saved_rentals':None
         
     }
     return render(request,'index.html',context)
@@ -134,14 +158,47 @@ class FilterRoom(APIView):
 
 
 
+class FilterSavedRoom(APIView):
+
+    def post(self, request):
+        print("running post request...")
+        
+        max_price =  request.data['max'] 
+        user_id =  request.data['id']
+        min_price =  request.data['min']
+        beds =  request.data['beds']
+        print("min price :",min_price)
+        print("max price :",max_price)
+        print("beds : ",beds)
+        user_obj =  User.objects.get(id =  user_id)
+        print("user obj",user_obj)
+        if min_price != "Minimum Price" and max_price != "Maximum Price":
+            print("running 1")
+            all_roo =  SavedRooms.objects.filter(user= user_obj,room__rent__range = [float(min_price),float(max_price)],room__room_type = beds,liked = True)
+            serializer = SavedRoomSerializers(all_roo, many=True)
+            return Response(serializer.data)
+
+        elif min_price == "Minimum Price" and max_price != "Maximum Price":
+            print("running 2")
+            all_roo =  SavedRooms.objects.filter(user = user_obj,room__rent__lte = float(max_price) ,room__room_type = beds,liked = True)
+            serializer = SavedRoomSerializers(all_roo, many=True)
+            return Response(serializer.data)
+
+        
+        elif max_price == "Maximum Price" and min_price != "Minimum Price" :
+            print("running 4")
+            all_roo =  SavedRooms.objects.filter(user= user_obj,room__rent__gte = float(min_price) ,room__room_type = beds,liked = True)
+            serializer = SavedRoomSerializers(all_roo, many=True)
+            return Response(serializer.data)
+
+        elif max_price == "Maximum Price" and min_price == "Minimum Price":
+            print("running 5")
+            all_roo =  SavedRooms.objects.filter(user= user_obj,room__room_type = beds,liked=True)
+            serializer = SavedRoomSerializers(all_roo, many=True)
+            return Response(serializer.data)
 
 
-        # print("min price :",min_price)
-        # print("max price :",max_price)
-        # rooms = Room.objects.all()
-        # # the many param informs the serializer that it will be serializing more than a single article.
-        # serializer = RoomSerializer(rooms, many=True)
-        # return Response(serializer.data)
+
 
 
 
@@ -221,4 +278,34 @@ def book_request(request,id):
 
 @login_required(login_url="account:sign_in")
 def saved_room(request,id):
-    return render(request,'saved_room.html')
+    get_r = Room.objects.get(id = id)
+    user_obj =  User.objects.get(id =  request.user.id)
+    print(user_obj)
+    obj,created = SavedRooms.objects.get_or_create(room = get_r,user = user_obj)
+    obj.liked =  True
+    obj.save()
+    
+
+    all_saved_rooms = SavedRooms.objects.filter(user = user_obj,liked=True)
+    print("jjj",all_saved_rooms)
+
+    context = {
+        'saved_rooms':all_saved_rooms
+    }
+
+
+
+    
+    return render(request,'saved_room.html',context)
+
+@login_required(login_url="account:sign_in")
+def all_saved_rooms(request):
+    user_obj =  User.objects.get(id =  request.user.id)
+    all_saved_rooms = SavedRooms.objects.filter(user = user_obj,liked=True)
+    print("jjj",all_saved_rooms)
+
+    context = {
+        'saved_rooms':all_saved_rooms
+    }
+
+    return render(request,'all_saved_rooms.html',context)

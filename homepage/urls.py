@@ -15,7 +15,9 @@ from .views import (
     request_booking,
     listing_listview,
     book_request,
-    saved_room
+    saved_room,
+    FilterSavedRoom,
+    all_saved_rooms
 )
 
 app_name = "homepage"
@@ -31,7 +33,9 @@ urlpatterns = [
     path('booking_request/<room_id>/<agent_id>/<user_id>/',request_booking,name="request_booking"),
     path('listing_listview/',listing_listview,name="listing_listview"),
     path('book_request/<id>/',book_request,name="book_request"),
-    path('saved_rentals/<id>/',saved_room,name="saved_rentals")
+    path('saved_rentals/<id>/',saved_room,name="saved_rentals"),
+    path('filter_saved_rooms/',FilterSavedRoom.as_view(),name="filter_saved_rooms"),
+    path('all_saved_rooms/',all_saved_rooms,name="all_saved_rooms")
 
   
 ]

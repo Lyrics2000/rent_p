@@ -1,0 +1,9 @@
+POST http://127.0.0.1:8000/filter_saved_rooms/ 
+Content-Type: application/json
+
+{
+    "min":30000,
+    "max":40000,
+    "beds":"2 BEDROOM",
+    "id":1
+}

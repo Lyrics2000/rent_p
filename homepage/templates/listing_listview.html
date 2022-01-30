@@ -223,7 +223,7 @@
             $.ajax({
                 type: 'POST',
                 url: "{% url 'homepage:filtered_data' %}",
-                data: {max:min_p.value, min:sel.options[sel.selectedIndex].value,beds:bb.value},
+                data: {max:min_p.value, min:sel.options[sel.selectedIndex].value,beds:bb.value,'csrfmiddlewaretoken': '{{ csrf_token }}'},
                 success: function (response) {
                     console.log(response) ;
                     var card_containe  =  $('.real_listing')
@@ -389,7 +389,7 @@
             $.ajax({
                 type: 'POST',
                 url: "{% url 'homepage:filtered_data' %}",
-                data: {min:min_p.value, max:sel.options[sel.selectedIndex].value,beds:bb.value},
+                data: {min:min_p.value, max:sel.options[sel.selectedIndex].value,beds:bb.value,'csrfmiddlewaretoken': '{{ csrf_token }}'},
                 success: function (response) {
                     console.log("room response",response) ;
                     var card_containe  =  $('.real_listing')
@@ -557,7 +557,7 @@
             $.ajax({
                 type: 'POST',
                 url: "{% url 'homepage:filtered_data' %}",
-                data: {max:max_p.value, beds:sel.options[sel.selectedIndex].value,min:min_p.value},
+                data: {max:max_p.value, beds:sel.options[sel.selectedIndex].value,min:min_p.value,'csrfmiddlewaretoken': '{{ csrf_token }}'},
                 success: function (response) {
                     console.log(response) ;
                     var card_containe  =  $('.real_listing')
@@ -722,7 +722,7 @@
             $.ajax({
                 type: 'POST',
                 url: "{% url 'homepage:filtered_data' %}",
-                data: {max:max_p.value, beds:bb.value,min:min_p.value},
+                data: {max:max_p.value, beds:bb.value,min:min_p.value,'csrfmiddlewaretoken': '{{ csrf_token }}'},
                 success: function (response) {
                     console.log(response) ;
                     var card_containe  =  $('.real_listing')

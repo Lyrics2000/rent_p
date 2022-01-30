@@ -61,7 +61,7 @@
                 <ol class="droptwo">
                     {% if user.is_authenticated %}
                     <li>Profile</li>
-                    <li>Saved rentals</li>
+                    <li> <a href="{% url 'homepage:all_saved_rooms' %}">Saved rentals</a></li>
                     <li><hr></li>
                     <li>Applications</li>
                     <li>Payment</li>

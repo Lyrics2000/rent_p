@@ -457,7 +457,7 @@
     $.ajax({
         type: 'POST',
         url: "{% url 'homepage:get_all_data' %}",
-        data : {id:{{rooms_data.building.id}}},
+        data : {id:{{rooms_data.building.id}},'csrfmiddlewaretoken': '{{ csrf_token }}'},
         success: function (response) {
             // on successfull creating object
              // 1. clear the form.

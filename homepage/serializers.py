@@ -3,7 +3,8 @@ from rest_framework import serializers
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
 from .models import (
     Room,
-    Building
+    Building,
+    SavedRooms
 )
 
 class BuildingSerializer(GeoFeatureModelSerializer):
@@ -17,3 +18,9 @@ class RoomSerializer(serializers.ModelSerializer):
         model = Room
         depth = 1
         fields = '__all__'
+
+class SavedRoomSerializers(serializers.ModelSerializer):
+    room = RoomSerializer(read_only=True)
+    class Meta:
+        model = SavedRooms
+        fields = ['id','user','liked','room']
