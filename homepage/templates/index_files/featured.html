@@ -9,111 +9,124 @@
 
         {% if rooms %}
         {% for r in rooms  %}
+        {% if r.saved %}
+
         <div class="box">
             <div class="image-container">
-                <img src="{{r.room_picture.url}}" alt="">
-                <div class="info">
-                    <h3>3 days ago</h3>
-                    <h3>for rent</h3>
-                </div>
+                <img src="{{r.room.room_picture.url}}" alt="">
+                
                
             </div>
             <div class="content">
                 <div class="price">
-                    <h3>Ksh : {{r.rent}}/mo</h3>
+                    <h3>Ksh : {{r.room.rent}}/mo</h3>
                     <!-- <a href="{{r.get_saved_rentals}}" class="fas fa-heart shinning"></a> -->
-
-                    {% if saved_rentals %}
-
-                    {% for s in saved_rentals  %}
-
-                    {% if s.room.id == r.id %}
-
-                        {% if s.liked == True %}
-                            <a style="background: red;color: white;" href="#" class="fas fa-heart"></a>
-
-                        {% else %}
-                            <a href="{{r.get_saved_rentals}}" class="fas fa-heart shinning"></a>
-
-                        {% endif %}
-
-                    {% else %}
-
-                    <a href="{{r.get_saved_rentals}}" class="fas fa-heart shinning"></a>
-                   
-                    {% endif %}
-
-                 
-
-
-                    
-                    {% comment %} <a href="{{r.get_saved_rentals}}" class="fas fa-heart shinning"></a> {% endcomment %}
-                   
-                    
-                    {% endfor %}
-
-
-                    {% comment %} {% for s in saved_rentals  %}
-
-                    {% if s.room.id is not r.id %}
-                    <a href="{{r.get_saved_rentals}}" class="fas fa-heart shinning"></a>
-                    {% endif %}
-                    
-                    {% endfor %} {% endcomment %}
-
-                    {% comment %} <a href="{{r.get_saved_rentals}}" class="fas fa-heart shinning"></a> {% endcomment %}
-
-                    
-                    {% else %}
-<a href="{{r.get_saved_rentals}}" class="fas fa-heart shinning"></a>
-                   
-                    {% endif %}
-
-
-
-
-
-                    
-                  
+                    <a style="background: red;color: white;" href="{{r.room.get_unsaved_rentals}}" class="fas fa-heart"></a>
                 </div>
                 <div class="location">
-                    <h3>{{r.building.building_name}}({{r.room_name}})</h3>
-                    <p>{{r.building.location_name}}</p>
+                    <h3>{{r.room.building.building_name}}({{r.room.room_name}})</h3>
+                    <p>{{r.room.building.location_name}}</p>
                 </div>
                 <div class="details">
-                    {% if r.room_size %}
-                    <h3> <i class="fas fa-expand"></i> {{r.room_size}} sqft </h3>
+                    {% if r.room.room_size %}
+                    <h3> <i class="fas fa-expand"></i> {{r.room.room_size}} sqft </h3>
                     {% endif %}
-                    {% if r.room_type %}
+                    {% if r.room.room_type %}
 
-                    <h3> <i class="fas fa-bed"></i> {{r.room_type}} </h3>
+                    <h3> <i class="fas fa-bed"></i> {{r.room.room_type}} </h3>
                     {% endif %}
-                    {% if r.bathtab_np != 0 %}
-                    <h3> <i class="fas fa-bath"></i> {{ r.bathtab_np}} bathtab </h3>
+                    {% if r.room.bathtab_np != 0 %}
+                    <h3> <i class="fas fa-bath"></i> {{ r.room.bathtab_np}} bathtab </h3>
                     {% endif %}
-                    {% if r.balcony %}
+                    {% if r.room.balcony %}
                     <h3> <i class="fas fa-door-closed"></i>balcony </h3>
 
                     {% endif %}
 
-                    {% if r.building.tv_connection  %}
+                    {% if r.room.building.tv_connection  %}
                     
                     <h3> <i class="fas fa-tv"></i> tv connection </h3>
 
                     {% endif %}
 
-                    {% if r.building.security  %}
+                    {% if r.room.building.security  %}
                     
                     <h3> <i class="fas fa-key"></i> security </h3>
 
                     {% endif %}
                 </div>
                 <div class="buttons">
-                    <a href="{{r.get_book_request}}" class="btn">Book Tour</a>
-                    <a href="{{r.get_absolute_url}}" class="btn">view details</a>
+                    <a href="{{r.room.get_book_request}}" class="btn">Book Tour</a>
+                    <a href="{{r.room.get_absolute_url}}" class="btn">view details</a>
                 </div>
             </div>
         </div>
+
+
+        {% else %}
+        {% comment %}   <a href="{{r.get_saved_rentals}}" class="fas fa-heart shinning"></a>
+ {% endcomment %}
+
+
+            <div class="box">
+                <div class="image-container">
+                    <img src="{{r.room.room_picture.url}}" alt="">
+                    
+                
+                </div>
+                <div class="content">
+                    <div class="price">
+                        <h3>Ksh : {{r.room.rent}}/mo</h3>
+                        <!-- <a href="{{r.get_saved_rentals}}" class="fas fa-heart shinning"></a> -->
+                        <a href="{{r.room.get_saved_rentals}}" class="fas fa-heart shinning"></a>
+                    </div>
+                    <div class="location">
+                        <h3>{{r.room.building.building_name}}({{r.room.room_name}})</h3>
+                        <p>{{r.room.building.location_name}}</p>
+                    </div>
+                    <div class="details">
+                        {% if r.room.room_size %}
+                        <h3> <i class="fas fa-expand"></i> {{r.room.room_size}} sqft </h3>
+                        {% endif %}
+                        {% if r.room.room_type %}
+
+                        <h3> <i class="fas fa-bed"></i> {{r.room.room_type}} </h3>
+                        {% endif %}
+                        {% if r.room.bathtab_np != 0 %}
+                        <h3> <i class="fas fa-bath"></i> {{ r.room.bathtab_np}} bathtab </h3>
+                        {% endif %}
+                        {% if r.room.balcony %}
+                        <h3> <i class="fas fa-door-closed"></i>balcony </h3>
+
+                        {% endif %}
+
+                        {% if r.room.building.tv_connection  %}
+                        
+                        <h3> <i class="fas fa-tv"></i> tv connection </h3>
+
+                        {% endif %}
+
+                        {% if r.room.building.security  %}
+                        
+                        <h3> <i class="fas fa-key"></i> security </h3>
+
+                        {% endif %}
+                    </div>
+                    <div class="buttons">
+                        <a href="{{r.room.get_book_request}}" class="btn">Book Tour</a>
+                        <a href="{{r.room.get_absolute_url}}" class="btn">view details</a>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        
+        
+        
+        {% endif %}
+        
         {% endfor %}
         {% endif %}
 

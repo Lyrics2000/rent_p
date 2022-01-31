@@ -30,10 +30,49 @@ def index(request):
             all_room_pic =  RoomMorePic.objects.all()
             all_room_pic_count =  RoomMorePic.objects.count()
             saved_rentals =  SavedRooms.objects.filter(user =  user_obj,liked=True)
+            print(saved_rentals)
+            empty_list = []
+            if saved_rentals:
+               
+                for j in  all_room:
+                    try:
+                        sv = SavedRooms.objects.get(user =  user_obj,liked=True,room__id = j.id)
+                       
+                        dicti = {}
+                        dicti['room'] = j
+                        dicti['saved'] = True
+                        empty_list.append(dicti)
+                    except SavedRooms.DoesNotExist:
+                        dicti = {}
+                        dicti['room'] = j
+                        dicti['saved'] = False
+                        empty_list.append(dicti)
+
+
+
+                    
+
+
+                
+                            
+                       
+
+            else:
+                for i in  all_room:
+                        dicti = {}
+                        dicti['room'] = i
+                        dicti['saved'] = False
+                        empty_list.append(dicti)
+
+            print(empty_list)
+
+
+                    
+            
             # get current ip
             
             context = {
-                'rooms' :  all_room,
+                'rooms' :  empty_list,
                 'sliding' :  all_sliding,
                 'all_room_pic_count' : all_room_pic_count,
                 'all_room_pic' : all_room_pic,
@@ -48,9 +87,19 @@ def index(request):
     all_room_pic =  RoomMorePic.objects.all()
     all_room_pic_count =  RoomMorePic.objects.count()
     # get current ip
+    empty_list= []
+    for i in  all_room:
+                dicti = {}
+                dicti['room'] = i
+                dicti['saved'] = False
+                empty_list.append(dicti)
+
+    print(empty_list)
+
+
     
     context = {
-        'rooms' :  all_room,
+        'rooms' :  empty_list,
         'sliding' :  all_sliding,
         'all_room_pic_count' : all_room_pic_count,
         'all_room_pic' : all_room_pic,
@@ -309,3 +358,26 @@ def all_saved_rooms(request):
     }
 
     return render(request,'all_saved_rooms.html',context)
+
+
+@login_required(login_url="account:sign_in")
+def unsaved_room(request,id):
+    get_r = Room.objects.get(id = id)
+    user_obj =  User.objects.get(id =  request.user.id)
+    print(user_obj)
+    obj,created = SavedRooms.objects.get_or_create(room = get_r,user = user_obj)
+    obj.liked =  False
+    obj.save()
+    
+
+    all_saved_rooms = SavedRooms.objects.filter(user = user_obj,liked=True)
+    print("jjj",all_saved_rooms)
+
+    context = {
+        'saved_rooms':all_saved_rooms
+    }
+
+
+
+    
+    return render(request,'saved_room.html',context)
