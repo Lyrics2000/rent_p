@@ -291,11 +291,62 @@ def request_booking(request,room_id,agent_id,user_id):
 
 
 def listing_listview(request):
+
+    if request.user.is_authenticated:
+        user_obj =  User.objects.get(id =  request.user.id)
+        all_room = Room.objects.all()
+        saved_rentals =  SavedRooms.objects.filter(user =  user_obj,liked=True)
+        print(saved_rentals)
+        empty_list = []
+        if saved_rentals: 
+            for j in  all_room:
+                try:
+                    sv = SavedRooms.objects.get(user =  user_obj,liked=True,room__id = j.id)
+                    
+                    dicti = {}
+                    dicti['room'] = j
+                    dicti['saved'] = True
+                    empty_list.append(dicti)
+                except SavedRooms.DoesNotExist:
+                    dicti = {}
+                    dicti['room'] = j
+                    dicti['saved'] = False
+                    empty_list.append(dicti)
+
+
+        else:
+            for i in  all_room:
+                dicti = {}
+                dicti['room'] = i
+                dicti['saved'] = False
+                empty_list.append(dicti)
+
+        print("authenticated",empty_list)
+
+        context = {
+        'all_rooms':empty_list
+        }
+        return render(request,'listing_listview.html',context)
+
+
+
     all_rooms = Room.objects.all()
 
+    
+    empty_list = []
+    for i in  all_rooms:
+            dicti = {}
+            dicti['room'] = i
+            dicti['saved'] = False
+            empty_list.append(dicti)
+
+    print("not authenticated",empty_list)
+
     context = {
-        'all_rooms':all_rooms
+        'all_rooms':empty_list
     }
+
+
     return render(request,'listing_listview.html',context)
 
 

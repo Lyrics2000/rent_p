@@ -38,12 +38,14 @@
             <div class="real_listing">
                
                 {% if all_rooms %}
+                
                 {% for f in all_rooms %}
+                {% if f.saved %}
                 <div class="col-xl-6 col-sm-6 col-12">
                     <div class="ltn__product-item ltn__product-item-4 ltn__product-item-5 text-center---">
                         <div class="one">
                             <div class="product-img">
-                                <a href="product-details.html"><img src="{{f.room_picture.url}}" alt="#"></a>
+                                <a href="product-details.html"><img src="{{f.room.room_picture.url}}" alt="#"></a>
                                
                             </div>
 
@@ -54,41 +56,46 @@
                                 <div class="product-badge">
                                     <ul>
                                         <li class="sale-badg">For Rent</li>
-                                        <li class="sale-badg">Ksh {{f.rent}} <span>/month</span></li>
-                                    </ul>
-                                </div>
-                               
-                                <h2 class="product-title"><a href="product-details.html">{{f.building.building_name}} - {{f.room_name}}</a></h2>
-                                <div class="product-img-location">
-                                    <ul>
-                                        <li>
-                                            <a href=""><i class="fas fa-map-pin"></i>{{f.building.location_name}}</a>
+                                        <li class="sale-badg">Ksh {{f.room.rent}} <span>/month</span></li>
+                                        <li class="sale-badg">     <a style="background: red;color: white;" href="{{r.room.get_unsaved_rentals}}" class="fas fa-heart"></a>
+               
+               
                                         </li>
                                     </ul>
                                 </div>
+                               
+                                <h2 class="product-title"><a href="product-details.html">{{f.room.building.building_name}} - {{f.room.room_name}}</a></h2>
+                                <div class="product-img-location">
+                                    <ul>
+                                        <li>
+                                            <a href=""><i class="fas fa-map-pin"></i>{{f.room.building.location_name}}</a>
+                                        </li>
+                                        
+                                    </ul>
+                                </div>
                                 <div class="details">
-                                    {% if f.room_size %}
-                                    <h3> <i class="fas fa-expand"></i> {{f.room_size}} sqft </h3>
+                                    {% if f.room.room_size %}
+                                    <h3> <i class="fas fa-expand"></i> {{f.room.room_size}} sqft </h3>
                                     {% endif %}
                                     {% if f.room_type %}
                 
-                                    <h3> <i class="fas fa-bed"></i> {{f.room_type}} </h3>
+                                    <h3> <i class="fas fa-bed"></i> {{f.room.room_type}} </h3>
                                     {% endif %}
                                     {% if f.bathtab_np != 0 %}
-                                    <h3> <i class="fas fa-bath"></i> {{ f.bathtab_np}} bathtab </h3>
+                                    <h3> <i class="fas fa-bath"></i> {{ f.room.bathtab_np}} bathtab </h3>
                                     {% endif %}
-                                    {% if f.balcony %}
+                                    {% if f.room.balcony %}
                                     <h3> <i class="fas fa-door-closed"></i>balcony </h3>
                 
                                     {% endif %}
                 
-                                    {% if f.building.tv_connection  %}
+                                    {% if f.room.building.tv_connection  %}
                                     
                                     <h3> <i class="fas fa-tv"></i> tv connection </h3>
                 
                                     {% endif %}
                 
-                                    {% if f.building.security  %}
+                                    {% if f.room.building.security  %}
                                     
                                     <h3> <i class="fas fa-key"></i> security </h3>
                 
@@ -96,8 +103,8 @@
                                 </div>
 
                                 <div class="buttons">
-                                    <a href="{{f.get_book_request}}" class="btn">Book Tour</a>
-                                    <a href="{{f.get_absolute_url}}" class="btn">view details</a>
+                                    <a href="{{f.room.get_book_request}}" class="btn">Book Tour</a>
+                                    <a href="{{f.room.get_absolute_url}}" class="btn">view details</a>
                                 </div>
                                
                             </div>
@@ -105,7 +112,87 @@
                         </div>
                     </div>
                 </div>
+
+                {% else %}
+
+                <div class="col-xl-6 col-sm-6 col-12">
+                    <div class="ltn__product-item ltn__product-item-4 ltn__product-item-5 text-center---">
+                        <div class="one">
+                            <div class="product-img">
+                                <a href="product-details.html"><img src="{{f.room.room_picture.url}}" alt="#"></a>
+                               
+                            </div>
+
+                        </div>
+                        
+                        <div class="two">
+                            <div class="product-info">
+                                <div class="product-badge">
+                                    <ul>
+                                        <li class="sale-badg">For Rent</li>
+                                        <li class="sale-badg">Ksh {{f.room.rent}} <span>/month</span></li>
+                                        <li class="sale-badg">   <a  href="{{f.room.get_saved_rentals}}" class="fas fa-heart shinning"></a>
+               
+                                        </li>
+                                    </ul>
+                                </div>
+                               
+                                <h2 class="product-title"><a href="product-details.html">{{f.room.building.building_name}} - {{f.room.room_name}}</a></h2>
+                                <div class="product-img-location">
+                                    <ul>
+                                        <li>
+                                            <a href=""><i class="fas fa-map-pin"></i>{{f.room.building.location_name}}</a>
+                                        </li>
+                                        
+                                    </ul>
+                                </div>
+                                <div class="details">
+                                    {% if f.room.room_size %}
+                                    <h3> <i class="fas fa-expand"></i> {{f.room.room_size}} sqft </h3>
+                                    {% endif %}
+                                    {% if f.room_type %}
+                
+                                    <h3> <i class="fas fa-bed"></i> {{f.room.room_type}} </h3>
+                                    {% endif %}
+                                    {% if f.bathtab_np != 0 %}
+                                    <h3> <i class="fas fa-bath"></i> {{ f.room.bathtab_np}} bathtab </h3>
+                                    {% endif %}
+                                    {% if f.room.balcony %}
+                                    <h3> <i class="fas fa-door-closed"></i>balcony </h3>
+                
+                                    {% endif %}
+                
+                                    {% if f.room.building.tv_connection  %}
+                                    
+                                    <h3> <i class="fas fa-tv"></i> tv connection </h3>
+                
+                                    {% endif %}
+                
+                                    {% if f.room.building.security  %}
+                                    
+                                    <h3> <i class="fas fa-key"></i> security </h3>
+                
+                                    {% endif %}
+                                </div>
+
+                                <div class="buttons">
+                                    <a href="{{f.room.get_book_request}}" class="btn">Book Tour</a>
+                                    <a href="{{f.room.get_absolute_url}}" class="btn">view details</a>
+                                </div>
+                               
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+
+
+
+                {% endif %}
+
                 {% endfor %}
+                
+
                 {% endif %}
 
           
