@@ -401,6 +401,7 @@ def saved_room(request,id):
 @login_required(login_url="account:sign_in")
 def all_saved_rooms(request):
     user_obj =  User.objects.get(id =  request.user.id)
+    
     all_saved_rooms = SavedRooms.objects.filter(user = user_obj,liked=True)
     print("jjj",all_saved_rooms)
 
