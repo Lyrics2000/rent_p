@@ -1,5 +1,7 @@
 from http.client import HTTPResponse
 import json
+from threading import Thread
+
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from account.models import Agent, User
@@ -15,10 +17,15 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from homepage.common.SendEmailThread import SendEmailThread
+
+from homepage.common.sendsms import sendSms
 
 from .LOc import LocationQuery
 from .models import Building, BuildingMorePic, Room, RoomMorePic, SavedRooms, SlidingImages,BookTour
 from .serializers import BuildingSerializer, RoomSerializer, SavedRoomSerializers
+
+
 
 
 # Create your views here.
@@ -355,6 +362,12 @@ def book_request(request,id):
 
 
         )
+        print(phone)
+        message = f"Hello,thanks for scheduling a tour with us for  room {roo.room_name},in {roo.building.location_name}, on {time} and date {date}"
+        sendSms(phone,message).send_sms()
+        SendEmailThread(email=email.lower(),message=message,subject="Room Booking").start()
+
+       
 
         return JsonResponse({"success":"ok"})
 
@@ -389,9 +402,6 @@ def saved_room(request,id):
 
     }
 
-
-
-    
     return render(request,'saved_room.html',context)
 
 @login_required(login_url="account:sign_in")

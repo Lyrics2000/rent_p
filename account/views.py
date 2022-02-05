@@ -1,4 +1,6 @@
 from django.shortcuts import redirect, render
+
+from homepage.common.SendEmailThread import SendEmailThread
 from .forms import SignINForm,SignUpForm
 from django.contrib.auth import authenticate,login
 # from django.contrib.auth.models import User
@@ -62,9 +64,10 @@ def signup(request):
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': account_activation_token.make_token(user),
                 })
-                to_email = email
-                email = EmailMessage(email_subject, message, to=[to_email])
-                email.send()
+                
+                
+                SendEmailThread(email=email.lower(),message=message,subject=email_subject).start()
+
                 return render(request,'send_email_user.html')
                 # userr = authenticate(request,username = email, password = password )
                 # if userr is not None:

@@ -188,3 +188,10 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'thomasambetsa@gmail.com'
 EMAIL_HOST_PASSWORD = 'wojjleviqxakkazs'
 EMAIL_PORT = 587
+
+
+
+
+
+VASPRO_API  = "276065df7d176a284acc036600d232b1"
+
