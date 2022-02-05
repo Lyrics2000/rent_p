@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from account.models import Agent, User
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Min,Max
 
 from django.http import HttpResponse
 from django.contrib.gis.geos import Point
@@ -180,30 +181,13 @@ class FilterRoom(APIView):
         print("min price :",min_price)
         print("max price :",max_price)
         print("beds : ",beds)
-        if min_price != "Minimum Price" and max_price != "Maximum Price":
-            print("running 1")
-            all_roo =  Room.objects.filter(rent__range = [float(min_price),float(max_price)],room_type = beds)
-            serializer = RoomSerializer(all_roo, many=True)
-            return Response(serializer.data)
-
-        elif min_price == "Minimum Price" and max_price != "Maximum Price":
-            print("running 2")
-            all_roo =  Room.objects.filter(rent__lte = float(max_price) ,room_type = beds)
-            serializer = RoomSerializer(all_roo, many=True)
-            return Response(serializer.data)
-
         
-        elif max_price == "Maximum Price" and min_price != "Minimum Price" :
-            print("running 4")
-            all_roo =  Room.objects.filter(rent__gte = float(min_price) ,room_type = beds)
-            serializer = RoomSerializer(all_roo, many=True)
-            return Response(serializer.data)
+        print("running 1")
+        all_roo =  Room.objects.filter(rent__range = [float(min_price),float(max_price)],room_type = beds)
+        serializer = RoomSerializer(all_roo, many=True)
+        return Response(serializer.data)
 
-        elif max_price == "Maximum Price" and min_price == "Minimum Price":
-            print("running 5")
-            all_roo =  Room.objects.filter(room_type = beds)
-            serializer = RoomSerializer(all_roo, many=True)
-            return Response(serializer.data)
+
 
 
 
@@ -221,32 +205,21 @@ class FilterSavedRoom(APIView):
         print("beds : ",beds)
         user_obj =  User.objects.get(id =  user_id)
         print("user obj",user_obj)
-        if min_price != "Minimum Price" and max_price != "Maximum Price":
-            print("running 1")
+        if user_obj:
+        
+            print("signed in 1")
+            all_roo =  SavedRooms.objects.filter(user= user_obj,room__rent__range = [float(min_price),float(max_price)],room__room_type = beds,liked = True)
+            serializer = SavedRoomSerializers(all_roo, many=True)
+            return Response(serializer.data)
+        else:
+            print("not signed in 1")
             all_roo =  SavedRooms.objects.filter(user= user_obj,room__rent__range = [float(min_price),float(max_price)],room__room_type = beds,liked = True)
             serializer = SavedRoomSerializers(all_roo, many=True)
             return Response(serializer.data)
 
-        elif min_price == "Minimum Price" and max_price != "Maximum Price":
-            print("running 2")
-            all_roo =  SavedRooms.objects.filter(user = user_obj,room__rent__lte = float(max_price) ,room__room_type = beds,liked = True)
-            serializer = SavedRoomSerializers(all_roo, many=True)
-            return Response(serializer.data)
 
-        
-        elif max_price == "Maximum Price" and min_price != "Minimum Price" :
-            print("running 4")
-            all_roo =  SavedRooms.objects.filter(user= user_obj,room__rent__gte = float(min_price) ,room__room_type = beds,liked = True)
-            serializer = SavedRoomSerializers(all_roo, many=True)
-            return Response(serializer.data)
-
-        elif max_price == "Maximum Price" and min_price == "Minimum Price":
-            print("running 5")
-            all_roo =  SavedRooms.objects.filter(user= user_obj,room__room_type = beds,liked=True)
-            serializer = SavedRoomSerializers(all_roo, many=True)
-            return Response(serializer.data)
-
-
+     
+     
 
 
 
@@ -295,6 +268,7 @@ def listing_listview(request):
     if request.user.is_authenticated:
         user_obj =  User.objects.get(id =  request.user.id)
         all_room = Room.objects.all()
+        
         saved_rentals =  SavedRooms.objects.filter(user =  user_obj,liked=True)
         print(saved_rentals)
         empty_list = []
@@ -323,8 +297,16 @@ def listing_listview(request):
 
         print("authenticated",empty_list)
 
+        
+        all_rooms = Room.objects.all()
+        min_rent = Room.objects.filter().annotate(Min('rent')).order_by('rent')[0]
+        subtract = len(all_rooms) - 1
+        max_rent = Room.objects.filter().annotate(Max('rent')).order_by('rent')[subtract]
+        print(min_rent.rent,max_rent.rent)
         context = {
-        'all_rooms':empty_list
+        'all_rooms':empty_list,
+         'min_rent' : min_rent.rent,
+        'max_rent' : max_rent.rent
         }
         return render(request,'listing_listview.html',context)
 
@@ -332,7 +314,10 @@ def listing_listview(request):
 
     all_rooms = Room.objects.all()
 
-    
+    min_rent = Room.objects.filter().annotate(Min('rent')).order_by('rent')[0]
+    subtract = len(all_rooms) - 1
+    max_rent = Room.objects.filter().annotate(Max('rent')).order_by('rent')[subtract]
+    print(min_rent.rent,max_rent.rent)
     empty_list = []
     for i in  all_rooms:
             dicti = {}
@@ -343,7 +328,10 @@ def listing_listview(request):
     print("not authenticated",empty_list)
 
     context = {
-        'all_rooms':empty_list
+        'all_rooms':empty_list,
+        'min_rent' : min_rent.rent,
+        'max_rent' : max_rent.rent
+
     }
 
 
@@ -388,9 +376,17 @@ def saved_room(request,id):
 
     all_saved_rooms = SavedRooms.objects.filter(user = user_obj,liked=True)
     print("jjj",all_saved_rooms)
+    all_rooms = Room.objects.all()
+    min_rent = Room.objects.filter().annotate(Min('rent')).order_by('rent')[0]
+    subtract = len(all_rooms) - 1
+    max_rent = Room.objects.filter().annotate(Max('rent')).order_by('rent')[subtract]
+    print(min_rent.rent,max_rent.rent)
 
     context = {
-        'saved_rooms':all_saved_rooms
+        'saved_rooms':all_saved_rooms,
+        'min_rent':min_rent.rent,
+        'max_rent':max_rent.rent
+
     }
 
 
@@ -401,12 +397,20 @@ def saved_room(request,id):
 @login_required(login_url="account:sign_in")
 def all_saved_rooms(request):
     user_obj =  User.objects.get(id =  request.user.id)
-    
+    all_rooms = Room.objects.all()
     all_saved_rooms = SavedRooms.objects.filter(user = user_obj,liked=True)
+    min_rent = Room.objects.filter().annotate(Min('rent')).order_by('rent')[0]
+    subtract = len(all_rooms) - 1
+    max_rent = Room.objects.filter().annotate(Max('rent')).order_by('rent')[subtract]
     print("jjj",all_saved_rooms)
+    print(max_rent)
 
     context = {
-        'saved_rooms':all_saved_rooms
+        'saved_rooms':all_saved_rooms,
+        'min_rent':min_rent.rent,
+        'max_rent':max_rent.rent
+        
+
     }
 
     return render(request,'all_saved_rooms.html',context)
