@@ -14,12 +14,12 @@ priceInput.forEach(input =>{
                 
 
                 range.style.left = ((minPrice / rangeInput[0].max) * 100) + "%";
-                min_max(rangeInput[0].value,rangeInput[1].value)
+                min_max_all_saved(rangeInput[0].value,rangeInput[1].value)
             }else{
                 rangeInput[1].value = maxPrice;
             
                 range.style.right = 100 - (maxPrice / rangeInput[1].max) * 100 + "%";
-                min_max(rangeInput[0].value,rangeInput[1].value)
+                min_max_all_saved(rangeInput[0].value,rangeInput[1].value)
             }
         }
     });
@@ -33,17 +33,17 @@ rangeInput.forEach(input =>{
         if((maxVal - minVal) < priceGap){
             if(e.target.className === "range-min"){
                 rangeInput[0].value = maxVal - priceGap
-                min_max(rangeInput[0].value,rangeInput[1].value)
+                min_max_all_saved(rangeInput[0].value,rangeInput[1].value)
             }else{
                 rangeInput[1].value = minVal + priceGap;
-                min_max(rangeInput[0].value,rangeInput[1].value)
+                min_max_all_saved(rangeInput[0].value,rangeInput[1].value)
             }
         }else{
             priceInput[0].value = minVal;
             priceInput[1].value = maxVal;
             range.style.left = ((minVal / rangeInput[0].max) * 100) + "%";
             range.style.right = 100 - (maxVal / rangeInput[1].max) * 100 + "%";
-            min_max(rangeInput[0].value,rangeInput[1].value)
+            min_max_all_saved(rangeInput[0].value,rangeInput[1].value)
         }
     });
 });

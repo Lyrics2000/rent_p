@@ -1344,6 +1344,28 @@ header .icons #menu-bars {
   font-weight: 500;
 }
 
+.ltn__shop-details-area .row .bigger-column .details {
+  padding: .5rem 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.ltn__shop-details-area .row .bigger-column .details h3 {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  padding: 1rem;
+  border: 0.1rem solid rgba(0, 0, 0, 0.1);
+  color: #999;
+  font-size: 1.3rem;
+}
+
+.ltn__shop-details-area .row .bigger-column .details h3 i {
+  color: #fb4e2e;
+  padding-left: .5rem;
+}
+
 .ltn__shop-details-area .row .smaller-col {
   width: 30rem;
 }

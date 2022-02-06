@@ -150,85 +150,33 @@
 
             <h4 class="title-2">Room Features</h4>
 
-          <div class="property-detail-feature-list clearfix mb-45">                            
-            <ul>
-              {% if rooms_data.balcony%}
-                <li>
-                    <div class="property-detail-feature-list-item">
-                        <i class="fas fa-door-closed"></i>
-                        <div>
-                            <h6>Balcony</h6>
-                          
-                           
-                        </div>
-                    </div>
-                </li>
+          <div class="property-detail-feature-list clearfix mb-45"> 
+            
+            <div class="details">
+              {% if rooms_data.room_size %}
+              <h3> <i class="fas fa-expand"></i> {{rooms_data.room_size}} sqft </h3>
+              {% endif %}
+              {% if rooms_data.room_type %}
 
-                {% endif %}
+              <h3> <i class="fas fa-bed"></i> {{rooms_data.room_type}} </h3>
+              {% endif %}
+              {% if rooms_data.bathtab_np != 0 %}
+              <h3> <i class="fas fa-bath"></i> {{ rooms_data.bathtab_np}} bathtab </h3>
+              {% endif %}
+              {% if rooms_data.balcony %}
+              <h3> <i class="fas fa-door-closed"></i>balcony </h3>
 
-                {% if rooms_data.bathtab_np != 0%}
-                <li>
-                    <div class="property-detail-feature-list-item">
-                        <i class="fas fa-bath"></i>
-                        <div>
-                            <h6>{{ rooms_data.bathtab_np}} bathtab</h6>
-                          
-                           
-                        </div>
-                    </div>
-                </li>
+              {% endif %}
 
-                {% endif %}
+              {% if rooms_data.floor %}
+              
+              <h3> <i class="fas fa-building"></i> {{rooms_data.floor}} floor </h3>
 
-               
+              {% endif %}
+
+              
+          </div>
            
-                {% if rooms_data.room_type %}
-                <li>
-                    <div class="property-detail-feature-list-item">
-                        <i class="fas fa-bed"></i>
-                        <div>
-                            <h6>{{rooms_data.room_type}}</h6>
-                          
-                           
-                        </div>
-                    </div>
-                </li>
-
-                {% endif %}
-
-
-                {% if rooms_data.room_size %}
-                <li>
-                    <div class="property-detail-feature-list-item">
-                        <i class="fas fa-expand"></i>
-                        <div>
-                            <h6>{{rooms_data.room_size}} sqft</h6>
-                          
-                           
-                        </div>
-                    </div>
-                </li>
-
-                {% endif %}
-
-
-                {% if rooms_data.floor%}
-                <li>
-                    <div class="property-detail-feature-list-item">
-                      <i class="fas fa-building"></i>
-                        <div>
-                            <h6>{{ rooms_data.floor}} floor</h6>
-                          
-                           
-                        </div>
-                    </div>
-                </li>
-
-                {% endif %}
-
-        
-         
-            </ul>
         </div>
             <h4 class="title-2">Location</h4>
 
