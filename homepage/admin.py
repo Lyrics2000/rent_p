@@ -9,7 +9,8 @@ from .models import (
     BuildingMorePic,
     SlidingImages,
     BookTour,
-    SavedRooms
+    SavedRooms,
+    BookingRequest
 )
 # Register your models here.
 
@@ -28,3 +29,4 @@ admin.site.register(BuildingMorePic)
 admin.site.register(SlidingImages)
 admin.site.register(BookTour)
 admin.site.register(SavedRooms)
+admin.site.register(BookingRequest)

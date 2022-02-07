@@ -105,6 +105,13 @@ class Room(BaseModel):
             'id': self.id
         })
 
+        # book_room_payment
+
+    def get_book_payment(self):
+        return reverse("homepage:book_room_payment", kwargs={
+            'id': self.id
+        })
+
     def get_saved_rentals(self):
         return reverse("homepage:saved_rentals", kwargs={
             'id': self.id
@@ -186,6 +193,16 @@ class SavedRooms(models.Model):
         return str(self.user)
 
 
+class BookingRequest(BaseModel):
+    user = models.ForeignKey(User,on_delete=models.CASCADE,blank=True,null=True)
+    room = models.ForeignKey(Room,on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    email = models.EmailField()
+    contact_phone = models.CharField(max_length=255)
+    paid = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
 
 
 

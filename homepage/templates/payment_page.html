@@ -1,0 +1,140 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rentobay</title>
+    <link rel="stylesheet" href="{% static  'css/style.css' %}">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+</head>
+
+<body class="payment_body">
+    <div class="wrapper">
+        <h2>Booking Form</h2>
+        <form id="payment_form_form" method="post">
+            <!--Account Information Start-->
+            <h4>Account</h4>
+            <div class="input_group">
+                <div class="input_box">
+                    <input type="text" name="full_name" placeholder="Full Name" required class="name">
+                    <i class="fa fa-user icon"></i>
+                </div>
+                <div class="input_box">
+                    <input type="number" name="id_number" placeholder="Id Number" required class="name">
+                    <i class="fa fa-user icon"></i>
+                </div>
+            </div>
+            <div class="input_group">
+                <div class="input_box">
+                    <input style="text-transform: lowercase;" type="email" name="emai_address" placeholder="Email Address" required class="name">
+                    <i class="fa fa-envelope icon"></i>
+                </div>
+            </div>
+            <div class="input_group">
+                <div class="input_box">
+                    <input type="tel" name="contact_number" placeholder="Contact Phone Number" required class="name">
+                    <i class="fa fa-phone icon" aria-hidden="true"></i>
+                </div>
+            </div>
+           
+            <!--Account Information End-->
+
+            <!--Payment Details Start-->
+            <div class="input_group">
+                <div class="input_box">
+                    <h4>Payment Option</h4>
+                    <input onclick="check_which()" type="radio" name="pay" class="radio" id="bc1" checked>
+                    <label for="bc1"><span>
+                            Credit Card</span></label>
+                    <input onclick="check_which()" type="radio" name="pay" class="radio" id="bc2">
+                    <label for="bc2"><span >
+                            Mpesa</span></label>
+                </div>
+            </div>
+
+            
+            <input type="hidden" name="room_number" value = "{{specific_room.id}}">
+            <div id="payment_collection">
+                <div class="input_group">
+                    <div class="input_box">
+                        <input type="tel" name="card_number" class="name" placeholder="Card Number 1111-2222-3333-4444" required>
+                        <i class="fa fa-credit-card icon"></i>
+                    </div>
+                </div>
+                <div class="input_group">
+                    <div class="input_box">
+                        <input type="tel" name="card_cvc" class="name" placeholder="Card CVC 632" required>
+                        <i class="fa fa-user icon"></i>
+                    </div>
+                </div>
+                <div class="input_group">
+                    <div class="input_box">
+                        <div class="input_box">
+                            <input type="number" name="expire_month" placeholder="Exp Month" required class="name">
+                            <i class="fa fa-calendar icon" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                    <div class="input_box">
+                        <input type="number" name="expire_year" placeholder="Exp Year" required class="name">
+                        <i class="fa fa-calendar-o icon" aria-hidden="true"></i>
+                    </div>
+                </div>
+                
+            </div>
+            <!--Payment Details End-->
+            <div id="animation_holder" class="animation_holder">
+                
+            </div>
+            <div class="input_group">
+                <div id="submit_btn" class="input_box">
+                    <button  type="submit">PAY NOW</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="{% static './js/payment_option.js' %}"></script>
+
+   <script>
+       function pay_with_mpesa(dicti){
+           console.log(dicti)
+
+               
+           var id_user = {{request.user.id}}
+
+           $.ajax({
+                type: 'POST',
+                url: "{% url 'payment:lipa_online_mpesa' %}",
+                data: {'user_id':id_user,'payment':`${JSON.stringify(dicti)}`,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success: function (response) {
+                    console.log(response) ;
+                    window.location.replace("{% url 'homepage:payment_waiting' %}"); 
+                  
+                },
+                error: function (response) {
+                    // alert the error if any error occured
+                    console.log(response["responseJSON"]["error"]);
+                    const animation_holder  =  $('#animation_holder')
+                    animation_holder.empty()
+
+                    const btn = $('#submit_btn')
+                    btn.empty();
+
+                    const v = `<button  type="submit">PAY NOW</button>`;
+                    btn.append(v);
+                }
+            })
+        
+       }
+   </script>
+</body>
+
+</html>
+        

@@ -1,0 +1,199 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, shrink-to-fit=9">
+		<meta name="description" content="Gambolthemes">
+		<meta name="author" content="Gambolthemes">		
+		<title>Twala Fish </title>
+		
+		<!-- Favicon Icon -->
+		<link rel="icon" type="image/png" href="{% static 'images\bg_sin.png' %}">
+		
+		<!-- Stylesheets -->
+		<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+		<link href='vendor\unicons-2.0.1\css\unicons.css' rel='stylesheet'>
+		<link href="{% static 'css\style.css' %}" rel="stylesheet">
+		<link href="{% static 'css\responsive.css' %}" rel="stylesheet">
+		<link href="{% static 'css\night-mode.css' %}" rel="stylesheet">
+		<link href="{% static 'css\step-wizard.css' %}" rel="stylesheet">
+		
+		<!-- Vendor Stylesheets -->
+		<link href="{% static 'vendor\fontawesome-free\css\all.min.css' %}" rel="stylesheet">
+		<link href="{% static 'vendor\OwlCarousel\assets\owl.carousel.css' %}" rel="stylesheet">
+		<link href="{% static 'vendor\OwlCarousel\assets\owl.theme.default.min.css' %}" rel="stylesheet">
+		<link href="{% static 'vendor\bootstrap\css\bootstrap.min.css' %}" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="{% static 'vendor\semantic\semantic.min.css' %}">	
+		
+	</head>
+
+<body>
+	<!-- Header Start -->
+	<header class="header clearfix">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="top-header-group">
+						<div class="top-header">
+							<div class="res_main_logo">
+								<a href="/"><img src="{% static 'images\bg.jpeg' %}" alt=""></a>
+							</div>
+							<div class="main_logo" id="logo">
+                
+								<a href="/"><img src="{% static 'images\P_ight.jpg' %}" alt=""></a>
+								<a href="/"><img class="logo-inverse" src="{% static 'images\P_dark.jpg' %}" alt=""></a>
+						   
+							</div>
+							<div class="header_right">
+								<a href="#" class="report-btn hover-btn">Thank You</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+	<!-- Header End -->
+	<!-- Body Start -->
+	
+		
+	<div class="bill-dt-bg">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-lg-8">
+					<div class="bill-detail">
+						<div class="bill-dt-step">
+							<!-- messages -->
+							{% if messages %}
+							{% for message in messages %}
+							<div class="alert alert-danger" role="alert">
+								{{ message }}
+							  </div>
+							  {% endfor %}
+							{% endif %}
+							<!-- end messages -->
+							<div class="bill-title">
+								<h4>Items</h4>
+							
+							</div>
+							<div class="bill-descp">
+                                <div class="itm-ttl">{{cart_items}} items</div>
+                                {% if cart.products %}
+                                {% for p in cart.products.all %}
+                                <span class="item-prdct">{{p.product_title }} 1kg</span>
+                                {% endfor %}
+                                {% endif %}
+							
+							</div>
+                        </div>
+                        <div class="bill-dt-step">
+							<div class="bill-title">
+								<h4>Delivery Address</h4>
+							</div>
+							<div class="bill-descp">
+								<div class="itm-ttl"></div>
+								<p class="bill-address">{{object.delivery_address.name}},{{object.delivery_address.phone}},{{object.delivery_address.email}}</p>
+							</div>
+						</div>
+						<div class="bill-dt-step">
+							<div class="bill-title">
+								<h4>Order Details</h4>
+							</div>
+							<div class="bill-descp">
+								
+								<p class="bill-dt-sl">Order ID - <span class="descp-bll-dt">{{object.order_id}}</span></p>
+								<p class="bill-dt-sl">Items - <span class="descp-bll-dt">{{cart_items}}</span></p>
+								<p class="bill-dt-sl">Timing - <span class="descp-bll-dt">{{delivery_time.date}}</span></p>
+							</div>
+						</div>
+						<div class="bill-dt-step">
+							<div class="bill-title">
+								<h4>Payment</h4>
+							</div>
+							<div class="bill-descp">
+								<div class="total-checkout-group p-0 border-top-0">
+									<div class="cart-total-dil">
+										<h4>Subtotal</h4>
+										<span>Ksh : {{object.cart.total }}</span>
+									</div>
+									<div class="cart-total-dil pt-3">
+										<h4>Delivery Charges</h4>
+										<span>Ksh : {{object.shipping_total }}</span>
+									</div>
+								</div>
+								<div class="main-total-cart pl-0 pr-0 pb-0 border-bottom-0">
+									<h2>Total</h2>
+									<span>Ksh : {{object.total }}</span>
+								</div>
+							</div>
+						</div>
+						
+						<div class="bill-dt-step">
+							<div class="bill-title">
+								<h4>Payment Option</h4>
+							</div>
+							<div class="bill-descp">
+								<p class="bill-dt-sl"><span class="dlr-ttl25 mr-1"><i class="uil uil-check-circle"></i></span>Cash on Delivery</p>
+							</div>
+						</div>
+						<form method="POST">
+							{% csrf_token %}
+
+						<div class="bill-dt-step">
+							<div class="bill-title">
+								<h4>Enter Cash At Hand*</h4>
+							</div>
+							<div class="bill-descp">
+								
+									<input  type = "number" style = " color:#000000;width:100%;font-size:16px;border: 2px solid red;padding:10px"   placeholder = "Cash At Hand" , name = "cash_at_hand" >
+							
+							</div>
+						</div>
+						<div class="bill-dt-step">
+							
+							{% comment %} <div class="bill-title">
+								<h4>Enter Cash At Hand*</h4>
+							</div>
+							<div class="bill-descp">
+								{{cash_at_hand.cash_at_hand}}
+							</div> {% endcomment %}
+							
+
+							<div class="bill-bottom">
+								<div class="thnk-ordr">Continue with Order</div>
+								
+								
+								
+								
+								<button class="print-btn hover-btn" type="submit" >{{delivery_method}}</button>
+							</form>
+							</div>
+					
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Body End -->
+	
+	<!-- Javascripts -->
+	<script src="{ static 'js\jquery-3.3.1.min.js' %}"></script>
+	<script src="{% static 'vendor\bootstrap\js\bootstrap.bundle.min.js' %}"></script>
+	<script src="{% static 'vendor\OwlCarousel\owl.carousel.js' %}"></script>
+	<script src="{% static 'vendor\semantic\semantic.min.js' %}"></script>
+	<script src="{% static 'js\jquery.countdown.min.js' %}"></script>
+	<script src="{% static 'js\custom.js' %}"></script>
+	<script src="{% static 'js\product.thumbnail.slider.js' %}"></script>
+	<script src="{% static 'js\offset_overlay.js' %}"></script>
+	<script src="{% static 'js\night-mode.js' %}"></script>
+	<script>
+		document.getElementById("form_control_lgn_input")
+	</script>
+	
+	
+</body>
+</html>

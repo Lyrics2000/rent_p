@@ -447,3 +447,21 @@ def unsaved_room(request,id):
 
     
     return render(request,'saved_room.html',context)
+
+
+
+@login_required(login_url="account:sign_in")
+def book_room_payment(request,id):
+
+    specific_room =  Room.objects.get(id =  id)
+
+    context = {
+        'specific_room':specific_room
+    }
+    
+    return render(request,'payment_page.html',context)
+
+
+@login_required(login_url="account:sign_in")
+def payment_waiting(request):
+    return render(request,'payment_waiting.html')

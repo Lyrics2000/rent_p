@@ -41,7 +41,7 @@
 <section class="image-container">
     <div class="container">
         <div class="mySlides">
-          <div class="numbertext">1 / 6</div>
+          <div class="numbertext"></div>
           <img src="{{rooms_data.room_picture.url}}" style="width:100%">
         </div>
       
@@ -49,7 +49,7 @@
         {% for b in other_images %}
 
         <div class="mySlides">
-          <div class="numbertext">1 / 6</div>
+          <div class="numbertext"></div>
           <img src="{{b.image.url}}" style="width:100%">
         </div>
         {% endfor %}
@@ -207,9 +207,9 @@
 
             <div class="widget">
               <div class="text-center">
-                <form action="">
-                  <button style="width: 100%;"  class="btn">Book</button>
-                </form>
+                
+                  <a href="{{rooms_data.get_book_payment}}" style="width: 100%;"  class="btn">Book</a>
+                
 
                 
                   <a href="{{rooms_data.get_book_request}}" style="width: 100%;"  class="btn">Book Tour</a>

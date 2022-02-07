@@ -10,6 +10,7 @@ urlpatterns = [
     path('auth/',include('account.urls',namespace="account")),
     path('',include('homepage.urls',namespace="homepage")),
     path('social-auth/', include('social_django.urls', namespace="social")),
+    path('payments/',include('payment.urls',namespace="payment"))
 ]
 
 if settings.DEBUG:

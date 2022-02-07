@@ -1,0 +1,26 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rentobay</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    <div class="waiting_container">
+        <div class="in_wait">
+            <img src="{% static './images/background.png' %}" alt="">
+        <h1>Thank You for booking with us</h1>
+        <p>WE have sent you push notification which will be used for payment,
+            if you have not received it please contact us <a href="">Rentobay</a>
+        </p>
+        <a style="margin-bottom:20px;" href="{% url 'homepage:homepage' %}" class="btn">Home</a>
+        </div>
+    </div>
+    
+</body>
+</html>

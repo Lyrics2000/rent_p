@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'leaflet',
     'rest_framework',
      'rest_framework_gis',
+     'payment'
 ]
 
 MIDDLEWARE = [

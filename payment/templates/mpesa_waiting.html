@@ -1,0 +1,101 @@
+{% load static  %}
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, shrink-to-fit=9">
+		<meta name="description" content="Gambolthemes">
+		<meta name="author" content="Gambolthemes">		
+		<title>Twala Fish </title>
+		
+		<!-- Favicon Icon -->
+		<link rel="icon" type="image/png" href="{% static 'images\bg_sin.png' %}">
+		
+		<!-- Stylesheets -->
+		<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+		<link href='vendor\unicons-2.0.1\css\unicons.css' rel='stylesheet'>
+		<link href="{% static 'css\style.css' %}" rel="stylesheet">
+		<link href="{% static 'css\responsive.css' %}" rel="stylesheet">
+		<link href="{% static 'css\night-mode.css' %}" rel="stylesheet">
+		<link href="{% static 'css\step-wizard.css' %}" rel="stylesheet">
+		
+		<!-- Vendor Stylesheets -->
+		<link href="{% static 'vendor\fontawesome-free\css\all.min.css' %}" rel="stylesheet">
+		<link href="{% static 'vendor\OwlCarousel\assets\owl.carousel.css' %}" rel="stylesheet">
+		<link href="{% static 'vendor\OwlCarousel\assets\owl.theme.default.min.css' %}" rel="stylesheet">
+		<link href="{% static 'vendor\bootstrap\css\bootstrap.min.css' %}" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="{% static 'vendor\semantic\semantic.min.css' %}">	
+		
+	</head>
+
+<body>
+	<!-- Header Start -->
+	
+	<!-- Header End -->
+	<!-- Body Start -->
+	<div class="wrapper">
+      
+        <div class="all-product-grid">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6 col-md-8">
+                        <div class="order-placed-dt">
+							<div class="sign-logo" id="logo">
+								<a href="/"><img src="{% static 'images\bg_sin.png' %}" alt=""></a>
+								<a href="/"><img class="logo-inverse" src="{% static 'images\bg_sin.png' %}" alt=""></a>
+							</div>
+                            <i class="uil uil-check-circle icon-circle"></i>
+                            <h2>Please wait...</h2>
+							<h3>Order processing </h3>
+    
+                            <div class="delivery-address-bg">
+                                <div class="title585">
+                                    <div class="pln-icon"><i class="uil uil-telegram-alt"></i></div>
+                                    <h4 class="mli1">if you didn't receive a notification on your phone  please do the following.</h4>
+                                </div>
+                                <ul class="address-placed-dt1">
+                                    <li><p><i class="glyphicon glyphicon-ok"></i>Go to mpesa menu then lipa na mpesa</p></li>
+                                    <li><p><i class="uil uil-phone-alt"></i>Go to Lipa na Mpesa </p></li>
+									<li><p><i class="uil uil-phone-alt"></i>Go to Buy Goods and Services </p></li>
+									<li><p><i class="uil uil-phone-alt"></i>Enter till no :  <span>5788665</span></p></li>
+                                    <li><p><i class="uil uil-envelope"></i>Enter amount  : <span> {{view}} </span></p></li>
+									<li><p><i class="uil uil-card-atm"></i>Enter pin and pay </p></li>
+									<li><p><i class="uil uil-card-atm"></i> <a href="{% url 'contacts:contacts_index' %}">Contact Twalafish to confirm order on</a> </li>
+                                </ul>
+                                <!-- <div class="stay-invoice">
+                                    <div class="st-hm">Stay Home<i class="uil uil-smile"></i></div>
+                                    
+                                </div> -->
+                                
+                            </div>
+
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>	
+    </div>
+	<!-- Body End -->
+	
+	<!-- Javascripts -->
+	<script src="{ static 'js\jquery-3.3.1.min.js' %}"></script>
+	<script src="{% static 'vendor\bootstrap\js\bootstrap.bundle.min.js' %}"></script>
+	<script src="{% static 'vendor\OwlCarousel\owl.carousel.js' %}"></script>
+	<script src="{% static 'vendor\semantic\semantic.min.js' %}"></script>
+	<script src="{% static 'js\jquery.countdown.min.js' %}"></script>
+	<script src="{% static 'js\custom.js' %}"></script>
+	<script src="{% static 'js\product.thumbnail.slider.js' %}"></script>
+	<script src="{% static 'js\offset_overlay.js' %}"></script>
+	<script src="{% static 'js\night-mode.js' %}"></script>
+    <script>
+        setTimeout(function(){
+             window.location.href = "/payment/online/lipa";
+          }, 1000);
+    </script>
+	
+	
+</body>
+</html>
