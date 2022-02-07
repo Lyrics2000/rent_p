@@ -415,10 +415,13 @@ def all_saved_rooms(request):
     print("jjj",all_saved_rooms)
     print(max_rent)
 
+    all_similar  = Room.objects.filter(approved = True,paid = False,rent__range = [float(min_rent.rent),float(max_rent.rent)])
+    print("similar",all_similar)
     context = {
         'saved_rooms':all_saved_rooms,
         'min_rent':min_rent.rent,
-        'max_rent':max_rent.rent
+        'max_rent':max_rent.rent,
+        'all_similar' :all_similar
         
 
     }
