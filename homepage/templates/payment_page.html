@@ -9,10 +9,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rentobay</title>
     <link rel="stylesheet" href="{% static  'css/style.css' %}">
+    <script src="https://js.stripe.com/v3/"></script>
+
+
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
 </head>
 
+
+
 <body class="payment_body">
+
+    <style type="text/css">
+		/**
+		 * The CSS shown here will not be introduced in the Quickstart guide, but shows
+		 * how you can use CSS to style your Element's container.
+		 */
+		.StripeElement {
+		  box-sizing: border-box;
+
+		  height: 40px;
+
+		  padding: 10px 12px;
+
+		  border: 1px solid transparent;
+		  border-radius: 4px;
+		  background-color: white;
+
+		  box-shadow: 0 1px 3px 0 #e6ebf1;
+		  -webkit-transition: box-shadow 150ms ease;
+		  transition: box-shadow 150ms ease;
+		}
+
+		.StripeElement--focus {
+		  box-shadow: 0 1px 3px 0 #cfd7df;
+		}
+
+		.StripeElement--invalid {
+		  border-color: #fb4e2e;
+		}
+
+		.StripeElement--webkit-autofill {
+		  background-color: #fefde5 !important;
+		}
+	</style>
     <div class="wrapper">
         <h2>Booking Form</h2>
         <form id="payment_form_form" method="post">
@@ -59,30 +98,20 @@
             
             <input type="hidden" name="room_number" value = "{{specific_room.id}}">
             <div id="payment_collection">
+                
+
                 <div class="input_group">
-                    <div class="input_box">
-                        <input type="tel" name="card_number" class="name" placeholder="Card Number 1111-2222-3333-4444" required>
-                        <i class="fa fa-credit-card icon"></i>
+                    <div id="stripe_card" class="input_box">
+                    <input  type="hidden" name="payment_option" value = "card">
                     </div>
                 </div>
-                <div class="input_group">
-                    <div class="input_box">
-                        <input type="tel" name="card_cvc" class="name" placeholder="Card CVC 632" required>
-                        <i class="fa fa-user icon"></i>
-                    </div>
-                </div>
-                <div class="input_group">
-                    <div class="input_box">
-                        <div class="input_box">
-                            <input type="number" name="expire_month" placeholder="Exp Month" required class="name">
-                            <i class="fa fa-calendar icon" aria-hidden="true"></i>
-                        </div>
-                    </div>
-                    <div class="input_box">
-                        <input type="number" name="expire_year" placeholder="Exp Year" required class="name">
-                        <i class="fa fa-calendar-o icon" aria-hidden="true"></i>
-                    </div>
-                </div>
+                
+                <div id="card-element">
+                    <!-- A Stripe Element will be inserted here. -->
+                  </div>
+
+                  <!-- Used to display form errors. -->
+                  <div id="card-errors" role="alert"></div>
                 
             </div>
             <!--Payment Details End-->
@@ -134,6 +163,108 @@
         
        }
    </script>
+
+
+<script>
+    // Create a Stripe client.
+    var stripe = Stripe('pk_test_51HI1b9FXATpECfwy4C31P9uRCRaNzQ3SSchTU97YdhBWgsNzrZ4vbOTIaN1qx4O4bj7W1DeNqRt8BXuq6F4kOaSj00SGNs1A2l');
+
+    // Create an instance of Elements.
+    var elements = stripe.elements();
+
+    // Custom styling can be passed to options when creating an Element.
+    // (Note that this demo uses a wider set of styles than the guide below.)
+    var style = {
+      base: {
+        color: '#32325d',
+        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+        fontSmoothing: 'antialiased',
+        fontSize: '16px',
+        '::placeholder': {
+          color: '#aab7c4'
+        }
+      },
+      invalid: {
+        color: '#fa755a',
+        iconColor: '#fa755a'
+      }
+    };
+
+    // Create an instance of the card Element.
+    var card = elements.create('card', {style: style});
+
+    // Add an instance of the card Element into the `card-element` <div>.
+    card.mount('#card-element');
+
+    // Handle real-time validation errors from the card Element.
+    card.addEventListener('change', function(event) {
+      var displayError = document.getElementById('card-errors');
+      if (event.error) {
+        displayError.textContent = event.error.message;
+      } else {
+        displayError.textContent = '';
+      }
+    });
+
+    // Handle form submission.
+   
+
+    // Submit the form with the token ID.
+    
+
+</script>
+
+
+<script>
+
+    send_card_details(){
+        stripe.createToken(card).then(function(result) {
+            if (result.error) {
+              // Inform the user if there was an error.
+              var errorElement = document.getElementById('card-errors');
+              errorElement.textContent = result.error.message;
+            } else {
+              // Send the token to your server.
+              stripeTokenHandler(result.token);
+            }
+          });
+
+          
+    }
+</script>
+
+
+<script>
+    function stripeTokenHandler(token) {
+      // Insert the token ID into the form so it gets submitted to the server
+      var form = document.getElementById('stripe_card');
+      var hiddenInput = document.createElement('input');
+      hiddenInput.setAttribute('type', 'hidden');
+      hiddenInput.setAttribute('name', 'stripeToken');
+      hiddenInput.setAttribute('class','name');
+      hiddenInput.setAttribute('value', token.id);
+      form.appendChild(hiddenInput);
+
+      // Submit the form
+
+      stripe_completion();
+      
+    }
+
+
+</script>
+
+<script>
+    stripe_completion(){
+    const indexed_arra = {};
+    const serialized_da = $('#payment_form_form').serializeArray();
+    $.map(serialized_da, function(n, i){
+        indexed_arra[n['name']] = n['value'];
+    });
+
+    console.log("completed",indexed_arra)
+    }
+</script>
 </body>
 
 </html>
