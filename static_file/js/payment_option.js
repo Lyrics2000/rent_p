@@ -4,20 +4,30 @@ function check_which(){
             const v = $('#payment_collection')
             v.empty()
 
-            const epp = `
-            <div class="input_group">
+            const epp = `<div class="input_group">
+            <div class="input_box">
+                <input type="tel" name="" class="name" placeholder="Card Number 1111-2222-3333-4444" required>
+                <i class="fa fa-credit-card icon"></i>
+            </div>
+        </div>
+        <div class="input_group">
+            <div class="input_box">
+                <input type="tel" name="" class="name" placeholder="Card CVC 632" required>
+                <i class="fa fa-user icon"></i>
+            </div>
+        </div>
+        <div class="input_group">
+            <div class="input_box">
                 <div class="input_box">
-                <input id="stripe_card" type="hidden" name="payment_option" value = "mpesa">
+                    <input type="number" placeholder="Exp Month" required class="name">
+                    <i class="fa fa-calendar icon" aria-hidden="true"></i>
                 </div>
             </div>
-            
-            <div id="card-element">
-                <!-- A Stripe Element will be inserted here. -->
-              </div>
-
-              <!-- Used to display form errors. -->
-              <div id="card-errors" role="alert"></div>
-            `
+            <div class="input_box">
+                <input type="number" placeholder="Exp Year" required class="name">
+                <i class="fa fa-calendar-o icon" aria-hidden="true"></i>
+            </div>
+        </div>`
 
     v.append(epp)
 
@@ -59,10 +69,6 @@ $('#payment_form_form').submit(function (e) {
 
     if(indexed_array.payment_option === "mpesa"){
         pay_with_mpesa(indexed_array);
-    }else if(indexed_array.payment_option === "card"){
-
-        send_card_details();
-
     }
 
 
