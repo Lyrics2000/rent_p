@@ -89,6 +89,7 @@ class Room(BaseModel):
     # featured =  models.BooleanField(default=False)
     room_video = models.FileField(upload_to = upload_image_path,help_text="The video of room ",blank=True,null=True)
     approved =  models.BooleanField(default=False,help_text="if true means the room can appear on site ")
+    paid = models.BooleanField(default=False)
     
     def __str__(self):
         return self.room_name

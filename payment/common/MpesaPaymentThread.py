@@ -48,6 +48,9 @@ class PayViaMpesaThred(threading.Thread):
                 objf.request_id =  mpesa_request['request_id']
                 objf.save()
 
+                room = Room.objects.get(id = self.room_id)
+                room.paid = True
+                room.save()
 
                 booking_obj =  BookingRequest.objects.get(id = int(self.request_id))
 

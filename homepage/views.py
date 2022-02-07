@@ -22,7 +22,7 @@ from homepage.common.SendEmailThread import SendEmailThread
 from homepage.common.sendsms import sendSms
 
 from .LOc import LocationQuery
-from .models import Building, BuildingMorePic, Room, RoomMorePic, SavedRooms, SlidingImages,BookTour
+from .models import BookingRequest, Building, BuildingMorePic, Room, RoomMorePic, SavedRooms, SlidingImages,BookTour
 from .serializers import BuildingSerializer, RoomSerializer, SavedRoomSerializers
 
 
@@ -32,7 +32,7 @@ from .serializers import BuildingSerializer, RoomSerializer, SavedRoomSerializer
 def index(request):
 
     if request.user.is_authenticated:
-            all_room =  Room.objects.filter(approved = True)
+            all_room =  Room.objects.filter(approved = True,paid = False)
             user_obj =  User.objects.get(id = request.user.id)
             all_sliding =  SlidingImages.objects.first()
             all_room_pic =  RoomMorePic.objects.all()
@@ -90,7 +90,7 @@ def index(request):
             return render(request,'index.html',context)
 
 
-    all_room =  Room.objects.filter(approved = True)
+    all_room =  Room.objects.filter(approved = True,paid = False)
     all_sliding =  SlidingImages.objects.first()
     all_room_pic =  RoomMorePic.objects.all()
     all_room_pic_count =  RoomMorePic.objects.count()
@@ -129,7 +129,7 @@ def map_search_view(request):
             radius =  100
             point = Point(longitude,latitude)
             buildings =  Building.objects.filter(geom__distance_lt=(point, Distance(km=radius)))
-            all_rooms =  Room.objects.all()
+            all_rooms =  Room.objects.filter(approved = True,paid = False)
             context= {
                 'building':buildings,
                 'formatted' : results,
@@ -140,7 +140,7 @@ def map_search_view(request):
 
 
     buildings =  Building.objects.all()
-    all_rooms =  Room.objects.all()
+    all_rooms =  Room.objects.filter(approved = True,paid = False)
 
     context= {
         'building':buildings,
@@ -172,7 +172,7 @@ class GetBUildingAPIVIEW(APIView):
 
 class GetRoom(APIView):
     def get(self, request):
-        rooms = Room.objects.all()
+        rooms = Room.objects.filter(approved = True,paid = False)
         # the many param informs the serializer that it will be serializing more than a single article.
         serializer = RoomSerializer(rooms, many=True)
         return Response(serializer.data)
@@ -190,7 +190,7 @@ class FilterRoom(APIView):
         print("beds : ",beds)
         
         print("running 1")
-        all_roo =  Room.objects.filter(rent__range = [float(min_price),float(max_price)],room_type = beds)
+        all_roo =  Room.objects.filter(rent__range = [float(min_price),float(max_price)],room_type = beds,approved = True,paid = False)
         serializer = RoomSerializer(all_roo, many=True)
         return Response(serializer.data)
 
@@ -234,7 +234,7 @@ class FilterSavedRoom(APIView):
 
 def map_detailed_page(request,id):
     buildingv = Building.objects.get(id=id)
-    all_rooms =  Room.objects.filter(building = buildingv )
+    all_rooms =  Room.objects.filter(building = buildingv,approved = True,paid = False )
     more_building_pic =  BuildingMorePic.objects.filter(building_id = buildingv)
     
     context = {
@@ -249,7 +249,7 @@ def room_detailed_page(request,id):
     
     all_rooms =  Room.objects.get(id = id )
     other_images =  RoomMorePic.objects.filter(room_id =  all_rooms)
-    all_rooms_b =  Room.objects.all()
+    all_rooms_b =  Room.objects.filter(approved = True,paid = False)
     
     print(model_to_dict(all_rooms))
     
@@ -274,7 +274,7 @@ def listing_listview(request):
 
     if request.user.is_authenticated:
         user_obj =  User.objects.get(id =  request.user.id)
-        all_room = Room.objects.all()
+        all_room = Room.objects.filter(approved = True,paid = False)
         
         saved_rentals =  SavedRooms.objects.filter(user =  user_obj,liked=True)
         print(saved_rentals)
@@ -305,7 +305,7 @@ def listing_listview(request):
         print("authenticated",empty_list)
 
         
-        all_rooms = Room.objects.all()
+        all_rooms = Room.objects.filter(approved = True,paid = False)
         min_rent = Room.objects.filter().annotate(Min('rent')).order_by('rent')[0]
         subtract = len(all_rooms) - 1
         max_rent = Room.objects.filter().annotate(Max('rent')).order_by('rent')[subtract]
@@ -319,7 +319,7 @@ def listing_listview(request):
 
 
 
-    all_rooms = Room.objects.all()
+    all_rooms = Room.objects.filter(approved = True,paid = False)
 
     min_rent = Room.objects.filter().annotate(Min('rent')).order_by('rent')[0]
     subtract = len(all_rooms) - 1
@@ -389,10 +389,10 @@ def saved_room(request,id):
 
     all_saved_rooms = SavedRooms.objects.filter(user = user_obj,liked=True)
     print("jjj",all_saved_rooms)
-    all_rooms = Room.objects.all()
-    min_rent = Room.objects.filter().annotate(Min('rent')).order_by('rent')[0]
+    all_rooms = Room.objects.filter(approved = True,paid = False)
+    min_rent = Room.objects.filter(approved = True,paid = False).annotate(Min('rent')).order_by('rent')[0]
     subtract = len(all_rooms) - 1
-    max_rent = Room.objects.filter().annotate(Max('rent')).order_by('rent')[subtract]
+    max_rent = Room.objects.filter(approved = True,paid = False).annotate(Max('rent')).order_by('rent')[subtract]
     print(min_rent.rent,max_rent.rent)
 
     context = {
@@ -407,11 +407,11 @@ def saved_room(request,id):
 @login_required(login_url="account:sign_in")
 def all_saved_rooms(request):
     user_obj =  User.objects.get(id =  request.user.id)
-    all_rooms = Room.objects.all()
+    all_rooms = Room.objects.filter(approved = True,paid = False)
     all_saved_rooms = SavedRooms.objects.filter(user = user_obj,liked=True)
-    min_rent = Room.objects.filter().annotate(Min('rent')).order_by('rent')[0]
+    min_rent = Room.objects.filter(approved = True,paid = False).annotate(Min('rent')).order_by('rent')[0]
     subtract = len(all_rooms) - 1
-    max_rent = Room.objects.filter().annotate(Max('rent')).order_by('rent')[subtract]
+    max_rent = Room.objects.filter(approved = True,paid = False).annotate(Max('rent')).order_by('rent')[subtract]
     print("jjj",all_saved_rooms)
     print(max_rent)
 
@@ -465,3 +465,15 @@ def book_room_payment(request,id):
 @login_required(login_url="account:sign_in")
 def payment_waiting(request):
     return render(request,'payment_waiting.html')
+
+@login_required(login_url="account:sign_in")
+def paid_rooms(request):
+    user_obj = User.objects.get(id = request.user.id)
+    paid_rooms = BookingRequest.objects.filter(user = user_obj)
+
+    context = {
+
+        'paid_rooms' : paid_rooms
+
+    }
+    return render(request,'paid_rooms.html',context)

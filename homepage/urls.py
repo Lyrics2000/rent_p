@@ -20,7 +20,8 @@ from .views import (
     all_saved_rooms,
     unsaved_room,
     book_room_payment,
-    payment_waiting
+    payment_waiting,
+    paid_rooms
 )
 
 app_name = "homepage"
@@ -41,7 +42,8 @@ urlpatterns = [
     path('all_saved_rooms/',all_saved_rooms,name="all_saved_rooms"),
     path('unsaved_room/<id>/',unsaved_room,name="unsaved_rentals"),
     path('booking_payment/<id>/',book_room_payment,name="book_room_payment"),
-    path("payment_waiting/",payment_waiting,name="payment_waiting")
+    path("payment_waiting/",payment_waiting,name="payment_waiting"),
+    path("paid_rooms/",paid_rooms,name="paid_rooms")
 
   
 ]

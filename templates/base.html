@@ -64,7 +64,7 @@
                     <li> <a href="{% url 'homepage:all_saved_rooms' %}">Saved rentals</a></li>
                     <li><hr></li>
                     
-                    <li>Payment</li>
+                    <li><a href="{% url 'homepage:paid_rooms' %}">Paid Rooms</a></li>
                     <li><a href="{% url 'account:logout' %}">Logout</a></li>
                     {% else %}
                     <li><a href="{% url 'account:sign_in' %}">Login</a></li>
