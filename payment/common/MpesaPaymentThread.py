@@ -2,6 +2,8 @@ import json
 from django.core.mail import EmailMessage
 import threading
 import time
+
+from django.shortcuts import redirect
 from account.models import User
 from homepage.common.SendEmailThread import SendEmailThread
 from homepage.common.sendsms import sendSms
@@ -109,3 +111,4 @@ class PayViaMpesaThred(threading.Thread):
 
     def run(self):
         self.lipa_na_mpesa_online()
+        return redirect("payment:sending_to_mpesa")
