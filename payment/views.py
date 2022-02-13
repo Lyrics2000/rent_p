@@ -61,6 +61,8 @@ class LipaNaMpesa(APIView):
         current_site = get_current_site(request)
 
         site_url = f"{current_site}payments/confirmation_url/"
+        print("......................call_back url.................................")
+        print(site_url)
 
         PayViaMpesaThred(data['mpesa_payment'],obj.id,1,room.id,user.id,data['emai_address'],site_url).start()
 
