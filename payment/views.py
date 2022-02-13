@@ -78,7 +78,7 @@ class PayWithStripe(APIView):
 def confirmation_url(request):
     if request.method == "POST":
       
-        print("...............confirmation beginning...................")
+        print(".................confirmation beginning...................")
         mpesa_body =request.body.decode('utf-8')
         mpesa_payment = json.loads(mpesa_body)
         body = mpesa_payment['Body']["stkCallback"]
