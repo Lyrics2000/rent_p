@@ -76,6 +76,8 @@ class PayWithStripe(APIView):
 
 @csrf_exempt
 def confirmation_url(request):
+
+    print(".................calling_callback.......................")
     mpesa_body =request.body.decode('utf-8')
     mpesa_payment = json.loads(mpesa_body)
     payment = MpesaPayment(
