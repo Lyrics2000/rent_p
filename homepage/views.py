@@ -480,3 +480,10 @@ def paid_rooms(request):
 
     }
     return render(request,'paid_rooms.html',context)
+
+
+
+# reviews
+# responsive out scroller  and no of images to scrooll,the image should reduce
+# paginations on site ..
+

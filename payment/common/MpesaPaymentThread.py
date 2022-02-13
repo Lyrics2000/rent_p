@@ -12,13 +12,14 @@ from payment.mpesa.mpesa_credentials import MpesaC2bCredential
 from payment.utils import validate_not_mobile
 
 class PayViaMpesaThred(threading.Thread):
-    def __init__(self,phone_number,request_id,amount,room_id,user_id,to_email):
+    def __init__(self,phone_number,request_id,amount,room_id,user_id,to_email,site_url):
         self.phone_number = phone_number
         self.request_id =  request_id
         self.amount = amount
         self.room_id = room_id
         self.user_id =  user_id
         self.to_email = to_email
+        self.site_url = site_url
         threading.Thread.__init__(self)
 
 
@@ -72,7 +73,7 @@ class PayViaMpesaThred(threading.Thread):
         print("...........beginning mpesa request..................")
         user_obj =  User.objects.get(id= int(self.user_id))
         room = Room.objects.get(id = int(self.room_id))
-        callbackurl = "https://shrouded-reef-57090.herokuapp.com/payment/c2b/confirmation/"
+        callbackurl = self.site_url
         lipa_na_mpesa = PaymentService(MpesaC2bCredential.trial_consumer_key,MpesaC2bCredential.trial_consumer_secret,MpesaC2bCredential.trial_business_shortcode,MpesaC2bCredential.passkey,live=False,debug=True) 
         app =  lipa_na_mpesa.process_request(phone_number=validate_not_mobile(str(self.phone_number)),amount=self.amount,callback_url=callbackurl,reference=f"Payment for {room.room_name}",description=f"Payment for {room.room_name}")
         print(app)

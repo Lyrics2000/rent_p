@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import MpesaResquest,MpesaQuery
+from .models import MpesaResquest,MpesaQuery,MpesaPayment
 
 
 
@@ -19,5 +19,6 @@ class MpesaQueryAdmin(admin.ModelAdmin):
         model = MpesaQuery
 
 admin.site.register(MpesaQuery,MpesaQueryAdmin)
+admin.site.register(MpesaPayment)
 
 
