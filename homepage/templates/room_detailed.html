@@ -198,8 +198,8 @@
                 <img src="{% static 'images/place_holder.jpeg' %}" alt="" srcset="">
                 {% endif %}
                 <h5><i style="color:#fb4e2e;padding:0 1rem" class="fa fa-user" aria-hidden="true"></i>{{rooms_data.building.agent.agent_name}}</h5>
-                <small><i style="color:#fb4e2e;padding:0 1rem" class="fa fa-envelope" aria-hidden="true"></i>{{rooms_data.building.agent.email}}</small>
-                <small><i style="color:#fb4e2e;padding:0 1rem" class="fa fa-phone" aria-hidden="true"></i>{{rooms_data.building.agent.mobile_number}} </small>
+                <small><i style="color:#fb4e2e;padding:0 1rem" class="fa fa-envelope" aria-hidden="true"></i><a href="mailto:{{rooms_data.building.agent.email}}" >{{rooms_data.building.agent.email}}</a></small>
+                <small><i style="color:#fb4e2e;padding:0 1rem" class="fa fa-phone" aria-hidden="true"></i><a href="tel:{{rooms_data.building.agent.mobile_number}}"> {{rooms_data.building.agent.mobile_number}}</a> </small>
               
               </div>
   
