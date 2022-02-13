@@ -12,6 +12,10 @@ from payment.models import MpesaQuery, MpesaResquest
 from payment.mpesa.services import PaymentService
 from payment.mpesa.mpesa_credentials import MpesaC2bCredential
 from payment.utils import validate_not_mobile
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+
+channel_layer =  get_channel_layer()
 
 class PayViaMpesaThred(threading.Thread):
     def __init__(self,phone_number,request_id,amount,room_id,user_id,to_email,site_url):
@@ -67,7 +71,14 @@ class PayViaMpesaThred(threading.Thread):
 
                 sendSms(self.phone_number,message).send_sms()
                 SendEmailThread(self.to_email,message,f"Booking for {room.room_name}").start()
-                redirect("payment:sending_to_mpesa")
+
+                dicti = {
+                    "title":"Payment Received!!",
+                    "message" : "Thanks for booking a room with us"
+                }
+
+                mm =  json.loads(dicti)
+                async_to_sync(channel_layer.group_send)('mpesa_successful',{'type':'send_mpesa_success','text':mm})
 
                 
                 

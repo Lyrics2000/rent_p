@@ -30,7 +30,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'social_django', # add this
     'django.contrib.gis',
+
+
     'djgeojson',
+
+    'channels',
     'homepage',
     'account',
     'leaflet',
@@ -70,6 +74,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+ASGI_APPLICATION = 'config.asgi.application'
 
 # add this
 AUTHENTICATION_BACKENDS = [

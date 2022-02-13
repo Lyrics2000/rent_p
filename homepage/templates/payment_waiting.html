@@ -21,6 +21,19 @@
         <a style="margin-bottom:20px;" href="{% url 'homepage:homepage' %}" class="btn">Home</a>
         </div>
     </div>
+
+    <script>
+
+const socket1 = new WebSocket(`https://aqueous-depths-52708.herokuapp.com/ws/payment_successfull/`);
+    socket1.onmessage = function(event){
+      const threewayEnergybet = event.data
+      // setEightFootball(threewayEnergybet)
+      const js_data =  JSON.parse(threewayEnergybet)
+      // console.log(js_data)
+      setTwoWay(js_data)
+      
+    }
+    </script>
     
 </body>
 </html>
