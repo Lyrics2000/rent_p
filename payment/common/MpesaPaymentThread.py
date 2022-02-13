@@ -67,7 +67,7 @@ class PayViaMpesaThred(threading.Thread):
 
                 sendSms(self.phone_number,message).send_sms()
                 SendEmailThread(self.to_email,message,f"Booking for {room.room_name}").start()
-
+                redirect("payment:sending_to_mpesa")
 
                 
                 
@@ -111,4 +111,4 @@ class PayViaMpesaThred(threading.Thread):
 
     def run(self):
         self.lipa_na_mpesa_online()
-        return redirect("payment:sending_to_mpesa")
+        
