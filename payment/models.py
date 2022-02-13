@@ -44,24 +44,21 @@ class MpesaQuery(BaseModel):
 
 
 class MpesaPayment(BaseModel):
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-    description = models.TextField()
-    type = models.TextField()
-    reference = models.TextField()
-    first_name = models.CharField(max_length=100)
-    middle_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    phone_number = models.TextField()
-    organization_balance = models.DecimalField(max_digits=10, decimal_places=2)
+    amount = models.DecimalField(max_digits=30, decimal_places=2)
+    result_description = models.TextField()
+    merchant_id = models.CharField(max_length=150,blank=True,null=True)
+    checkout_request_id = models.CharField(max_length=150,blank=True,null=True)
+    mpesaReceiptNumber = models.CharField(max_length=150,blank=True,null=True)
+    name = models.CharField(max_length=150,blank=True,null=True)
+    transaction_date = models.DateTimeField(blank=True,null=True)
+    phone_number = models.CharField(max_length=150,blank=True,null=True)
+
     class Meta:
         verbose_name = 'Mpesa Payment'
         verbose_name_plural = 'Mpesa Payments'
+
     def __str__(self):
-        return self.first_name
-
-
-
-
+        return self.merchant_id
 
 
 
