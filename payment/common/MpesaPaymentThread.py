@@ -77,7 +77,7 @@ class PayViaMpesaThred(threading.Thread):
                     "message" : "Thanks for booking a room with us"
                 }
 
-                mm =  json.loads(dicti)
+                mm =  json.loads(json.dumps(dicti))
                 async_to_sync(channel_layer.group_send)('mpesa_successful',{'type':'send_mpesa_success','text':mm})
 
                 

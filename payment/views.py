@@ -61,7 +61,8 @@ class LipaNaMpesa(APIView):
         )
         current_site = get_current_site(request)
 
-        site_url = f"https://{current_site}/payments/confirmation_url/"
+        # site_url = f"https://{current_site}/payments/confirmation_url/"
+        site_url = "https://shrouded-reef-57090.herokuapp.com/payment/c2b/confirmation/"
         print(site_url)
 
         PayViaMpesaThred(data['mpesa_payment'],obj.id,1,room.id,user.id,data['emai_address'],site_url).start()

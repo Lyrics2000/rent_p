@@ -14,23 +14,35 @@
     <div class="waiting_container">
         <div class="in_wait">
             <img src="{% static './images/background.png' %}" alt="">
-        <h1>Thank You for booking with us</h1>
-        <p>WE have sent you push notification which will be used for payment,
+        <h1 id="title">Thank You for booking with us</h1>
+        <p id="message">WE have sent you push notification which will be used for payment,
             if you have not received it please contact us <a href="">Rentobay</a>
         </p>
         <a style="margin-bottom:20px;" href="{% url 'homepage:homepage' %}" class="btn">Home</a>
         </div>
     </div>
 
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+
     <script>
 
-const socket1 = new WebSocket(`https://aqueous-depths-52708.herokuapp.com/ws/payment_successfull/`);
+const wsStart='ws://'
+const  endpoint=wsStart + window.location.host + "/ws/payment_successfull/";
+
+    const socket1 = new WebSocket(endpoint);
     socket1.onmessage = function(event){
       const threewayEnergybet = event.data
       // setEightFootball(threewayEnergybet)
       const js_data =  JSON.parse(threewayEnergybet)
-      // console.log(js_data)
-      setTwoWay(js_data)
+      console.log(js_data)
+      
+      $("#title").text(js_data.title)
+      $("#message").text(js_data.message)
+
+      
       
     }
     </script>

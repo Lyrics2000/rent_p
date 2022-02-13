@@ -9,7 +9,7 @@ class PaymentSuccessfullMessage(AsyncJsonWebsocketConsumer):
     async def disconnect(self,code):
          await self.channel_layer.group_discard('mpesa_successful',self.channel_name)
 
-    async def send_footballl_twowayp(self,event):
+    async def send_mpesa_success(self,event):
         text_message = event['text']
         await self.send_json(text_message)
 
