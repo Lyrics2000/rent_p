@@ -60,7 +60,7 @@ class LipaNaMpesa(APIView):
         )
         current_site = get_current_site(request)
 
-        site_url = f"{current_site}payments/confirmation_url/"
+        site_url = f"https://{current_site}/payments/confirmation_url/"
         print("......................call_back url.................................")
         print(site_url)
 
