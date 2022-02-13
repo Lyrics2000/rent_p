@@ -132,7 +132,7 @@ def confirmation_url(request):
         "ResultDesc": "Accepted"
     }
 
-    return JsonResponse(dict(context))
+    return render(request,'sending_success_payment.html')
 
 
 
