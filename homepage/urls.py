@@ -22,7 +22,8 @@ from .views import (
     book_room_payment,
     payment_waiting,
     paid_rooms,
-    payment_Processing
+    payment_Processing,
+    room_detailed_page_paid
 )
 
 app_name = "homepage"
@@ -35,6 +36,8 @@ urlpatterns = [
     path('map_detailed/<id>/',map_detailed_page,name="map_detailed"),
     path('filter_room/',FilterRoom.as_view(),name="filtered_data"),
     path('room_detailed/<id>/',room_detailed_page,name="room_detailed"),
+path('room_detailed_paid/<id>/',room_detailed_page_paid,name="room_detailed_page_paid"),
+
     path('booking_request/<room_id>/<agent_id>/<user_id>/',request_booking,name="request_booking"),
     path('listing_listview/',listing_listview,name="listing_listview"),
     path('book_request/<id>/',book_request,name="book_request"),

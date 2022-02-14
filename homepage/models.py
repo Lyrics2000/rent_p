@@ -44,6 +44,7 @@ class Building(BaseModel):
     security =  models.BooleanField(default=False,help_text="if true means the building has security example: cctv,guars")
     tv_connection =  models.BooleanField(default=False,help_text="if true the building has tv connections cables")
     account_number =  models.CharField(max_length=255,help_text="The account number for rent payment for the building")
+    payment_instructions = models.TextField(blank=True,null=True,help_text="Payment Instructions")
     owner =  models.CharField(max_length=255,help_text="The name of the owner of the building")
     description = models.TextField(blank=True,null=True,help_text="The description of the building")
     payment_deadline =  models.DateField(help_text="The payment deadline when rent is due")
@@ -97,6 +98,11 @@ class Room(BaseModel):
 
     def get_absolute_url(self):
         return reverse("homepage:room_detailed", kwargs={
+            'id': self.id
+        })
+
+    def get_absolute_room_paid_detailed_url(self):
+        return reverse("homepage:room_detailed_page_paid", kwargs={
             'id': self.id
         })
 

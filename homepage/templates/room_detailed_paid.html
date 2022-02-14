@@ -1,0 +1,481 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_head %}
+
+  <!-- leflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+  integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+  crossorigin=""/>
+
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+  integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+  crossorigin=""></script>
+
+
+
+{% endblock extra_head %}
+
+
+{% block content %}
+
+<!-- breadbrump -->
+<section class="breadbrump">
+    <div>
+       <div >
+          <h1 class="page-title">Room Details</h1>
+          <div>
+             <ul>
+                <li><a href="#/"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="#/"><i class="fas fa-angle-double-right"></i> Room Details </a></li>
+             </ul>
+          </div>
+       </div>
+    </div>
+    </div>
+  </section>
+  
+<!-- endbread brump -->
+
+
+<section class="image-container">
+    <div class="container">
+        <div class="mySlides">
+          <div class="numbertext"></div>
+          <img src="{{rooms_data.room_picture.url}}" style="width:100%">
+        </div>
+      
+        {% if other_images %}
+        {% for b in other_images %}
+
+        <div class="mySlides">
+          <div class="numbertext"></div>
+          <img src="{{b.image.url}}" style="width:100%">
+        </div>
+        {% endfor %}
+        {% endif %}
+      
+        <a class="prev" onclick="plusSlides(-1)">❮</a>
+        <a class="next" onclick="plusSlides(1)">❯</a>
+      
+        <div class="caption-container">
+          <p id="caption"></p>
+        </div>
+{% comment %}       
+        <div class="row">
+          <div class="column">
+            <img class="demo cursor" src="{{building.building_main_pic.url}}" style="width:100%" onclick="currentSlide(1)" >
+          </div>
+
+          {% if building_more_pic %}
+        {% for b in building_more_pic %}
+        <div class="column">
+          <img class="demo cursor" src="{{b.image.url}}" style="width:100%" onclick="currentSlide(b.id)" alt="Cinque Terre">
+        </div>
+        {% endfor %}
+        {% endif %}
+        
+         
+        </div> {% endcomment %}
+      </div>
+      
+</section>
+
+
+
+<section class="ltn__shop-details-area pb-10">
+    <div class="container">
+      <div class="row">
+        <div class="bigger-column">
+          <div class="ltn__blog-meta">
+            <ul>
+              <li class="ltn__blog-category">
+                  <a href="#">Featured</a>
+              </li>
+              <li class="ltn__blog-category">
+                  <a class="bg-orange" href="#">For Rent</a>
+              </li>
+              <li class="ltn__blog-date">
+                  <i class="far fa-calendar-alt"></i>{{rooms_data.building.created}}
+              </li>
+              
+          </ul>
+  
+          </div>
+          <h1>{{rooms_data.room_name}}({{rooms_data.room_type}})-(ksh {{rooms_data.rent}})</h1>
+          <label><span class="ltn__secondary-color"><i class="fas fa-map-pin"></i></span> {{rooms_data.building.location_name}}</label>
+          
+  
+          {% if rooms_data.description %}
+          <h4 class="title-2">Description</h4>
+          <p>{{rooms_data.description}}</p>
+
+          {% endif %}
+  
+           
+              <h4 class="title-2">Property Detail</h4>
+  
+              <div class="section-bg-1">                          
+                <ul>
+                    <li><label>Owner Name:</label> <span>{{rooms_data.building.owner}}</span></li>
+                    <li><label>Parking Space: </label> <span>{{rooms_data.building.parking_space}} sqm</span></li>
+                    <li><label>Number of Floors:</label> <span>{{rooms_data.building.no_of_floors}}</span></li>
+                  
+                </ul>
+                <ul>
+                    {% if rooms_data.building.security == True %}
+                    <li><label>Security:</label> <span>Available </span></li>
+
+                    {% else %}
+
+                    <li><label>Security:</label> <span>UnAvailable </span></li>
+
+
+                    {% endif %}
+
+                    {% if rooms_data.building.tv_connection == True %}
+                    <li><label>Tv connection :</label> <span>Available </span></li>
+
+                    {% else %}
+
+                    <li><label>Tv connection:</label> <span>UnAvailable </span></li>
+
+
+                    {% endif %}
+                    <li><label>Number of Rooms:</label> <span>{{rooms_data.building.no_of_Room}}</span></li>
+                   
+                    
+                </ul>
+            </div>
+
+            <h4 class="title-2">Room Features</h4>
+
+          <div class="property-detail-feature-list clearfix mb-45"> 
+            
+            <div class="details">
+              {% if rooms_data.room_size %}
+              <h3> <i class="fas fa-expand"></i> {{rooms_data.room_size}} sqft </h3>
+              {% endif %}
+              {% if rooms_data.room_type %}
+
+              <h3> <i class="fas fa-bed"></i> {{rooms_data.room_type}} </h3>
+              {% endif %}
+              {% if rooms_data.bathtab_np != 0 %}
+              <h3> <i class="fas fa-bath"></i> {{ rooms_data.bathtab_np}} bathtab </h3>
+              {% endif %}
+              {% if rooms_data.balcony %}
+              <h3> <i class="fas fa-door-closed"></i>balcony </h3>
+
+              {% endif %}
+
+              {% if rooms_data.floor %}
+              
+              <h3> <i class="fas fa-building"></i> {{rooms_data.floor}} floor </h3>
+
+              {% endif %}
+
+              
+          </div>
+           
+        </div>
+            <h4 class="title-2">Location</h4>
+
+            
+            <div id="map_building" class="property-details-google-map mb-60" style="width:100%;height:100vh">
+              
+          </div>
+          
+        </div>
+  
+        <div class="smaller-col">
+  
+          <aside>
+
+
+            <div class="widget">
+                <div style="background: #f9edeb;" class="text-center">
+                    <h5 style="margin-top: 20px; color:#fb4e2e ;">Room Payment Details</h5>
+                  
+                    <p>Account : {{rooms_data.building.account_number}}</p>
+
+                    <h5 style="margin-top: 20px; color:#fb4e2e ;">Payment Instructions</h5>
+
+                    <p>{{rooms_data.building.payment_instructions | safe}}</p>
+                  
+  
+                
+                </div>
+              </div>
+
+            <div class="widget">
+              <div class="text-center">
+                {% if rooms_data.building.agent.agent_profile_picture %}
+                <img src="{{rooms_data.building.agent.agent_profile_picture.url}}" alt="" srcset="">
+                {% else %}
+                <img src="{% static 'images/place_holder.jpeg' %}" alt="" srcset="">
+                {% endif %}
+                <h5><i style="color:#fb4e2e;padding:0 1rem" class="fa fa-user" aria-hidden="true"></i>{{rooms_data.building.agent.agent_name}}</h5>
+                <small><i style="color:#fb4e2e;padding:0 1rem" class="fa fa-envelope" aria-hidden="true"></i><a href="mailto:{{rooms_data.building.agent.email}}" >{{rooms_data.building.agent.email}}</a></small>
+                <small><i style="color:#fb4e2e;padding:0 1rem" class="fa fa-phone" aria-hidden="true"></i><a href="tel:{{rooms_data.building.agent.mobile_number}}"> {{rooms_data.building.agent.mobile_number}}</a> </small>
+              
+              </div>
+  
+            </div>
+
+            
+  
+          
+  
+          </aside>
+  
+        </div>
+  
+      </div>
+  
+    </div>
+  
+</section>
+
+
+<!-- featured section starts  -->
+
+
+<section class="featured" id="featured">
+
+  <h1 class="heading"> Simalar Rooms </h1>
+
+  <div class="box-container">
+
+      {% if all_rooms %}
+      {% for r in all_rooms  %}
+      {% if r.building.id == rooms_data.building.id %}
+      <div class="box">
+          <div class="image-container">
+              <img src="{{r.room_picture.url}}" alt="">
+              <div class="info">
+                  <h3>3 days ago</h3>
+                  <h3>for rent</h3>
+              </div>
+              <div class="icons">
+                  <a href="#" class="fas fa-film"><h3>1</h3></a>
+                    
+                  <a href="#" class="fas fa-camera"><h3>4</h3></a>
+                  
+              </div>
+          </div>
+          <div class="content">
+              <div class="price">
+                  <h3>Ksh : {{r.rent}}/mo</h3>
+                  <a href="#" class="fas fa-heart"></a>
+                  <a href="#" class="fas fa-envelope"></a>
+                  <a href="#" class="fas fa-phone"></a>
+              </div>
+              <div class="location">
+                  <h3>{{r.building.building_name}}({{r.room_name}})</h3>
+                  <p>{{r.building.location_name}}</p>
+              </div>
+              <div class="details">
+                  {% if r.room_size %}
+                  <h3> <i class="fas fa-expand"></i> {{r.room_size}} sqft </h3>
+                  {% endif %}
+                  {% if r.room_type %}
+
+                  <h3> <i class="fas fa-bed"></i> {{r.room_type}} </h3>
+                  {% endif %}
+                  {% if r.bathtab_np != 0 %}
+                  <h3> <i class="fas fa-bath"></i> {{ r.bathtab_np}} bathtab </h3>
+                  {% endif %}
+                  {% if r.balcony %}
+                  <h3> <i class="fas fa-door-closed"></i>balcony </h3>
+
+                  {% endif %}
+
+                  {% if r.building.tv_connection  %}
+                  
+                  <h3> <i class="fas fa-tv"></i> tv connection </h3>
+
+                  {% endif %}
+
+                  {% if r.building.security  %}
+                  
+                  <h3> <i class="fas fa-key"></i> security </h3>
+
+                  {% endif %}
+              </div>
+              <div class="buttons">
+                  <a href="#" class="btn">request info</a>
+                  <a href="{{r.get_absolute_url}}" class="btn">view details</a>
+              </div>
+          </div>
+      </div>
+      {% endif %}
+      {% endfor %}
+      {% endif %}
+
+    
+  </div>
+  
+</section>
+
+<section class="footer">
+
+    <div class="footer-container">
+
+        <div class="box-container">
+
+            <div class="box">
+                <h3>branch location</h3>
+                <a href="#">india</a>
+                <a href="#">USA</a>
+                <a href="#">france</a>
+                <a href="#">russia</a>
+                <a href="#">japan</a>
+            </div> 
+            
+            <div class="box">
+                <h3>quick links</h3>
+                <a href="#">home</a>
+                <a href="#">services</a>
+                <a href="#">featured</a>
+                <a href="#">agents</a>
+                <a href="#">contact</a>
+            </div> 
+
+            <div class="box">
+                <h3>extra links</h3>
+                <a href="#">my account</a>
+                <a href="#">my favorite</a>
+                <a href="#">my list</a>
+            </div> 
+
+            <div class="box">
+                <h3>follow us</h3>
+                <a href="#">facebook</a>
+                <a href="#">twitter</a>
+                <a href="#">instagram</a>
+                <a href="#">linkedin</a>
+            </div> 
+
+        </div>
+
+        <div class="credit">created by <span> mr. web designer </span> | all rights reserved! </div>
+
+    </div>
+
+</section>
+
+    
+
+{% block extra_js %}
+
+
+<script>
+    var slideIndex = 1;
+    showSlides(slideIndex);
+    
+    function plusSlides(n) {
+      showSlides(slideIndex += n);
+    }
+    
+    function currentSlide(n) {
+      showSlides(slideIndex = n);
+    }
+    
+    function showSlides(n) {
+      var i;
+      var slides = document.getElementsByClassName("mySlides");
+      var dots = document.getElementsByClassName("demo");
+      var captionText = document.getElementById("caption");
+      if (n > slides.length) {slideIndex = 1}
+      if (n < 1) {slideIndex = slides.length}
+      for (i = 0; i < slides.length; i++) {
+          slides[i].style.display = "none";
+      }
+      for (i = 0; i < dots.length; i++) {
+          dots[i].className = dots[i].className.replace(" active", "");
+      }
+      slides[slideIndex-1].style.display = "block";
+      dots[slideIndex-1].className += " active";
+      captionText.innerHTML = dots[slideIndex-1].alt;
+    }
+</script>
+
+
+<script>
+
+    
+</script>
+
+
+<script>
+
+    $.ajax({
+        type: 'POST',
+        url: "{% url 'homepage:get_all_data' %}",
+        data : {id:{{rooms_data.building.id}},'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        success: function (response) {
+            // on successfull creating object
+             // 1. clear the form.
+            var dataa = response.geometry.coordinates
+            console.log(dataa)
+
+
+          var map = L.map('map_building').setView(dataa, 5);
+
+          var tiles = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+            maxZoom: 18,
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+              'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            id: 'mapbox/streets-v11',
+            tileSize: 512,
+            zoomOffset: -1
+          }).addTo(map);
+        
+            var smallIcon = new L.Icon({
+                iconSize: [27, 27],
+                iconAnchor: [13, 27],
+                popupAnchor:  [1, -24],
+                iconUrl: '{% static "images/mk.png" %}'
+            });
+
+            L.marker(dataa,{icon: smallIcon}).addTo(map).bindPopup(`<h3>ksh {{rooms_data.rent}}</h3>`)
+        
+  
+
+        
+          
+           
+            
+
+          
+          
+        },
+        error: function (response) {
+            // alert the error if any error occured
+            alert(response["responseJSON"]["error"]);
+        }
+    })
+
+</script>
+
+
+
+
+
+
+
+<script>
+  var slideIndex = 1;
+  setInterval(()=>{
+              showSlides(slideIndex += -1)
+  
+          }, 6000)
+  </script>
+  
+
+
+{% endblock extra_js %}
+
+
+
+  {% endblock content %}

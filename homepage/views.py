@@ -487,6 +487,25 @@ def paid_rooms(request):
 def payment_Processing(request):
     return render(request,'payment_proccessing_c2b.html')
 
+@login_required(login_url="account:sign_in")
+def room_detailed_page_paid(request,id):
+    
+    all_rooms =  Room.objects.get(id = id )
+    other_images =  RoomMorePic.objects.filter(room_id =  all_rooms)
+    all_rooms_b =  Room.objects.filter(approved = True,paid = False)
+    
+    print(model_to_dict(all_rooms))
+    
+    context = {
+       
+        'rooms_data' :all_rooms,
+        'other_images':other_images,
+        'all_rooms':all_rooms_b
+
+      
+    }
+    return render(request,'room_detailed_paid.html',context)
+
 # reviews
 # responsive out scroller  and no of images to scrooll,the image should reduce
 # paginations on site ..
