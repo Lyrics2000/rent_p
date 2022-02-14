@@ -74,3 +74,30 @@ $('#payment_form_form').submit(function (e) {
 
     
 });
+
+
+
+$('#payment_c2b').submit(function (e) { 
+    e.preventDefault();
+    const indexed_array = {};
+    const serialized_data = $('#payment_c2b').serializeArray();
+    $.map(serialized_data, function(n, i){
+        indexed_array[n['name']] = n['value'];
+    });
+
+    console.log(indexed_array)
+    const appender  =  `<div class="loader" > </div>`
+    const animation_holder  =  $('#animation_holder')
+    const btn = $('#submit_btn')
+    
+    animation_holder.empty()
+    animation_holder.append(appender)
+    btn.empty()
+
+    if(indexed_array.payment_option === "mpesa"){
+        pay_with_mpesa_c2b(indexed_array);
+    }
+
+
+    
+});

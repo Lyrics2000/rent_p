@@ -14,26 +14,10 @@
     <div class="waiting_container">
         <div class="in_wait">
             <img src="{% static './images/background.png' %}" alt="">
-        <h1 id="title">Thank You for booking with us</h1>
-        <p id="message">WE have sent you push notification which will be used for payment,
-            if you have not received it:
-            <br>
-            follow this steps
-            <ol style="list-style: none; font-size: 16px; margin-top: 10px; color: #666;text-align: center;">
-
-                <li style="color: #666;">Go to Mpesa</li>
-                <li style="color: #666;">Go to lipa Na Mpesa</li>
-                <li style="color: #666;">Go to Buy goods and services</li>
-                <li style="color: #666;">Enter Paybill </li>
-                <li style="color: #666;">Enter Amount of Ksh 1</li>
-                <li style="color: #666;">ENter Pin</li>
-                
-
-            </ol>
-
-            
+        <h1 id="title">Please Wait ...</h1>
+        <p id="message">Proccessing ...   
         </p>
-        <a style="margin-bottom:20px;" href="{% url 'payment:customer_to_business' %}" class="btn">Paid Offline Continue</a>
+      
         <a style="margin-bottom:20px;" href="{% url 'homepage:homepage' %}" class="btn">Home</a>
         </div>
     </div>

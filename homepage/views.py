@@ -483,6 +483,10 @@ def paid_rooms(request):
 
 
 
+@login_required(login_url="account:sign_in")
+def payment_Processing(request):
+    return render(request,'payment_proccessing_c2b.html')
+
 # reviews
 # responsive out scroller  and no of images to scrooll,the image should reduce
 # paginations on site ..

@@ -1,0 +1,105 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rentobay</title>
+    <link rel="stylesheet" href="{% static  'css/style.css' %}">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+</head>
+
+<body class="payment_body">
+    <div class="wrapper">
+        <h2>Customer To Business</h2>
+        <form id="payment_c2b" method="post">
+            {% csrf_token %}
+          
+            <div class="input_group">
+                <div class="input_box">
+                    <input style="text-transform: lowercase;" type="text" name="full_name" placeholder="Enter Full Name" required class="name">
+                    <i class="fa fa-user icon"></i>
+                </div>
+            </div>
+            <div class="input_group">
+                <div class="input_box">
+                    <input style="text-transform: lowercase;" type="email" name="email" placeholder="Enter Email" required class="name">
+                    <i class="fa fa-envelope icon"></i>
+                </div>
+            </div>
+          
+            <div class="input_group">
+                <div class="input_box">
+                    <input style="text-transform: lowercase;" type="number" name="payment_amount" placeholder="Payment Amount" required class="name">
+                    <i class="fa fa-coins icon"></i>
+                </div>
+            </div>
+            <div class="input_group">
+                <div class="input_box">
+                    <input type="tel" name="phone_number" placeholder="Paying Phone Number" required class="name">
+                    <i class="fa fa-phone icon" aria-hidden="true"></i>
+                </div>
+            </div>
+           
+            <!--Account Information End-->
+            
+
+            <input type="hidden" name="room_number" value = "{{specific_room.id}}">
+         
+            <!--Payment Details End-->
+            <div id="animation_holder" class="animation_holder">
+                
+            </div>
+            <div class="input_group">
+                <input type="hidden" name="payment_option" value = "mpesa">
+                <div id="submit_btn" class="input_box">
+                    <button  type="submit">PAY NOW</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="{% static './js/payment_option.js' %}"></script>
+
+   <script>
+       function pay_with_mpesa_c2b(dicti){
+           console.log(dicti)
+
+               
+           var id_user = {{request.user.id}}
+
+           $.ajax({
+                type: 'POST',
+                url: "{% url 'payment:c2b_p' %}",
+                data: {'user_id':id_user,'payment':`${JSON.stringify(dicti)}`,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success: function (response) {
+                    console.log(response) ;
+                    window.location.replace("{% url 'homepage:payment_Processing' %}"); 
+                  
+                },
+                error: function (response) {
+                    // alert the error if any error occured
+                    console.log(response["responseJSON"]["error"]);
+                    const animation_holder  =  $('#animation_holder')
+                    animation_holder.empty()
+
+                    const btn = $('#submit_btn')
+                    btn.empty();
+
+                    const v = `<button  type="submit">PAY NOW</button>`;
+                    btn.append(v);
+                }
+            })
+        
+       }
+   </script>
+</body>
+
+</html>
+        

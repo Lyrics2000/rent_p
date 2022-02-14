@@ -26,6 +26,7 @@ class PayViaMpesaThred(threading.Thread):
         self.user_id =  user_id
         self.to_email = to_email
         self.site_url = site_url
+    
         threading.Thread.__init__(self)
 
 
@@ -78,7 +79,8 @@ class PayViaMpesaThred(threading.Thread):
                 }
 
                 mm =  json.loads(json.dumps(dicti))
-                async_to_sync(channel_layer.group_send)('mpesa_successful',{'type':'send_mpesa_success','text':mm})
+                # to do : add later for demonstration
+                # async_to_sync(channel_layer.group_send)('mpesa_successful',{'type':'send_mpesa_success','text':mm})
 
                 
                 

@@ -3,6 +3,7 @@
 import io
 import json
 import os
+from pprint import pp
 import time
 from datetime import datetime
 from django.http import HttpResponse, JsonResponse,HttpResponseRedirect
@@ -24,6 +25,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from payment.common.MpesaPaymentThread import PayViaMpesaThred
+from payment.common.MpesaPaymentC2BThread import PayViaMpesaThredC2B
 from payment.models import MpesaQuery, MpesaResquest
 
 from .models import MpesaPayment
@@ -134,6 +136,39 @@ def confirmation_url(request):
     }
 
     return render(request,'sending_success_payment.html')
+
+
+@login_required(login_url="account:sign_in")
+def customer_to_business(request):
+    return render(request,'awaiting_c2b.html')
+
+
+class LipaNaMpesaC2B(APIView):
+    def post(self,request):
+
+        payment =  request.data
+
+        data =json.loads(json.dumps(payment))
+        print(data['payment'])
+        ppy = json.loads(data['payment'])
+        user = User.objects.get(id = int(request.data['user_id']))
+        room =  Room.objects.get(id = int(1) )
+        obj =  BookingRequest.objects.create(
+            user = user,
+            room = room,
+            name = ppy['full_name'],
+            email = ppy['email'],
+            contact_phone = ppy['phone_number']
+
+        )
+        current_site = get_current_site(request)
+        site_url = "https://shrouded-reef-57090.herokuapp.com/payment/c2b/confirmation/"
+        PayViaMpesaThredC2B(ppy['phone_number'],obj.id,1,1,user.id,ppy['email'],site_url).start()
+
+        
+
+        return Response({"success":"ok"},status=status.HTTP_200_OK)
+
 
 
 
