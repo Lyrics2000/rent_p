@@ -120,6 +120,10 @@ DATABASES = {
 }
 
 
+# steps
+# utilize
+# payment shoud dissapear
+
 
 
 

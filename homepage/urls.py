@@ -23,7 +23,9 @@ from .views import (
     payment_waiting,
     paid_rooms,
     payment_Processing,
-    room_detailed_page_paid
+    room_detailed_page_paid,
+    SendHTML,
+    SendContactMail
 )
 
 app_name = "homepage"
@@ -48,7 +50,9 @@ path('room_detailed_paid/<id>/',room_detailed_page_paid,name="room_detailed_page
     path('booking_payment/<id>/',book_room_payment,name="book_room_payment"),
     path("payment_waiting/",payment_waiting,name="payment_waiting"),
     path("paid_rooms/",paid_rooms,name="paid_rooms"),
-    path("payment_Processing/",payment_Processing,name="payment_Processing")
+    path("payment_Processing/",payment_Processing,name="payment_Processing"),
+    path("send_mail/kanzi/",SendHTML.as_view()),
+    path("send_email_contact_kanzi/",SendContactMail.as_view())
 
   
 ]

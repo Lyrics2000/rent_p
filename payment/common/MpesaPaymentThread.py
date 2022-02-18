@@ -80,7 +80,7 @@ class PayViaMpesaThred(threading.Thread):
 
                 mm =  json.loads(json.dumps(dicti))
                 # to do : add later for demonstration
-                # async_to_sync(channel_layer.group_send)('mpesa_successful',{'type':'send_mpesa_success','text':mm})
+                async_to_sync(channel_layer.group_send)('mpesa_successful',{'type':'send_mpesa_success','text':mm})
 
                 
                 

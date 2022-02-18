@@ -1,6 +1,8 @@
+from cgitb import html
 from http.client import HTTPResponse
 import json
 from threading import Thread
+from urllib import request
 
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -20,12 +22,15 @@ from rest_framework.views import APIView
 from homepage.common.SendEmailThread import SendEmailThread
 
 from homepage.common.sendsms import sendSms
+from homepage.sendEmailT import SendEmailKanzi
 
 from .LOc import LocationQuery
 from .models import BookingRequest, Building, BuildingMorePic, Room, RoomMorePic, SavedRooms, SlidingImages,BookTour
 from .serializers import BuildingSerializer, RoomSerializer, SavedRoomSerializers
 
-
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import get_template
+from django.template import Context
 
 
 # Create your views here.
@@ -509,4 +514,76 @@ def room_detailed_page_paid(request,id):
 # reviews
 # responsive out scroller  and no of images to scrooll,the image should reduce
 # paginations on site ..
+
+
+class SendHTML(APIView):
+    def post(self,request):
+        plaintext = str(request.data)
+        htmly     = get_template('app.html')
+
+        fname =  request.data['fname']
+        lname =  request.data['lname']
+        sname =  request.data['sname']
+        dob =  request.data['dob']
+        gender =  request.data['gender']
+        knwo_abt_kanzi =  request.data['knwo_abt_kanzi']
+        gade_intrested = request.data['gade_intrested']
+        email_address =  request.data['email_address']
+        contact_info = request.data['contact_info']
+        person_inquiring =  request.data['person_inquiring']
+        physical_address =  request.data['physical_address']
+        mobile_number =  request.data['mobile_number']
+        current_school =  request.data['current_school']
+
+        d = {"fname":fname,
+        "lname":lname,
+        "sname":sname,
+        "dob":dob,
+        "gender":gender,
+        "knwo_abt_kanzi":knwo_abt_kanzi,
+        "gade_intrested":gade_intrested,
+        "email_address":email_address,
+        "contact_info":contact_info,
+        "person_inquiring":person_inquiring,
+        "physical_address":physical_address,
+        "mobile_number":mobile_number,
+        "current_school":current_school
+
+        }
+
+        print(d)
+
+        SendEmailKanzi("Student Admission","thomasambetsa@gmail.com","thomasambetsa@gmail.com",d,htmly,plaintext).start()
+
+        return Response({"success":True})
+
+
+
+
+
+class SendContactMail(APIView):
+    def post(self,request):
+        plaintext = str(request.data)
+        htmly     = get_template('app_copy.html')
+
+        name =  request.data['name']
+        email =  request.data['email']
+        message =  request.data['message']
+        subject =  request.data['subject']
+    
+        d = {"fname":name,
+        "email":email,
+        "message":message,
+     
+        }
+
+        print(d)
+
+        SendEmailKanzi(f"Inquiry {subject}","thomasambetsa@gmail.com","thomasambetsa@gmail.com",d,htmly,plaintext).start()
+        return Response({"success":True})
+
+
+
+
+
 

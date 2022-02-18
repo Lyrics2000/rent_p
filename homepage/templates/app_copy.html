@@ -1,0 +1,121 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanzi Html</title>
+</head>
+<body style="margin: 0; padding: 0;border: 1px solid black; margin-top: 20px;margin-right: 5rem;margin-left: 5rem;margin-bottom: 5rem;box-sizing: border-box;" >
+
+    <style>
+
+        .logo_holder{
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .logo_holder h1{
+            font-size: 20px;
+        }
+
+        .content{
+       
+            display: flex;
+         
+         
+            justify-content: space-evenly;
+       
+            width: 100%;
+            height: 100vh;
+            margin: 20px;
+            
+        }
+
+        .content .additional_information{
+            margin-right: 3rem;
+
+        }
+
+        h2{
+            font-size: 18px;
+
+        }
+
+        .htc__footer__top{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .copyright__inner{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: white;
+        }
+
+        .footer__menu{
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            list-style: none;
+            margin-left: 1rem;
+            margin-right: 1rem;
+        }
+
+      
+
+      
+
+    
+        
+
+    </style>
+
+    <div class="logo_holder">
+
+        <h1>Inquiry Email</h1>
+
+        <h2 style="text-align: center;">Times Tower Building <br> Haile Selassie Avenue <br> P. O. Box 48240 - 00100 <br> Tel +254 20 281 0000 <br> Email: callcentre@kra.go.ke</h2>
+    
+    </div>
+
+    <div class="content">
+        <div class="child_information">
+        
+            <table style="height: 40vh;">
+                <tr>
+                    <td>Name : </td>
+                    <td style="color: #666;">{{fname}}</td>
+                </tr>
+
+                <tr>
+                    <td>Email : </td>
+                    <td style="color: #666;">{{email}}</td>
+                </tr>
+
+                <tr>
+                    <td>Message : </td>
+                    <td style="color: #666;">{{message}}</td>
+                </tr>
+
+
+          
+            </table>
+        </div>
+
+        
+
+    </div>
+
+  
+
+</body>
+</html>

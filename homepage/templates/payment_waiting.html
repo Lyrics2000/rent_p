@@ -19,7 +19,7 @@
             if you have not received it:
             <br>
             follow this steps
-            <ol style="list-style: none; font-size: 16px; margin-top: 10px; color: #666;text-align: center;">
+            <ol id="payme" style="list-style: none; font-size: 16px; margin-top: 10px; color: #666;text-align: center;">
 
                 <li style="color: #666;">Go to Mpesa</li>
                 <li style="color: #666;">Go to lipa Na Mpesa</li>
@@ -57,6 +57,7 @@ const  endpoint=wsStart + window.location.host + "/ws/payment_successfull/";
       
       $("#title").text(js_data.title)
       $("#message").text(js_data.message)
+      $("#payme").empty()
 
       
       
