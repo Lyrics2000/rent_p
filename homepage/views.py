@@ -553,7 +553,7 @@ class SendHTML(APIView):
 
         print(d)
 
-        SendEmailKanzi("Student Admission","thomasambetsa@gmail.com","thomasambetsa@gmail.com",d,htmly,plaintext).start()
+        SendEmailKanzi("Student Admission","thomasambetsa@gmail.com","admin@kanzischool.sc.ke",d,htmly,plaintext).start()
 
         return Response({"success":True})
 
@@ -579,7 +579,7 @@ class SendContactMail(APIView):
 
         print(d)
 
-        SendEmailKanzi(f"Inquiry {subject}","thomasambetsa@gmail.com","thomasambetsa@gmail.com",d,htmly,plaintext).start()
+        SendEmailKanzi(f"Inquiry {subject}","thomasambetsa@gmail.com","admin@kanzischool.sc.ke",d,htmly,plaintext).start()
         return Response({"success":True})
 
 
