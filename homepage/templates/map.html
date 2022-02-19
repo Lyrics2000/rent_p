@@ -426,7 +426,7 @@
         var geojson = L.geoJson(data, {
         onEachFeature: function(feature, layer) {
              // create popup contents
-
+            
              console.log(feature.properties.account_number)
              var customPopup = `
                     <div id="box" class="box-icon">
@@ -459,12 +459,51 @@
                 `
                 ;
     
-            layer.bindPopup( customPopup);
-        },
+            
+
+           
+            
+                layer.bindPopup( customPopup);
+       
+       
+            },
         pointToLayer: function (feature, latlng) {
             return markers.addLayer(L.marker(latlng, {icon: smallIcon}).on('mouseover',(e)=>{
                 console.log(latlng)
-                this.target.openPopup()
+              //  this.target.openPopup()
+
+              var customPopup = `
+              <div id="box" class="box-icon">
+              <div style="cursor:pointer;" id="image_cont" class="image-container-icon">
+                  <img src="${feature.properties.building_main_pic}" alt="">
+                        <div class="info">
+                     
+                      <h3>for rent</h3>
+                  </div>
+                
+              </div>
+              <div class="content">
+                  <div class="price">
+                      
+                      <a href="#" class="fas fa-heart"></a>
+                      <a href="#" class="fas fa-envelope"></a>
+                      <a href="#" class="fas fa-phone"></a>
+                  </div>
+                  <div class="location">
+                      <h3>${feature.properties.building_name}</h3>
+                      <p>${feature.properties.location_name}</p>
+                  </div>
+                 
+                  <div class="buttons">
+                      <a href="#" class="btn">request info</a>
+                      <a href="/map_detailed/${feature.id}/" class="btn">view details</a>
+                  </div>
+              </div>
+          </div>
+          `
+          ;
+
+      
                 
                 var element = `
                     <div id="box" class="box">
@@ -495,7 +534,11 @@
                     </div>
                 </div>
                 `
-                // e.bindPopup(element)
+               
+                var popup = L.popup()
+                    .setLatLng(e.latlng) 
+                    .setContent(customPopup)
+                    .openOn(map);
                 // var card_container  =  $('#card-container')
                 // {% comment %} card_container.empty();
                 // card_container.append(element) {% endcomment %}
@@ -564,7 +607,7 @@
                 </div>
                 `
                 
-                card_container.append(element)
+  card_container.append(element)
 
                 
 
