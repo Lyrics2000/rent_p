@@ -886,8 +886,8 @@ let mm = null;
           `
           ;
 
-
-  mm = new L.marker(hovered_element.building.geom.coordinates).addTo(map).bindPopup(cus);
+    const lat_long = [hovered_element.building.geom.coordinates[1],hovered_element.building.geom.coordinates[0]]
+  mm = new L.marker(lat_long).addTo(map).bindPopup(cus);
   mm.openPopup();
 
 
