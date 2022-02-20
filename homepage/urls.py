@@ -25,7 +25,8 @@ from .views import (
     payment_Processing,
     room_detailed_page_paid,
     SendHTML,
-    SendContactMail
+    SendContactMail,
+    GetRoomAl
 )
 
 app_name = "homepage"
@@ -52,7 +53,8 @@ path('room_detailed_paid/<id>/',room_detailed_page_paid,name="room_detailed_page
     path("paid_rooms/",paid_rooms,name="paid_rooms"),
     path("payment_Processing/",payment_Processing,name="payment_Processing"),
     path("send_mail/kanzi/",SendHTML.as_view()),
-    path("send_email_contact_kanzi/",SendContactMail.as_view())
+    path("send_email_contact_kanzi/",SendContactMail.as_view()),
+    path("get_all_rooms/",GetRoomAl.as_view(),name="all_rm")
 
   
 ]

@@ -1,6 +1,7 @@
 from cgitb import html
 from http.client import HTTPResponse
 import json
+
 from threading import Thread
 from urllib import request
 
@@ -172,6 +173,15 @@ class GetBUildingAPIVIEW(APIView):
         # the many param informs the serializer that it will be serializing more than a single article.
         serializer = BuildingSerializer(buidlings)
         return Response(serializer.data)
+
+
+
+class GetRoomAl(APIView):
+    def get(self,request):
+        all_roomms = Room.objects.all()
+        room_serializer =  RoomSerializer(all_roomms,many = True)
+        return Response(room_serializer.data)
+
 
 
 

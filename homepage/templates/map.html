@@ -421,9 +421,37 @@
      const markers = L.markerClusterGroup();
 
     
-    $.getJSON("{% url 'homepage:get_all_data' %}", function(data){
+    $.getJSON("{% url 'homepage:all_rm' %}", function(data){
+
+        console.log("new data",data)
+
+
+        const empty_l = []
+       
+
+        data.forEach(element => {
+
+            const dicti2 = {
+                type : "Feature",
+                geometry : element.building.geom,
+                properties : element
+            }
+
+            empty_l.push(dicti2)
+
+
+            
+        });
+
+        const dicti = {
+            type : "FeatureCollection",
+            features : empty_l
+
+        }
+
+        console.log("looo",dicti)
         
-        var geojson = L.geoJson(data, {
+        var geojson = L.geoJson(dicti, {
         onEachFeature: function(feature, layer) {
              // create popup contents
             
@@ -431,7 +459,7 @@
              var customPopup = `
                     <div id="box" class="box-icon">
                     <div style="cursor:pointer;" id="image_cont" class="image-container-icon">
-                        <img src="${feature.properties.building_main_pic}" alt="">
+                        <img src="${feature.properties.room_picture}" alt="">
                               <div class="info">
                            
                             <h3>for rent</h3>
@@ -446,8 +474,8 @@
                             <a href="#" class="fas fa-phone"></a>
                         </div>
                         <div class="location">
-                            <h3>${feature.properties.building_name}</h3>
-                            <p>${feature.properties.location_name}</p>
+                            <h3>${feature.properties.room_name}</h3>
+                            <p>${feature.properties.rent}</p>
                         </div>
                        
                         <div class="buttons">
@@ -475,7 +503,7 @@
               var customPopup = `
               <div id="box" class="box-icon">
               <div style="cursor:pointer;" id="image_cont" class="image-container-icon">
-                  <img src="${feature.properties.building_main_pic}" alt="">
+                  <img src="${feature.properties.room_picture}" alt="">
                         <div class="info">
                      
                       <h3>for rent</h3>
@@ -486,16 +514,15 @@
                   <div class="price">
                       
                       <a href="#" class="fas fa-heart"></a>
-                      <a href="#" class="fas fa-envelope"></a>
-                      <a href="#" class="fas fa-phone"></a>
+                      
                   </div>
                   <div class="location">
-                      <h3>${feature.properties.building_name}</h3>
-                      <p>${feature.properties.location_name}</p>
+                      <h3>${feature.properties.room_name}</h3>
+                      <p>${feature.properties.rent}</p>
                   </div>
                  
                   <div class="buttons">
-                      <a href="#" class="btn">request info</a>
+                      <a href="#" class="btn">Book Tour</a>
                       <a href="/map_detailed/${feature.id}/" class="btn">view details</a>
                   </div>
               </div>
@@ -504,36 +531,6 @@
           ;
 
       
-                
-                var element = `
-                    <div id="box" class="box">
-                    <div style="cursor:pointer;" id="image_cont" class="image-container">
-                        <img src="${feature.properties.building_main_pic}" alt="">
-                              <div class="info">
-                           
-                            <h3>for rent</h3>
-                        </div>
-                      
-                    </div>
-                    <div class="content">
-                        <div class="price">
-                            
-                            <a href="#" class="fas fa-heart"></a>
-                            <a href="#" class="fas fa-envelope"></a>
-                            <a href="#" class="fas fa-phone"></a>
-                        </div>
-                        <div class="location">
-                            <h3>${feature.properties.building_name}</h3>
-                            <p>${feature.properties.location_name}</p>
-                        </div>
-                       
-                        <div class="buttons">
-                            <a href="#" class="btn">request info</a>
-                            <a href="/map_detailed/${feature.id}/" class="btn">view details</a>
-                        </div>
-                    </div>
-                </div>
-                `
                
                 var popup = L.popup()
                     .setLatLng(e.latlng) 
@@ -562,52 +559,62 @@
 <script>
 
     var card_container  =  $('#card-container')
-
+    let all_rooms_list = null
 
     $.ajax({
         type: 'GET',
-        url: "{% url 'homepage:get_all_data' %}",
+        url: "{% url 'homepage:all_rm' %}",
         success: function (response) {
+            console.log(response)
             // on successfull creating object
              // 1. clear the form.
-            var dataa = response.features
+            var dataa = response
+            all_rooms_list = response
 
             for (let j = 0; j < dataa.length; j++) {
-                var building = dataa[j];
-                console.log(building)
-               
-                    
-                    var element = `
-                    <div id="box" class="box">
-                    <div style="cursor:pointer;" id="image_cont" class="image-container">
-                        <img src="${building.properties.building_main_pic}" alt="">
-                              <div class="info">
-                           
-                            <h3>for rent</h3>
-                        </div>
-                      
-                    </div>
-                    <div class="content">
-                        <div class="price">
-                            
-                            <a href="#" class="fas fa-heart"></a>
-                            <a href="#" class="fas fa-envelope"></a>
-                            <a href="#" class="fas fa-phone"></a>
-                        </div>
-                        <div class="location">
-                            <h3>${building.properties.building_name}</h3>
-                            <p>${building.properties.location_name}</p>
-                        </div>
-                       
-                        <div class="buttons">
-                            <a href="#" class="btn">request info</a>
-                            <a href="/map_detailed/${building.id}/" class="btn">view details</a>
-                        </div>
-                    </div>
-                </div>
-                `
+                var r = dataa[j];
+                console.log(r)
+
+                var elm = `<div  onmouseover="bigImg(this)" onmouseout="normalImg(this)" class="box">
+                <input type="hidden" id="hidden_id" value="${r.id}">
+            <div class="image-container">
+                <img src="${r.room_picture}" alt="">
                 
-  card_container.append(element)
+               
+            </div>
+            <div class="content">
+                <div class="price">
+                    <h3>Ksh : ${r.rent}/mo</h3>
+                    <!-- <a href="{{r.get_saved_rentals}" class="fas fa-heart shinning"></a> -->
+                    <a style="background: red;color: white;" href="${r.get_unsaved_rentals}" class="fas fa-heart"></a>
+               
+                </div>
+                <div class="location">
+                    <h3>${r.building.building_name}(${r.room_name})</h3>
+                    <p>${r.building.location_name}</p>
+                </div>
+                <div class="details">
+                    ${r.room_size ? `<h3> <i class="fas fa-expand"></i> ${r.room_size} sqft </h3>` : null}
+                    ${r.room_type ? `<h3> <i class="fas fa-bed"></i> ${r.room_type} </h3>` : null }
+                
+                    ${r.bathtab_np ? `<h3> <i class="fas fa-bath"></i> ${ r.bathtab_np} bathtab </h3>` : null }
+                
+                    ${r.balcony ? `<h3> <i class="fas fa-door-closed"></i>balcony </h3>` : null}
+                    ${r.building.tv_connection ? `<h3> <i class="fas fa-tv"></i> tv connection </h3>` : null}
+                    ${r.building.security ? `<h3> <i class="fas fa-key"></i> security </h3> ` : null}
+
+                </div>
+                <div class="buttons">
+                    <a href="{{r.room.get_book_request}}" class="btn">Book Tour</a>
+                    <a href="{{r.room.get_absolute_url}}" class="btn">view details</a>
+                </div>
+            </div>
+        </div>
+
+`
+               
+                
+          card_container.append(elm)
 
                 
 
@@ -822,6 +829,78 @@
 <script>
 
 </script>
+
+
+<script>
+
+let mm = null;
+ function bigImg(x) {
+
+    // console.log(String(x.innerHTML))
+
+ const doc = new DOMParser().parseFromString(String(x.innerHTML), "text/xml");
+  const ele = doc.getElementById("hidden_id").getAttribute("value")
+  console.log(ele)
+
+  const li_holder = []
+  if(all_rooms_list !== null){
+    all_rooms_list.forEach(element => {
+        if(parseInt(element.id) === parseInt(ele)){
+            li_holder.push(element)
+
+        }
+          
+      });
+  }
+
+  const hovered_element = li_holder[0]
+  console.log(li_holder[0])
+
+  var cus = `
+              <div id="box" class="box-icon">
+              <div style="cursor:pointer;" id="image_cont" class="image-container-icon">
+                  <img src="${hovered_element.room_picture}" alt="">
+                        <div class="info">
+                     
+                      <h3>for rent</h3>
+                  </div>
+                
+              </div>
+              <div class="content">
+                  <div class="price">
+                      
+                      <a href="#" class="fas fa-heart"></a>
+                      
+                  </div>
+                  <div class="location">
+                      <h3>${hovered_element.room_name}</h3>
+                      <p>${hovered_element.rent}</p>
+                  </div>
+                 
+                  <div class="buttons">
+                      <a href="#" class="btn">Book Tour</a>
+                      <a href="/map_detailed//" class="btn">view details</a>
+                  </div>
+              </div>
+          </div>
+          `
+          ;
+
+
+  mm = new L.marker(hovered_element.building.geom.coordinates).addTo(map).bindPopup(cus);
+  mm.openPopup();
+
+
+}
+</script>
+
+
+<script>
+    function normalImg(x) {
+    map.removeLayer(mm)
+}
+</script>
+
 
 
 {% endblock extra_js %}
