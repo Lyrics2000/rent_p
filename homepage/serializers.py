@@ -24,3 +24,6 @@ class SavedRoomSerializers(serializers.ModelSerializer):
     class Meta:
         model = SavedRooms
         fields = ['id','user','liked','room']
+
+
+

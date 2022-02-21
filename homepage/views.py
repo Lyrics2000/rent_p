@@ -141,6 +141,8 @@ def map_search_view(request):
                 # radius =  100
                 # point = Point(longitude,latitude)
                 # buildings =  Building.objects.filter(geom__distance_lt=(point, Distance(km=radius)))
+            
+            
             all_rooms =  Room.objects.filter(approved = True,paid = False,building__building_name =location )
             context= {
                 'type': building,
@@ -645,7 +647,52 @@ class SendContactMail(APIView):
         return Response({"success":True})
 
 
+@login_required(login_url="account:sign_in")
+def map_search_view_authenticated(request):
+    
+    if request.is_ajax and request.method == "POST":
+        user_obj =  User.objects.get(id =  request.user.id)
+        sv = SavedRooms.objects.filter(user =  user_obj,liked=True)
+       
+     
+        location =  request.POST.get("location_search")
+        building =  request.POST.get('building')
+        if(building  == "building"):
+            print("checking 1")
+          
+            
+            all_rooms =  Room.objects.filter(approved = True,paid = False,building__building_name =location )
+            context= {
 
+                'saved_room':sv,
+                'type': building,
+                'criteria_mk' : location,
+                'formatted' : f"Search for : {location}",
+                'all_rooms'  : all_rooms
+            }
+            
+            return render(request,'map.html',context)
+
+        elif (building  == "location"):
+            print("checking 2")
+            all_rooms =  Room.objects.filter(approved = True,paid = False,building__building_name = location )
+            context= {
+                'saved_room':sv,
+                'type': building,
+                'criteria_mk' : location,
+                'formatted' : f"Search for : {location}",
+                'all_rooms'  : all_rooms
+            }
+            
+            return render(request,'map.html',context)
+    all_rooms =  Room.objects.filter(approved = True,paid = False)
+
+    context= {
+        'saved_room':sv,
+        'rooms' :  all_rooms
+    }
+    
+    return render(request,'fullmap.html',context)
 
 
 

@@ -425,7 +425,7 @@
 
      $.ajax({
         type: 'POST',
-        data : {"criteria":critearo,"type":ty},
+        data : {"criteria":critearo,"type":ty,'csrfmiddlewaretoken': '{{ csrf_token }}'},
         url: "{% url 'homepage:all_rm' %}",
         success: function (data) {
 
@@ -706,9 +706,10 @@ geojson.addTo(map);
     critearo = "{{criteria_mk}}"
     ty = "{{type}}"
 
+
     $.ajax({
         type: 'POST',
-        data : {"criteria":critearo,"type":ty},
+        data : {"criteria":critearo,"type":ty,'csrfmiddlewaretoken': '{{ csrf_token }}'},
         url: "{% url 'homepage:all_rm' %}",
         success: function (response) {
             console.log(response)
