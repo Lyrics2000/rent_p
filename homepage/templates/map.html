@@ -398,9 +398,9 @@
 
     // map
     var map = L.map( 'map', {
-        center: [-1.286389, 36.817223],
-        minZoom: 2,
-        zoom: 5,
+        center: [{{zoom_lat}}, {{zoom_lng}}],
+        minZoom: 7,
+        zoom: 16,
         zoomControl: true
     
         });
@@ -408,6 +408,13 @@
         maxZoom: 20,
         subdomains:['mt0','mt1','mt2','mt3']
     }).addTo(map);
+
+    var circle = L.circle([{{zoom_lat}}, {{zoom_lng}}], {
+		color: 'red',
+		fillColor: '#f03',
+		fillOpacity: 0.3,
+		radius: 500
+	}).addTo(map);
 
   
 
@@ -419,13 +426,13 @@
     });
     
      const markers = L.markerClusterGroup();
-     critearo = "{{criteria_mk}}"
-     ty = "{{type}}"
+     latitudke = {{zoom_lat}}
+     longitudke = {{zoom_lng}}
 
 
      $.ajax({
         type: 'POST',
-        data : {"criteria":critearo,"type":ty,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        data : {"latitude":latitudke,"longitudkie":longitudke,'csrfmiddlewaretoken': '{{ csrf_token }}'},
         url: "{% url 'homepage:all_rm' %}",
         success: function (data) {
 
@@ -462,43 +469,53 @@ onEachFeature: function(feature, layer) {
      // create popup contents
     
      console.log(feature.properties.account_number)
-     var customPopup = `
-            <div id="box" class="box-icon">
-            <div style="cursor:pointer;" id="image_cont" class="image-container-icon">
-                <img src="${feature.properties.room_picture}" alt="">
-                      <div class="info">
-                   
-                    <h3>for rent</h3>
-                </div>
-              
-            </div>
-            <div class="content">
-                <div class="price">
-                    
-                    <a href="#" class="fas fa-heart"></a>
-                    <a href="#" class="fas fa-envelope"></a>
-                    <a href="#" class="fas fa-phone"></a>
-                </div>
-                <div class="location">
-                    <h3>${feature.properties.room_name}</h3>
-                    <p>${feature.properties.rent}</p>
-                </div>
-               
-                <div class="buttons">
-                    <a href="book_request/${feature.properties.id}/" class="btn">Book,, Tour</a>
-                    <a href="room_detailed/${feature.properties.id}/" class="btn">view details</a>
-               
-                </div>
-            </div>
+
+     var cusp = `<div style="display: flex;flex-wrap: wrap;gap:1.5rem;width: 250px;height: 200px;">
+
+
+<div style="border:.1rem solid #000;box-shadow: 0 .5rem 1rem #000;border-radius: .5rem;overflow:hidden;background:#fff;flex:1 1 30rem;">
+    <div style="overflow:hidden;position: relative;width: 100%;height: 10rem;">
+        <img style="width: 100%;height: 200px;object-fit: cover;transition: .2s linear;" src="${feature.properties.room_picture}" alt="">
+        <div style="position: absolute;top:10px; left:0;display: flex;">
+          
+            <h3 style="font-weight: 500;
+            font-size: 10px;
+            color:white;
+            background:red;
+            border-radius: .5rem;
+            padding:.5rem ;
+            margin-left: 1rem;">for rent</h3>
         </div>
-        `
-        ;
+       
+    </div>
+ 
+    <div >
+            
+        <div style=" display: flex;
+        align-items: center;justify-content: space-between;margin-left: 20px;margin-right: 20px;">
+            <h3 style="font-size:12px;">${feature.properties.room_name}</h3>
+            <h3 style="font-size:12px;">Ksh${feature.properties.rent}/mo</h3>
+            <div style="font-size:12px;" href="#" class="fas fa-heart shinning"></div>
+          
+        </div>
+     
+    
+        <div style="display: flex;align-items: center; justify-content: space-evenly;margin-left: 10px;margin-right: 10px;">
+                    <a style="padding:0.4rem; 0.8rem;font-size:1.3rem" href="book_request/${feature.properties.id}/" class="btn">Book Tour</a>
+                    <a style="padding:0.4rem; 0.8rem;font-size:1.3rem" href="room_detailed/${feature.properties.id}/" class="btn">view details</a>
+               
+                </div>
+    </div>
+</div>
+
+</div>
+`
 
     
 
    
     
-        layer.bindPopup( customPopup);
+        layer.bindPopup(cusp);
 
 
     },
@@ -507,41 +524,56 @@ pointToLayer: function (feature, latlng) {
         console.log(latlng)
       //  this.target.openPopup()
 
-      var customPopup = `
-      <div id="box" class="box-icon">
-      <div style="cursor:pointer;" id="image_cont" class="image-container-icon">
-          <img src="${feature.properties.room_picture}" alt="">
-                <div class="info">
-             
-              <h3>for rent</h3>
-          </div>
-        
-      </div>
-      <div class="content">
-          <div class="price">
-              
-              <a href="#" class="fas fa-heart"></a>
-              
-          </div>
-          <div class="location">
-              <h3>${feature.properties.room_name}</h3>
-              <p>${feature.properties.rent}</p>
-          </div>
-         
-          <div class="buttons">
-              <a href="book_request/${feature.properties.id}/" class="btn">Book Tour</a>
-              <a href="room_detailed/${feature.properties.id}/" class="btn">view details</a>
-          </div>
-      </div>
-  </div>
-  `
-  ;
+      var cusp = `<div style="display: flex;flex-wrap: wrap;gap:1.5rem;width: 250px;height: 200px;">
 
+
+<div style="border:.1rem solid #000;box-shadow: 0 .5rem 1rem #000;border-radius: .5rem;overflow:hidden;background:#fff;flex:1 1 15rem;">
+    <div style="overflow:hidden;position: relative;width: 100%;height: 10rem;">
+        <img style="width: 100%;height: 200px;object-fit: cover;transition: .2s linear;" src="${feature.properties.room_picture}" alt="">
+        <div style="position: absolute;top:10px; left:0;display: flex;">
+          
+            <h3 style="font-weight: 500;
+            font-size: 10px;
+            color:white;
+            background:red;
+            border-radius: .5rem;
+            padding:.5rem ;
+            margin-left: 1rem;">for rent</h3>
+        </div>
+       
+    </div>
+ 
+    <div >
+            
+        <div style=" display: flex;
+        align-items: center;justify-content: space-between;margin-left: 20px;margin-right: 20px;">
+            <h3 style="font-size:12px;">${feature.properties.room_name}</h3>
+            <h3 style="font-size:12px;">Ksh${feature.properties.rent}/mo</h3>
+            <div style="font-size:12px;" href="#" class="fas fa-heart shinning"></div>
+          
+        </div>
+     
+    
+        <div style="display: flex;align-items: center; justify-content: space-evenly;margin-left: 10px;margin-right: 10px;">
+                    <a style="padding:0.4rem; 0.8rem;font-size:1.3rem" href="book_request/${feature.properties.id}/" class="btn">Book Tour</a>
+                    <a style="padding:0.4rem; 0.8rem;font-size:1.3rem" href="room_detailed/${feature.properties.id}/" class="btn">view details</a>
+               
+                </div>
+    </div>
+</div>
+
+</div>
+`
+
+    
+
+      
+ 
 
        
         var popup = L.popup()
             .setLatLng(e.latlng) 
-            .setContent(customPopup)
+            .setContent(cusp)
             .openOn(map);
         // var card_container  =  $('#card-container')
         // {% comment %} card_container.empty();
@@ -550,6 +582,8 @@ pointToLayer: function (feature, latlng) {
     }));
   }
 });
+
+
 geojson.addTo(map);
 
           
@@ -691,6 +725,9 @@ geojson.addTo(map);
     
     map.addLayer(markers);
 
+
+  
+
     
 
 
@@ -703,13 +740,13 @@ geojson.addTo(map);
     var card_container  =  $('#card-container')
     let all_rooms_list = null
 
-    critearo = "{{criteria_mk}}"
-    ty = "{{type}}"
+    latitudkoe = {{zoom_lat}}
+     longitudoke = {{zoom_lng}}
 
 
     $.ajax({
         type: 'POST',
-        data : {"criteria":critearo,"type":ty,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        data : {"latitude":latitudkoe,"longitudkie":longitudoke,'csrfmiddlewaretoken': '{{ csrf_token }}'},
         url: "{% url 'homepage:all_rm' %}",
         success: function (response) {
             console.log(response)
@@ -1004,35 +1041,49 @@ let mm = null;
   const hovered_element = li_holder[0]
   console.log(li_holder[0])
 
-  var cus = `
-              <div id="box" class="box-icon">
-              <div style="cursor:pointer;" id="image_cont" class="image-container-icon">
-                  <img src="${hovered_element.room_picture}" alt="">
-                        <div class="info">
-                     
-                      <h3>for rent</h3>
-                  </div>
-                
-              </div>
-              <div class="content">
-                  <div class="price">
-                      
-                      <a href="#" class="fas fa-heart"></a>
-                      
-                  </div>
-                  <div class="location">
-                      <h3>${hovered_element.room_name}</h3>
-                      <p>${hovered_element.rent}</p>
-                  </div>
-                 
-                  <div class="buttons">
-                      <a href="#" class="btn">Book Tour</a>
-                      <a href="/map_detailed//" class="btn">view details</a>
-                  </div>
-              </div>
-          </div>
-          `
-          ;
+  var cusp = `<div style="display: flex;flex-wrap: wrap;gap:1.5rem;width: 250px;height: 200px;">
+
+
+<div style="border:.1rem solid #000;box-shadow: 0 .5rem 1rem #000;border-radius: .5rem;overflow:hidden;background:#fff;flex:1 1 15rem;">
+    <div style="overflow:hidden;position: relative;width: 100%;height: 10rem;">
+        <img style="width: 100%;height: 200px;object-fit: cover;transition: .2s linear;" src="${hovered_element.room_picture}" alt="">
+        <div style="position: absolute;top:10px; left:0;display: flex;">
+          
+            <h3 style="font-weight: 500;
+            font-size: 10px;
+            color:white;
+            background:red;
+            border-radius: .5rem;
+            padding:.5rem ;
+            margin-left: 1rem;">for rent</h3>
+        </div>
+       
+    </div>
+ 
+    <div >
+            
+        <div style=" display: flex;
+        align-items: center;justify-content: space-between;margin-left: 20px;margin-right: 20px;">
+            <h3 style="font-size:12px;">${hovered_element.room_name}</h3>
+            <h3 style="font-size:12px;">Ksh${hovered_element.rent}/mo</h3>
+            <div style="font-size:12px;" href="#" class="fas fa-heart shinning"></div>
+          
+        </div>
+     
+    
+        <div style="display: flex;align-items: center; justify-content: space-evenly;margin-left: 10px;margin-right: 10px;">
+                    <a style="padding:0.4rem; 0.8rem;font-size:1.3rem" href="book_request/${hovered_element.id}/" class="btn">Book Tour</a>
+                    <a style="padding:0.4rem; 0.8rem;font-size:1.3rem" href="room_detailed/${hovered_element.id}/" class="btn">view details</a>
+               
+                </div>
+    </div>
+</div>
+
+</div>
+`
+
+    
+
 
           var smallIcon = new L.Icon({
         iconSize: [27, 27],
@@ -1043,7 +1094,7 @@ let mm = null;
     
 
     const lat_long = [hovered_element.building.geom.coordinates[1],hovered_element.building.geom.coordinates[0]]
-    mm = new L.marker(lat_long,{icon:smallIcon }).addTo(map).bindPopup(cus);
+    mm = new L.marker(lat_long,{icon:smallIcon }).addTo(map).bindPopup(cusp);
     mm.openPopup();
     mm.on("mouseover",(e)=>{
         mm.openPopup();
