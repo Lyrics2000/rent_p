@@ -201,8 +201,9 @@ class GetRoomAl(APIView):
         print(latitude,longitude)
 
         radius = 500
-        point = Point(float(longitude),float(latitude))
-        all_rooms =  Room.objects.filter(approved = True,paid = False,building__geom__distance_lt=(point, Distance(km=radius)) )
+        
+        point = Point(float(latitude),float(longitude))
+        all_rooms =  Room.objects.filter(approved = True,paid = False,building__geom__distance_lte=(point, Distance(km=radius)) )
         
         # if (typee == "building"):
             # buidling = Building.objects.filter()

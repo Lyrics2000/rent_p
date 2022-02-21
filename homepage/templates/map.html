@@ -301,6 +301,8 @@
     <p style="font-size:2rem;color:black; margin-bottom:2rem;"> {{formatted}} </p>
     {% endif %}
 
+    <div  id="warning"></div>
+
     <div class="button_container">
 
         <ul class="unordered1">
@@ -415,6 +417,13 @@
 		fillOpacity: 0,
 		radius: 500
 	}).addTo(map);
+
+    map.createPane('labels');
+    // This pane is above markers but below popups
+	map.getPane('labels').style.zIndex = 650;
+
+    // Layers in this pane are non-interactive and do not obscure mouse/touch events
+	map.getPane('labels').style.pointerEvents = 'none';
 
   
 
@@ -750,6 +759,10 @@ geojson.addTo(map);
         url: "{% url 'homepage:all_rm' %}",
         success: function (response) {
             console.log(response)
+        if(response.length > 0){
+            
+
+            
             // on successfull creating object
              // 1. clear the form.
             var dataa = response
@@ -802,7 +815,7 @@ geojson.addTo(map);
           card_container.append(elm)
 
                 
-
+            
                 
                 
 
@@ -813,6 +826,13 @@ geojson.addTo(map);
             // display the newly friend to table.
             // var instance = JSON.parse(response);
 
+        }else{
+           const w =  $("#warning").empty()
+           w.append(`<div class="alert alert-warning" role="alert">
+        No buildings try  searching for different city,Neighborhood
+      </div>`)
+
+        }
 
           
            
@@ -1095,6 +1115,7 @@ let mm = null;
 
     const lat_long = [hovered_element.building.geom.coordinates[1],hovered_element.building.geom.coordinates[0]]
     mm = new L.marker(lat_long,{icon:smallIcon }).addTo(map).bindPopup(cusp);
+    map.invalidateSize();
     mm.openPopup();
     mm.on("mouseover",(e)=>{
         mm.openPopup();
