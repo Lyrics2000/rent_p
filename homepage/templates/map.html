@@ -298,7 +298,7 @@
     
   
     {% if formatted %}
-    <p style="font-size:2rem;color:black; margin-bottom:2rem;"> search near : {{formatted}} </p>
+    <p style="font-size:2rem;color:black; margin-bottom:2rem;"> {{formatted}} </p>
     {% endif %}
 
     <div class="button_container">
@@ -419,134 +419,276 @@
     });
     
      const markers = L.markerClusterGroup();
+     critearo = "{{criteria_mk}}"
+     ty = "{{type}}"
 
-    
-    $.getJSON("{% url 'homepage:all_rm' %}", function(data){
+
+     $.ajax({
+        type: 'POST',
+        data : {"criteria":critearo,"type":ty},
+        url: "{% url 'homepage:all_rm' %}",
+        success: function (data) {
 
         console.log("new data",data)
 
 
-        const empty_l = []
+const empty_l = []
+
+
+data.forEach(element => {
+
+    const dicti2 = {
+        type : "Feature",
+        geometry : element.building.geom,
+        properties : element
+    }
+
+    empty_l.push(dicti2)
+
+
+    
+});
+
+const dicti = {
+    type : "FeatureCollection",
+    features : empty_l
+
+}
+
+console.log("looo",dicti)
+
+var geojson = L.geoJson(dicti, {
+onEachFeature: function(feature, layer) {
+     // create popup contents
+    
+     console.log(feature.properties.account_number)
+     var customPopup = `
+            <div id="box" class="box-icon">
+            <div style="cursor:pointer;" id="image_cont" class="image-container-icon">
+                <img src="${feature.properties.room_picture}" alt="">
+                      <div class="info">
+                   
+                    <h3>for rent</h3>
+                </div>
+              
+            </div>
+            <div class="content">
+                <div class="price">
+                    
+                    <a href="#" class="fas fa-heart"></a>
+                    <a href="#" class="fas fa-envelope"></a>
+                    <a href="#" class="fas fa-phone"></a>
+                </div>
+                <div class="location">
+                    <h3>${feature.properties.room_name}</h3>
+                    <p>${feature.properties.rent}</p>
+                </div>
+               
+                <div class="buttons">
+                    <a href="book_request/${feature.properties.id}/" class="btn">Book,, Tour</a>
+                    <a href="room_detailed/${feature.properties.id}/" class="btn">view details</a>
+               
+                </div>
+            </div>
+        </div>
+        `
+        ;
+
+    
+
+   
+    
+        layer.bindPopup( customPopup);
+
+
+    },
+pointToLayer: function (feature, latlng) {
+    return markers.addLayer(L.marker(latlng, {icon: smallIcon}).on('mouseover',(e)=>{
+        console.log(latlng)
+      //  this.target.openPopup()
+
+      var customPopup = `
+      <div id="box" class="box-icon">
+      <div style="cursor:pointer;" id="image_cont" class="image-container-icon">
+          <img src="${feature.properties.room_picture}" alt="">
+                <div class="info">
+             
+              <h3>for rent</h3>
+          </div>
+        
+      </div>
+      <div class="content">
+          <div class="price">
+              
+              <a href="#" class="fas fa-heart"></a>
+              
+          </div>
+          <div class="location">
+              <h3>${feature.properties.room_name}</h3>
+              <p>${feature.properties.rent}</p>
+          </div>
+         
+          <div class="buttons">
+              <a href="book_request/${feature.properties.id}/" class="btn">Book Tour</a>
+              <a href="room_detailed/${feature.properties.id}/" class="btn">view details</a>
+          </div>
+      </div>
+  </div>
+  `
+  ;
+
+
+       
+        var popup = L.popup()
+            .setLatLng(e.latlng) 
+            .setContent(customPopup)
+            .openOn(map);
+        // var card_container  =  $('#card-container')
+        // {% comment %} card_container.empty();
+        // card_container.append(element) {% endcomment %}
+
+    }));
+  }
+});
+geojson.addTo(map);
+
+          
+        },
+        error: function (response) {
+            // alert the error if any error occured
+            alert(response["responseJSON"]["error"]);
+        }
+    })
+
+    
+    // $.getJSON("{% url 'homepage:all_rm' %}", function(data){
+
+    //     console.log("new data",data)
+
+
+    //     const empty_l = []
        
 
-        data.forEach(element => {
+    //     data.forEach(element => {
 
-            const dicti2 = {
-                type : "Feature",
-                geometry : element.building.geom,
-                properties : element
-            }
+    //         const dicti2 = {
+    //             type : "Feature",
+    //             geometry : element.building.geom,
+    //             properties : element
+    //         }
 
-            empty_l.push(dicti2)
+    //         empty_l.push(dicti2)
 
 
             
-        });
+    //     });
 
-        const dicti = {
-            type : "FeatureCollection",
-            features : empty_l
+    //     const dicti = {
+    //         type : "FeatureCollection",
+    //         features : empty_l
 
-        }
+    //     }
 
-        console.log("looo",dicti)
+    //     console.log("looo",dicti)
         
-        var geojson = L.geoJson(dicti, {
-        onEachFeature: function(feature, layer) {
-             // create popup contents
+    //     var geojson = L.geoJson(dicti, {
+    //     onEachFeature: function(feature, layer) {
+    //          // create popup contents
             
-             console.log(feature.properties.account_number)
-             var customPopup = `
-                    <div id="box" class="box-icon">
-                    <div style="cursor:pointer;" id="image_cont" class="image-container-icon">
-                        <img src="${feature.properties.room_picture}" alt="">
-                              <div class="info">
+    //          console.log(feature.properties.account_number)
+    //          var customPopup = `
+    //                 <div id="box" class="box-icon">
+    //                 <div style="cursor:pointer;" id="image_cont" class="image-container-icon">
+    //                     <img src="${feature.properties.room_picture}" alt="">
+    //                           <div class="info">
                            
-                            <h3>for rent</h3>
-                        </div>
+    //                         <h3>for rent</h3>
+    //                     </div>
                       
-                    </div>
-                    <div class="content">
-                        <div class="price">
+    //                 </div>
+    //                 <div class="content">
+    //                     <div class="price">
                             
-                            <a href="#" class="fas fa-heart"></a>
-                            <a href="#" class="fas fa-envelope"></a>
-                            <a href="#" class="fas fa-phone"></a>
-                        </div>
-                        <div class="location">
-                            <h3>${feature.properties.room_name}</h3>
-                            <p>${feature.properties.rent}</p>
-                        </div>
+    //                         <a href="#" class="fas fa-heart"></a>
+    //                         <a href="#" class="fas fa-envelope"></a>
+    //                         <a href="#" class="fas fa-phone"></a>
+    //                     </div>
+    //                     <div class="location">
+    //                         <h3>${feature.properties.room_name}</h3>
+    //                         <p>${feature.properties.rent}</p>
+    //                     </div>
                        
-                        <div class="buttons">
-                            <a href="#" class="btn">request info</a>
-                            <a href="/map_detailed/${feature.id}/" class="btn">view details</a>
-                        </div>
-                    </div>
-                </div>
-                `
-                ;
+    //                     <div class="buttons">
+    //                         <a href="#" class="btn">request info</a>
+    //                         <a href="/map_detailed/${feature.id}/" class="btn">view details</a>
+    //                     </div>
+    //                 </div>
+    //             </div>
+    //             `
+    //             ;
     
             
 
            
             
-                layer.bindPopup( customPopup);
+    //             layer.bindPopup( customPopup);
        
        
-            },
-        pointToLayer: function (feature, latlng) {
-            return markers.addLayer(L.marker(latlng, {icon: smallIcon}).on('mouseover',(e)=>{
-                console.log(latlng)
-              //  this.target.openPopup()
+    //         },
+    //     pointToLayer: function (feature, latlng) {
+    //         return markers.addLayer(L.marker(latlng, {icon: smallIcon}).on('mouseover',(e)=>{
+    //             console.log(latlng)
+    //           //  this.target.openPopup()
 
-              var customPopup = `
-              <div id="box" class="box-icon">
-              <div style="cursor:pointer;" id="image_cont" class="image-container-icon">
-                  <img src="${feature.properties.room_picture}" alt="">
-                        <div class="info">
+    //           var customPopup = `
+    //           <div id="box" class="box-icon">
+    //           <div style="cursor:pointer;" id="image_cont" class="image-container-icon">
+    //               <img src="${feature.properties.room_picture}" alt="">
+    //                     <div class="info">
                      
-                      <h3>for rent</h3>
-                  </div>
+    //                   <h3>for rent</h3>
+    //               </div>
                 
-              </div>
-              <div class="content">
-                  <div class="price">
+    //           </div>
+    //           <div class="content">
+    //               <div class="price">
                       
-                      <a href="#" class="fas fa-heart"></a>
+    //                   <a href="#" class="fas fa-heart"></a>
                       
-                  </div>
-                  <div class="location">
-                      <h3>${feature.properties.room_name}</h3>
-                      <p>${feature.properties.rent}</p>
-                  </div>
+    //               </div>
+    //               <div class="location">
+    //                   <h3>${feature.properties.room_name}</h3>
+    //                   <p>${feature.properties.rent}</p>
+    //               </div>
                  
-                  <div class="buttons">
-                      <a href="#" class="btn">Book Tour</a>
-                      <a href="/map_detailed/${feature.id}/" class="btn">view details</a>
-                  </div>
-              </div>
-          </div>
-          `
-          ;
+    //               <div class="buttons">
+    //                   <a href="#" class="btn">Book Tour</a>
+    //                   <a href="/map_detailed/${feature.id}/" class="btn">view details</a>
+    //               </div>
+    //           </div>
+    //       </div>
+    //       `
+    //       ;
 
       
                
-                var popup = L.popup()
-                    .setLatLng(e.latlng) 
-                    .setContent(customPopup)
-                    .openOn(map);
-                // var card_container  =  $('#card-container')
-                // {% comment %} card_container.empty();
-                // card_container.append(element) {% endcomment %}
+    //             var popup = L.popup()
+    //                 .setLatLng(e.latlng) 
+    //                 .setContent(customPopup)
+    //                 .openOn(map);
+    //             // var card_container  =  $('#card-container')
+    //             // {% comment %} card_container.empty();
+    //             // card_container.append(element) {% endcomment %}
 
-            }));
-          }
-     });
-     geojson.addTo(map);
+    //         }));
+    //       }
+    //  });
+    //  geojson.addTo(map);
      
-     });
-     // marker clustering
+    //  });
+    //  // marker clustering
+    
+    
     map.addLayer(markers);
 
     
@@ -561,8 +703,12 @@
     var card_container  =  $('#card-container')
     let all_rooms_list = null
 
+    critearo = "{{criteria_mk}}"
+    ty = "{{type}}"
+
     $.ajax({
-        type: 'GET',
+        type: 'POST',
+        data : {"criteria":critearo,"type":ty},
         url: "{% url 'homepage:all_rm' %}",
         success: function (response) {
             console.log(response)
@@ -605,8 +751,9 @@
 
                 </div>
                 <div class="buttons">
-                    <a href="{{r.room.get_book_request}}" class="btn">Book Tour</a>
-                    <a href="{{r.room.get_absolute_url}}" class="btn">view details</a>
+                    <a href="book_request/${r.id}/" class="btn">Book,, Tour</a>
+                    <a href="room_detailed/${r.id}/" class="btn">view details</a>
+               
                 </div>
             </div>
         </div>
@@ -886,9 +1033,20 @@ let mm = null;
           `
           ;
 
+          var smallIcon = new L.Icon({
+        iconSize: [27, 27],
+        iconAnchor: [13, 27],
+        popupAnchor:  [1, -24],
+        iconUrl: '{% static "images/mk.png" %}'
+    });
+    
+
     const lat_long = [hovered_element.building.geom.coordinates[1],hovered_element.building.geom.coordinates[0]]
-  mm = new L.marker(lat_long).addTo(map).bindPopup(cus);
-  mm.openPopup();
+    mm = new L.marker(lat_long,{icon:smallIcon }).addTo(map).bindPopup(cus);
+    mm.openPopup();
+    mm.on("mouseover",(e)=>{
+        mm.openPopup();
+    })
 
 
 }

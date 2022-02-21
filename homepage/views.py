@@ -1,9 +1,12 @@
 from cgitb import html
 from http.client import HTTPResponse
 import json
-
+from django.db.models import Q
 from threading import Thread
 from urllib import request
+
+from fuzzywuzzy import fuzz
+from fuzzywuzzy import process
 
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -126,30 +129,42 @@ def index(request):
 def map_search_view(request):
     if request.is_ajax and request.method == "POST":
         location =  request.POST.get("location_search")
-        if len(location) > 0:
-            app = LocationQuery(location.replace(" ","%20"))
-            dataa =  app.resp()
-            results =  dataa['results'][0]['formatted']
-            latitude = dataa['results'][0]['geometry']['lat']
-            longitude =  dataa['results'][0]['geometry']['lng']
-            radius =  100
-            point = Point(longitude,latitude)
-            buildings =  Building.objects.filter(geom__distance_lt=(point, Distance(km=radius)))
-            all_rooms =  Room.objects.filter(approved = True,paid = False)
+        building =  request.POST.get('building')
+        if(building  == "building"):
+            print("checking 1")
+            # if len(location) > 0:
+                # app = LocationQuery(location.replace(" ","%20"))
+                # dataa =  app.resp()
+                # results =  dataa['results'][0]['formatted']
+                # latitude = dataa['results'][0]['geometry']['lat']
+                # longitude =  dataa['results'][0]['geometry']['lng']
+                # radius =  100
+                # point = Point(longitude,latitude)
+                # buildings =  Building.objects.filter(geom__distance_lt=(point, Distance(km=radius)))
+            all_rooms =  Room.objects.filter(approved = True,paid = False,building__building_name =location )
             context= {
-                'building':buildings,
-                'formatted' : results,
+                'type': building,
+                'criteria_mk' : location,
+                'formatted' : f"Search for : {location}",
                 'all_rooms'  : all_rooms
             }
             
             return render(request,'map.html',context)
 
-
-    buildings =  Building.objects.all()
+        elif (building  == "location"):
+            print("checking 2")
+            all_rooms =  Room.objects.filter(approved = True,paid = False,building__building_name = location )
+            context= {
+                'type': building,
+                'criteria_mk' : location,
+                'formatted' : f"Search for : {location}",
+                'all_rooms'  : all_rooms
+            }
+            
+            return render(request,'map.html',context)
     all_rooms =  Room.objects.filter(approved = True,paid = False)
 
     context= {
-        'building':buildings,
         'rooms' :  all_rooms
     }
     
@@ -178,9 +193,46 @@ class GetBUildingAPIVIEW(APIView):
 
 class GetRoomAl(APIView):
     def get(self,request):
-        all_roomms = Room.objects.all()
+        criteria = request.query_params
+        print(criteria)
+        all_roomms = Room.objects.filter(approved = True,paid = False)
         room_serializer =  RoomSerializer(all_roomms,many = True)
         return Response(room_serializer.data)
+
+
+    def post(self,request):
+        criteria = request.data['criteria']
+        typee = request.data['type']
+        print("criteriaoo",criteria)
+        if (typee == "building"):
+            # buidling = Building.objects.filter()
+            # building__building_name__in = criteria
+            all_roomms = Room.objects.filter(Q(approved = True,paid = False)) 
+            empty_list = []
+            for i in all_roomms:
+                ratio = fuzz.partial_ratio(i.building.building_name.lower(),criteria.lower())
+                if (ratio >=70):
+                    empty_list.append(i)
+
+            print(empty_list)
+            # all_roomms = Room.objects.filter(approved = True,paid = False,buiding__building_name__contains = criteria)
+            room_serializer =  RoomSerializer(empty_list,many = True)
+            return Response(room_serializer.data)
+
+        elif (typee == "location"):
+            all_roomms = Room.objects.filter(Q(approved = True,paid = False)) 
+            empty_list = []
+            for i in all_roomms:
+                ratio = fuzz.partial_ratio(i.building.location_name.lower(),criteria.lower())
+                if (ratio >=70):
+                    empty_list.append(i)
+
+            print(empty_list)
+            # all_roomms = Room.objects.filter(approved = True,paid = False,buiding__building_name__contains = criteria)
+            room_serializer =  RoomSerializer(empty_list,many = True)
+            return Response(room_serializer.data)
+
+
 
 
 
