@@ -148,38 +148,39 @@ def map_search_view(request):
             if (ratio >=70):
                     empty_list_two.append(l.id)
 
-        print(empty_list_two[0])  
-        map_l = MapLocations.objects.get(id = int(empty_list_two[0]) )
-        filered_m = Coordinated.objects.filter(map_frame = map_l)
+        try:
+            print(empty_list_two[0])  
+            map_l = MapLocations.objects.get(id = int(empty_list_two[0]) )
+            filered_m = Coordinated.objects.filter(map_frame = map_l)
 
-        print("checking 1")
-        # app = LocationQuery(location.replace(" ","%20"))
-        # dataa =  app.resp()
-  
-        # results =  dataa['results'][0]['formatted']
-        # latitude = dataa['results'][0]['geometry']['lat']
-        # longitude =  dataa['results'][0]['geometry']['lng']
-
-        # radius =  100
-        # point = Point(longitude,latitude)
-        # buildings =  Building.objects.filter(geom__distance_lt=(point, Distance(km=radius)))
-    
-        
-    
-        # all_rooms =  Room.objects.filter(approved = True,paid = False,building__geom__distance_lt=(point, Distance(km=radius)) )
+            print("checking 1")
        
-        all_rooms =  Room.objects.filter(approved = True,paid = False)
-        context= {
+            all_rooms =  Room.objects.filter(approved = True,paid = False)
+            context= {
+                
+                'type': building,
             
-            'type': building,
+                'coordinates' : filered_m,
+                'criteria_mk' : location,
+                'formatted' : f"Search for : {location}",
+                'all_rooms'  : all_rooms
+            }
         
-            'coordinates' : filered_m,
-            'criteria_mk' : location,
-            'formatted' : f"Search for : {location}",
-            'all_rooms'  : all_rooms
-        }
+            return render(request,'map_edited.html',context)
+        except:
+            all_rooms =  Room.objects.filter(approved = True,paid = False)
+            context= {
+                
+                'type': building,
+            
+                'coordinates' : [],
+                'criteria_mk' : location,
+                'formatted' : f"Search for : {location}",
+                'all_rooms'  : all_rooms
+            }
         
-        return render(request,'map_edited.html',context)
+            return render(request,'map_edited.html',context)
+            
     all_rooms =  Room.objects.filter(approved = True,paid = False)
 
     context= {
