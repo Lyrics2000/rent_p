@@ -29,8 +29,8 @@ from homepage.common.sendsms import sendSms
 from homepage.sendEmailT import SendEmailKanzi
 
 from .LOc import LocationQuery
-from .models import BookingRequest, Building, BuildingMorePic, Room, RoomMorePic, SavedRooms, SlidingImages,BookTour
-from .serializers import BuildingSerializer, RoomSerializer, SavedRoomSerializers
+from .models import BookingRequest, Building, BuildingMorePic, Coordinated, MapLocations, Room, RoomMorePic, SavedRooms, SlidingImages,BookTour
+from .serializers import BuildingSerializer, CoordinatedSerializer, RoomSerializer, SavedRoomSerializers
 
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
@@ -130,30 +130,50 @@ def map_search_view(request):
     if request.is_ajax and request.method == "POST":
         location =  request.POST.get("location_search")
         building =  request.POST.get('building')
-    
-        print("checking 1")
         
-        app = LocationQuery(location.replace(" ","%20"))
-        dataa =  app.resp()
-        print("dataa",dataa)
-        results =  dataa['results'][0]['formatted']
-        latitude = dataa['results'][0]['geometry']['lat']
-        longitude =  dataa['results'][0]['geometry']['lng']
+        rms =  Room.objects.filter(approved = True,paid = False)
+        empty_list = []
+        for i in rms:
+            if i.building.l_name:
+                ratio = fuzz.partial_ratio(i.building.l_name.area_name.lower(),location.lower())
+                if (ratio >=70):
+                    empty_list.append(i)
 
-        radius =  100
-        point = Point(longitude,latitude)
+
+        oo = MapLocations.objects.all()
+        empty_list_two = []
+        for l in oo:
+            print(l)
+            ratio = fuzz.partial_ratio(l.area_name.lower(),location.lower())
+            if (ratio >=70):
+                    empty_list_two.append(l.id)
+
+        print(empty_list_two[0])  
+        map_l = MapLocations.objects.get(id = int(empty_list_two[0]) )
+        filered_m = Coordinated.objects.filter(map_frame = map_l)
+
+        print("checking 1")
+        # app = LocationQuery(location.replace(" ","%20"))
+        # dataa =  app.resp()
+  
+        # results =  dataa['results'][0]['formatted']
+        # latitude = dataa['results'][0]['geometry']['lat']
+        # longitude =  dataa['results'][0]['geometry']['lng']
+
+        # radius =  100
+        # point = Point(longitude,latitude)
         # buildings =  Building.objects.filter(geom__distance_lt=(point, Distance(km=radius)))
     
-        buildings =  Building.objects.all()
+        
     
         # all_rooms =  Room.objects.filter(approved = True,paid = False,building__geom__distance_lt=(point, Distance(km=radius)) )
+       
         all_rooms =  Room.objects.filter(approved = True,paid = False)
         context= {
-            'zoom_lat':latitude,
-            'zoom_lng': longitude,
-            'zoom_rad' : radius,
+            
             'type': building,
-            'dataa_tyoe': dataa,
+        
+            'coordinates' : filered_m,
             'criteria_mk' : location,
             'formatted' : f"Search for : {location}",
             'all_rooms'  : all_rooms
@@ -199,42 +219,21 @@ class GetRoomAl(APIView):
 
 
     def post(self,request):
-        longitude = request.data['longitudkie']
-        latitude = request.data['latitude']
-        print(latitude,longitude)
+      
+        criteria_location =  request.data['criteria_location']
+        print("lloo",criteria_location)
+   
 
-        radius = 500
-        
-        point = Point(float(latitude),float(longitude))
-        # all_rooms =  Room.objects.filter(approved = True,paid = False,building__geom__distance_lte=(point, Distance(km=radius)) )
-        all_rooms =  Room.objects.filter(approved = True,paid = False)
-        
-        # if (typee == "building"):
-            # buidling = Building.objects.filter()
-            # building__building_name__in = criteria
-            # all_roomms = Room.objects.filter(Q(approved = True,paid = False)) 
-        #     empty_list = []
-        #     for i in all_roomms:
-        #         ratio = fuzz.partial_ratio(i.building.building_name.lower(),criteria.lower())
-        #         if (ratio >=70):
-        #             empty_list.append(i)
+        rms =  Room.objects.filter(approved = True,paid = False)
+        empty_list = []
+        for i in rms:
+            if i.building.l_name:
+                ratio = fuzz.partial_ratio(i.building.l_name.area_name.lower(),criteria_location.lower())
+                if (ratio >=70):
+                    empty_list.append(i)
 
-        #     print(empty_list)
-        #     # all_roomms = Room.objects.filter(approved = True,paid = False,buiding__building_name__contains = criteria)
-        #     room_serializer =  RoomSerializer(empty_list,many = True)
-        #     return Response(room_serializer.data)
-
-        # elif (typee == "location"):
-        #     all_roomms = Room.objects.filter(Q(approved = True,paid = False)) 
-        #     empty_list = []
-        #     for i in all_roomms:
-        #         ratio = fuzz.partial_ratio(i.building.location_name.lower(),criteria.lower())
-        #         if (ratio >=70):
-        #             empty_list.append(i)
-
-        #     print(empty_list)
-            # all_roomms = Room.objects.filter(approved = True,paid = False,buiding__building_name__contains = criteria)
-        room_serializer =  RoomSerializer(all_rooms,many = True)
+        print(empty_list)
+        room_serializer =  RoomSerializer(empty_list,many = True)
         return Response(room_serializer.data)
 
 
@@ -326,7 +325,6 @@ def room_detailed_page(request,id):
     print(model_to_dict(all_rooms))
     
     context = {
-       
         'rooms_data' :all_rooms,
         'other_images':other_images,
         'all_rooms':all_rooms_b
@@ -696,6 +694,47 @@ def map_search_view_authenticated(request):
     }
     
     return render(request,'fullmap.html',context)
+
+
+
+class PostLocationCoordinates(APIView):
+    def get(self,request):
+        all_roomms = Coordinated.objects.all()
+        print(all_roomms)
+        room_serializer =  CoordinatedSerializer(all_roomms,many = True)
+        return Response(room_serializer.data)
+
+
+    def post(self,request):
+        data =  request.data
+        features_name = data['features'][0]['properties']['NAME']
+        mail_lat = data['features'][0]['properties']['main_lat']
+        main_lng = data['features'][0]['properties']['main_lng']
+
+        coordinates = data['features'][0]['geometry']['coordinates']
+
+        obj,created = MapLocations.objects.get_or_create(area_name = features_name )
+        obj.main_lat = mail_lat
+        obj.main_lng = main_lng
+        obj.save()
+
+        for i in coordinates:
+            
+            for k in i:
+                print(k)
+                Coordinated.objects.create(
+                    map_frame = obj,
+                    lat = k[1],
+                    lng = k[0]
+
+                )
+
+
+
+        
+     
+        return Response({"success":"ok"})
+
 
 
 

@@ -33,12 +33,24 @@ class BaseModel(models.Model):
     class Meta:
         abstract = True
 
+
+class MapLocations(models.Model):
+    area_name = models.CharField(max_length=255)
+    main_lat = models.CharField(max_length=255)
+    main_lng = models.CharField(max_length=255)
+
+
+    def __str__(self):
+        return self.area_name
+
+
 class Building(BaseModel):
     agent =  models.ForeignKey(Agent,on_delete=models.CASCADE,help_text="This email of the agent")
     building_name = models.CharField(max_length=255,help_text="The building name")
     no_of_floors =  models.IntegerField(help_text="Number of floors of the building")
     no_of_Room =  models.IntegerField(help_text="Number of rooms in the whole building")
-    location_name =  models.CharField(max_length=255,help_text="The location name of the building")
+    l_name =  models.ForeignKey(MapLocations,on_delete=models.CASCADE,help_text="The location name of the building",blank=True,null=True)
+   
     geom = models.PointField(srid=4326,blank=True,null=True)
     parking_space =  models.CharField(max_length=255,help_text="The parking size of the building example 10000 sqm")
     security =  models.BooleanField(default=False,help_text="if true means the building has security example: cctv,guars")
@@ -210,6 +222,19 @@ class BookingRequest(BaseModel):
 
     def __str__(self):
         return self.name
+
+
+
+
+
+class Coordinated(models.Model):
+    map_frame = models.ForeignKey(MapLocations,on_delete=models.CASCADE)
+    lat = models.CharField(max_length=255)
+    lng = models.CharField(max_length=255)
+
+    def __str__(self):
+        return str(self.map_frame)
+
 
 
 

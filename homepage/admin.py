@@ -10,12 +10,14 @@ from .models import (
     SlidingImages,
     BookTour,
     SavedRooms,
-    BookingRequest
+    BookingRequest,
+    MapLocations,
+    Coordinated
 )
 # Register your models here.
 
 class BuildingAdmin(LeafletGeoAdmin):
-    list_display = ['__str__','agent','no_of_floors','no_of_Room','location_name','geom','parking_space','security','tv_connection','account_number','owner','payment_deadline','penalties','building_main_pic','approved']
+    list_display = ['__str__','agent','no_of_floors','no_of_Room','geom','parking_space','security','tv_connection','account_number','owner','payment_deadline','penalties','building_main_pic','approved']
     class Meta:
         model = Building
 
@@ -30,3 +32,5 @@ admin.site.register(SlidingImages)
 admin.site.register(BookTour)
 admin.site.register(SavedRooms)
 admin.site.register(BookingRequest)
+admin.site.register(MapLocations)
+admin.site.register(Coordinated)

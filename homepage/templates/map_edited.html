@@ -459,25 +459,43 @@ src="http://leaflet.github.io/Leaflet.draw/leaflet.draw.js">
 </script>
 
 <script>
- const bounds = {{dataa_tyoe | safe}}
 
- const b = bounds.results
+    const mmm = []
+    {% for o in coordinates  %}
+    
+    mmm.push([parseFloat({{o.lng}}),parseFloat({{o.lat}})])
+    {% endfor %}
+
+    console.log("qqqq",mmm)
+</script>
+
+<script>
+ const bounds  = {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "properties": {},
+        "geometry": {
+          "type": "Polygon",
+          "coordinates":[
+          mmm
+               ]
+       
+        }
+      }
+    ]
+  };
+
+  
+ 
+ 
+  const b = bounds.features[0].geometry.coordinates[0];
 
 const latl = []
-
-const moopp = []
-
-for (lk=0; lk<b.length; lk++) {
-    const lo = b[lk]
-    const bbounds = lo.bounds
-    const northeast = bbounds.northeast
-    const southwest = bbounds.southwest
-    console.log("pp",southwest)
-    latl.push(new L.LatLng(northeast.lat, northeast.lng));
-    latl.push(new L.LatLng(southwest.lat, southwest.lng));
-    moopp.push([northeast.lat, northeast.lng])
-    moopp.push([southwest.lat, southwest.lng])
-  
+var coordinates = bounds.features[0].geometry.coordinates[0];
+for (i=0; i<coordinates.length; i++) {
+    latl.push(new L.LatLng(coordinates[i][1], coordinates[i][0]));
 }
 
 console.log("ppp",latl)
@@ -485,7 +503,7 @@ console.log("ppp",latl)
 
 L.Mask = L.Polygon.extend({
     options: {
-        stroke: false,
+        stroke: true,
         color: '#333',
         fillOpacity: 0.6,
         clickable: true,
@@ -515,9 +533,11 @@ L.mask = function (latLngs, options) {
 
 <script>
 
+       
+   
     // map
     var map = L.map( 'map', {
-        center: [{{zoom_lat}}, {{zoom_lng}}],
+        center: [-1.2640263,36.7472448],
         minZoom: 1,
         zoom: 9.5,
         zoomControl: true
@@ -529,14 +549,6 @@ L.mask = function (latLngs, options) {
     }).addTo(map);
 
 
-    
-  
-  
-
- 
- 
- 
-
      var smallIcon = new L.Icon({
         iconSize: [27, 27],
         iconAnchor: [13, 27],
@@ -545,15 +557,14 @@ L.mask = function (latLngs, options) {
     });
     
      const markers = L.markerClusterGroup();
-     latitudke = {{zoom_lat}}
-     longitudke = {{zoom_lng}}
+     
 
      const empty_l = []
      var latLngs = [];
 
      $.ajax({
         type: 'POST',
-        data : {"latitude":latitudke,"longitudkie":longitudke,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        data : {"criteria_location":'{{criteria_mk}}','csrfmiddlewaretoken': '{{ csrf_token }}'},
         url: "{% url 'homepage:all_rm' %}",
         success: function (data) {
 
@@ -779,13 +790,10 @@ L.mask(latl).addTo(map);
             card_container.append(holder)
         } 
 
-    latitudkoe = {{zoom_lat}}
-     longitudoke = {{zoom_lng}}
-
 
     $.ajax({
         type: 'POST',
-        data : {"latitude":latitudkoe,"longitudkie":longitudoke,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        data : {"criteria_location":'{{criteria_mk}}','csrfmiddlewaretoken': '{{ csrf_token }}'},
         url: "{% url 'homepage:all_rm' %}",
         success: function (response) {
             console.log(response)

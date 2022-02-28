@@ -4,7 +4,8 @@ from rest_framework_gis.serializers import GeoFeatureModelSerializer
 from .models import (
     Room,
     Building,
-    SavedRooms
+    SavedRooms,
+    Coordinated
 )
 
 class BuildingSerializer(GeoFeatureModelSerializer):
@@ -24,6 +25,14 @@ class SavedRoomSerializers(serializers.ModelSerializer):
     class Meta:
         model = SavedRooms
         fields = ['id','user','liked','room']
+
+
+
+class CoordinatedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Coordinated
+        depth = 1
+        fields = '__all__'
 
 
 
