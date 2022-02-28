@@ -32,4 +32,4 @@ class sendSms:
 
 
 
-# sendSms("254704157038","hey").send_sms()
+# sendSms("254713033508","hey").send_sms()

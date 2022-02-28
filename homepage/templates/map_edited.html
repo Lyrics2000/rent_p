@@ -1,0 +1,962 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block extra_head %}
+
+  <!-- leflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+  integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+  crossorigin=""/>
+
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+  integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+  crossorigin=""></script>
+
+  <link rel="stylesheet" href="{% static '/dist/MarkerCluster.css' %}" />
+  <link rel="stylesheet" href="{% static '/dist/MarkerCluster.Default.css' %}" />
+
+
+{% endblock extra_head %}
+
+{% block content %}
+
+<!-- breadbrump -->
+<section class="breadbrump">
+    <div>
+       <div >
+          <h1 class="page-title">Map View</h1>
+          <div>
+             <ul>
+                <li><a href="#/"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="#/"><i class="fas fa-angle-double-right"></i> map view </a></li>
+             </ul>
+          </div>
+       </div>
+    </div>
+    </div>
+  </section>
+  
+<!-- endbread brump -->
+
+<section class="map_started">
+    <div class="mmk">
+        <p > {{formatted}} </p>
+    </div>
+
+    <div class="button_container">
+
+        <ul >
+            <li class="unorderd_list selecthover">
+
+                <select class="selecthover" name="price"  id="price">
+                    <option value="volvo">Any price</option>
+                    <option value="volvo">Any price</option>
+                    <option value="volvo">Any price</option>
+                    <option value="volvo">Any price</option>
+                    
+                  </select>
+
+                  <ul class="dropd">
+                    <select class="selecttt dropd" id="minprice" >
+                        <option>Minimum Price</option>
+                        <option>Minimum Price</option>
+                        <option>Minimum Price</option>
+                        <option>Minimum Price</option>
+                      
+                      </select>
+
+                      <select class="selecttt dropd" id="maxprice">
+                        <option value="Maximum Price">Maximum Price</option>
+                        <option value="Maximum Price">Maximum Price</option>
+                        <option value="Maximum Price">Maximum Price</option>
+                        <option value="Maximum Price">Maximum Price</option>
+                        <option value="Maximum Price">Maximum Price</option>
+                    
+                      </select>
+                  </ul>
+
+            </li>
+
+            <li class="unorderd_list">
+                <select class="select" name="beds" id="beds"  onChange="changeRoom(this);">
+                    <option value="Single Room">Single Room</option>
+                    <option value="Bouble Room">Bouble Room</option>
+                    <option value="BedSitter">BedSitter</option>
+                    <option value="1 Bedroom">1 Bedroom</option>
+                    <option value="2 Bedroom">2 Bedroom</option>
+                    <option value="3 Bedroom">3 Bedroom</option>
+                    <option value="4 Bedroom">4 Bedroom</option>
+                  </select>
+            </li>
+
+            <li>
+                <button class="btn_submit" type="button"> Save </button>
+
+            </li>
+
+
+        </ul>
+
+        
+
+         
+
+        
+
+    </div>
+
+</section>
+
+
+<section id="cont" class="map_container">
+
+    <div class="map_listings">
+
+
+        <div  id="card-container" class="box-container">
+
+            
+    
+         
+    
+        </div>
+
+        <div  id="warning"></div>
+
+
+        
+        
+
+    </div>
+
+    <div id="map" class="map_holder">
+
+    </div>
+
+
+</section>
+
+
+
+
+<section class="footer">
+
+    <div class="footer-container">
+
+        <div class="box-container">
+
+            <div class="box">
+                <h3>branch location</h3>
+                <a href="#">india</a>
+                <a href="#">USA</a>
+                <a href="#">france</a>
+                <a href="#">russia</a>
+                <a href="#">japan</a>
+            </div> 
+            
+            <div class="box">
+                <h3>quick links</h3>
+                <a href="#">home</a>
+                <a href="#">services</a>
+                <a href="#">featured</a>
+                <a href="#">agents</a>
+                <a href="#">contact</a>
+            </div> 
+
+            <div class="box">
+                <h3>extra links</h3>
+                <a href="#">my account</a>
+                <a href="#">my favorite</a>
+                <a href="#">my list</a>
+            </div> 
+
+            <div class="box">
+                <h3>follow us</h3>
+                <a href="#">facebook</a>
+                <a href="#">twitter</a>
+                <a href="#">instagram</a>
+                <a href="#">linkedin</a>
+            </div> 
+
+        </div>
+
+        <div class="credit">created by <span> mr. web designer </span> | all rights reserved! </div>
+
+    </div>
+
+</section>
+
+    
+
+
+
+{% endblock content %}
+
+
+{% block extra_js %}
+
+<!-- markercluster  -->
+<script src="{% static '/dist/leaflet.markercluster.js' %}"></script>
+<script
+src="http://leaflet.github.io/Leaflet.draw/leaflet.draw.js">
+</script>
+
+<script
+        src="http://leaflet.github.io/Leaflet.draw/leaflet.draw.js">
+</script>
+
+<script>
+ const bounds = {{dataa_tyoe | safe}}
+
+ const b = bounds.results
+
+const latl = []
+
+const moopp = []
+
+for (lk=0; lk<b.length; lk++) {
+    const lo = b[lk]
+    const bbounds = lo.bounds
+    const northeast = bbounds.northeast
+    const southwest = bbounds.southwest
+    console.log("pp",southwest)
+    latl.push(new L.LatLng(northeast.lat, northeast.lng));
+    latl.push(new L.LatLng(southwest.lat, southwest.lng));
+    moopp.push([northeast.lat, northeast.lng])
+    moopp.push([southwest.lat, southwest.lng])
+  
+}
+
+console.log("ppp",latl)
+
+
+L.Mask = L.Polygon.extend({
+    options: {
+        stroke: false,
+        color: '#333',
+        fillOpacity: 0.6,
+        clickable: true,
+
+
+        outerBounds: new L.LatLngBounds([-90, -360], [90, 360])
+    },
+
+    initialize: function (latLngs, options) {
+
+         var outerBoundsLatLngs = [
+            this.options.outerBounds.getSouthWest(),
+            this.options.outerBounds.getNorthWest(),
+            this.options.outerBounds.getNorthEast(),
+            this.options.outerBounds.getSouthEast()
+        ];
+        L.Polygon.prototype.initialize.call(this, [outerBoundsLatLngs, latLngs], options);  
+    },
+
+});
+L.mask = function (latLngs, options) {
+    return new L.Mask(latLngs, options);
+};
+
+
+</script>
+
+<script>
+
+    // map
+    var map = L.map( 'map', {
+        center: [{{zoom_lat}}, {{zoom_lng}}],
+        minZoom: 1,
+        zoom: 9,
+        zoomControl: true
+    
+        });
+    L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
+        maxZoom: 20,
+        subdomains:['mt0','mt1','mt2','mt3']
+    }).addTo(map);
+
+
+    
+  
+  
+
+ 
+ 
+ 
+
+     var smallIcon = new L.Icon({
+        iconSize: [27, 27],
+        iconAnchor: [13, 27],
+        popupAnchor:  [1, -24],
+        iconUrl: '{% static "images/mk.png" %}'
+    });
+    
+     const markers = L.markerClusterGroup();
+     latitudke = {{zoom_lat}}
+     longitudke = {{zoom_lng}}
+
+     const empty_l = []
+     var latLngs = [];
+
+     $.ajax({
+        type: 'POST',
+        data : {"latitude":latitudke,"longitudkie":longitudke,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        url: "{% url 'homepage:all_rm' %}",
+        success: function (data) {
+
+        console.log("new data",data)
+
+        for (let n = 0; n < data.length; n++) {
+            const el = data[n];
+            const lat = el.building.geom.coordinates[0]
+            const long = el.building.geom.coordinates[1]
+
+            latLngs.push(new L.LatLng(lat, long));
+            
+        }
+
+
+
+
+
+data.forEach(element => {
+
+    const dicti2 = {
+        type : "Feature",
+        geometry : element.building.geom,
+        properties : element
+    }
+
+    empty_l.push(dicti2)
+
+
+    
+});
+
+const dicti = {
+    type : "FeatureCollection",
+    features : empty_l
+
+}
+
+console.log("looo",dicti)
+
+var geojson = L.geoJson(dicti, {
+onEachFeature: function(feature, layer) {
+     // create popup contents
+    
+     console.log(feature.properties.account_number)
+
+     var cusp = `<div style="display: flex;flex-wrap: wrap;gap:1.5rem;width: 250px;height: 200px;">
+
+
+<div style="border:.1rem solid #000;box-shadow: 0 .5rem 1rem #000;border-radius: .5rem;overflow:hidden;background:#fff;flex:1 1 30rem;">
+    <div style="overflow:hidden;position: relative;width: 100%;height: 10rem;">
+        <img style="width: 100%;height: 200px;object-fit: cover;transition: .2s linear;" src="${feature.properties.room_picture}" alt="">
+        <div style="position: absolute;top:10px; left:0;display: flex;">
+          
+            <h3 style="font-weight: 500;
+            font-size: 10px;
+            color:white;
+            background:red;
+            border-radius: .5rem;
+            padding:.5rem ;
+            margin-left: 1rem;">for rent</h3>
+        </div>
+       
+    </div>
+ 
+    <div >
+            
+        <div style=" display: flex;
+        align-items: center;justify-content: space-between;margin-left: 20px;margin-right: 20px;">
+            <h3 style="font-size:12px;">${feature.properties.room_name}</h3>
+            <h3 style="font-size:12px;">Ksh${feature.properties.rent}/mo</h3>
+            <div style="font-size:12px;" href="#" class="fas fa-heart shinning"></div>
+          
+        </div>
+     
+    
+        <div style="display: flex;align-items: center; justify-content: space-evenly;margin-left: 10px;margin-right: 10px;">
+                    <a style="padding:0.4rem; 0.8rem;font-size:1.3rem" href="book_request/${feature.properties.id}/" class="btn">Book Tour</a>
+                    <a style="padding:0.4rem; 0.8rem;font-size:1.3rem" href="room_detailed/${feature.properties.id}/" class="btn">view details</a>
+               
+                </div>
+    </div>
+</div>
+
+</div>
+`
+
+    
+
+   
+    
+        layer.bindPopup(cusp);
+
+
+    },
+pointToLayer: function (feature, latlng) {
+    return markers.addLayer(L.marker(latlng, {icon: smallIcon}).on('mouseover',(e)=>{
+        console.log(latlng)
+      //  this.target.openPopup()
+
+      var cusp = `<div style="display: flex;flex-wrap: wrap;gap:1.5rem;width: 250px;height: 200px;">
+
+
+<div style="border:.1rem solid #000;box-shadow: 0 .5rem 1rem #000;border-radius: .5rem;overflow:hidden;background:#fff;flex:1 1 15rem;">
+    <div style="overflow:hidden;position: relative;width: 100%;height: 10rem;">
+        <img style="width: 100%;height: 200px;object-fit: cover;transition: .2s linear;" src="${feature.properties.room_picture}" alt="">
+        <div style="position: absolute;top:10px; left:0;display: flex;">
+          
+            <h3 style="font-weight: 500;
+            font-size: 10px;
+            color:white;
+            background:red;
+            border-radius: .5rem;
+            padding:.5rem ;
+            margin-left: 1rem;">for rent</h3>
+        </div>
+       
+    </div>
+ 
+    <div >
+            
+        <div style=" display: flex;
+        align-items: center;justify-content: space-between;margin-left: 20px;margin-right: 20px;">
+            <h3 style="font-size:12px;">${feature.properties.room_name}</h3>
+            <h3 style="font-size:12px;">Ksh${feature.properties.rent}/mo</h3>
+            <div style="font-size:12px;" href="#" class="fas fa-heart shinning"></div>
+          
+        </div>
+     
+    
+        <div style="display: flex;align-items: center; justify-content: space-evenly;margin-left: 10px;margin-right: 10px;">
+                    <a style="padding:0.4rem; 0.8rem;font-size:1.3rem" href="book_request/${feature.properties.id}/" class="btn">Book Tour</a>
+                    <a style="padding:0.4rem; 0.8rem;font-size:1.3rem" href="room_detailed/${feature.properties.id}/" class="btn">view details</a>
+               
+                </div>
+    </div>
+</div>
+
+</div>
+`
+
+    
+
+      
+ 
+
+       
+        var popup = L.popup()
+            .setLatLng(e.latlng) 
+            .setContent(cusp)
+            .openOn(map);
+        // var card_container  =  $('#card-container')
+        // {% comment %} card_container.empty();
+        // card_container.append(element) {% endcomment %}
+
+    }));
+  }
+});
+
+
+geojson.addTo(map);
+
+L.mask(latl).addTo(map);
+
+
+          
+        },
+        error: function (response) {
+            // alert the error if any error occured
+            alert(response["responseJSON"]["error"]);
+        }
+    })
+
+    
+    
+    map.addLayer(markers);
+
+
+  
+
+    
+
+
+
+</script>
+
+
+<script>
+
+    var card_container  =  $('#card-container')
+    var cont = $("#cont")
+    let all_rooms_list = null
+
+
+    card_container.empty();
+
+        const holder = ` <div style="height: 400px;" class="box">
+                <div class="image-container skeleton">
+                    <div style="width:100px;height:200px" class="image_holder skeleton"></div>
+                   
+                   
+                </div>
+                <div class="content">
+                        
+                    <div class="price">
+                        <h3 style="width: 15rem;height: 20px;" class="skeleton"></h3>
+                        <div style="width: 5rem ; height: 20px;" class="skeleton"></div>
+                      
+                    </div>
+                    <div class="location">
+                        <h3 style="width: 20rem;height: 20px;" class="skeleton"></h3>
+                        <p style="width: 20rem;height: 20px; margin-top: 10px;" class="skeleton"></p>
+                    </div>
+                  
+                    <div class="buttons">
+                        <a href="#" class="btn skeleton"></a>
+                        <a href="#" class="btn skeleton"></a>
+                    </div>
+                </div>
+            </div>`
+
+        for(let i = 0;i<8;i++){
+            card_container.append(holder)
+        } 
+
+    latitudkoe = {{zoom_lat}}
+     longitudoke = {{zoom_lng}}
+
+
+    $.ajax({
+        type: 'POST',
+        data : {"latitude":latitudkoe,"longitudkie":longitudoke,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        url: "{% url 'homepage:all_rm' %}",
+        success: function (response) {
+            console.log(response)
+            card_container.empty();
+
+        if(response.length > 0){
+            
+
+            
+            // on successfull creating object
+             // 1. clear the form.
+            var dataa = response
+            all_rooms_list = response
+
+            for (let j = 0; j < dataa.length; j++) {
+                var r = dataa[j];
+                console.log(r)
+
+                var elm = `<div  onmouseover="bigImg(this)" onmouseout="normalImg(this)" class="box">
+                <input type="hidden" id="hidden_id" value="${r.id}">
+            <div class="image-container">
+                <img src="${r.room_picture}" alt="">
+                
+               
+            </div>
+            <div class="content">
+                <div class="price">
+                    <h3>Ksh : ${r.rent}/mo</h3>
+                    <!-- <a href="{{r.get_saved_rentals}" class="fas fa-heart shinning"></a> -->
+                    <a style="background: red;color: white;" href="${r.get_unsaved_rentals}" class="fas fa-heart"></a>
+               
+                </div>
+                <div class="location">
+                    <h3>${r.building.building_name}(${r.room_name})</h3>
+                    <p>${r.building.location_name}</p>
+                </div>
+                <div style="flex-wrap:wrap;" class="details">
+                    ${r.room_size ? `<h3> <i class="fas fa-expand"></i> ${r.room_size} sqft </h3>` : null}
+                    ${r.room_type ? `<h3> <i class="fas fa-bed"></i> ${r.room_type} </h3>` : null }
+                
+                    ${r.bathtab_np ? `<h3> <i class="fas fa-bath"></i> ${ r.bathtab_np} bathtab </h3>` : null }
+                
+                    ${r.balcony ? `<h3> <i class="fas fa-door-closed"></i>balcony </h3>` : null}
+                    ${r.building.tv_connection ? `<h3> <i class="fas fa-tv"></i> tv connection </h3>` : null}
+                    ${r.building.security ? `<h3> <i class="fas fa-key"></i> security </h3> ` : null}
+
+                </div>
+                <div class="buttons">
+                    <a href="book_request/${r.id}/" class="btn">Book Tour</a>
+                    <a href="room_detailed/${r.id}/" class="btn">view details</a>
+               
+                </div>
+            </div>
+        </div>
+
+`
+               
+                
+          card_container.append(elm)
+
+                
+            
+                
+                
+
+                //card_container.append(element)
+              }
+
+            
+            // display the newly friend to table.
+            // var instance = JSON.parse(response);
+
+        }else{
+           const w =  $("#warning").empty()
+           card_container.empty();
+           w.append(`<div  class="information">
+            <h1>Our servers had some issues with your request</h1>
+            <P>Please try to search again</P>
+
+            <div class="image-container">
+                <img src="https://www.trulia.com/images/txl3R/placeholder_images/NoResult.svg" alt="">
+            </div>
+
+            <div class="text-container">
+                <div class="near_etsate">
+                    <h3>Near Houses</h3>
+                    <ul>
+                        <li><a href="">Single room near me</a></li>
+                        <li><a href="">One room near me</a></li>
+                        <li><a href="">Two room near me</a></li>
+                        <li><a href="">Three room near me</a></li>
+                    </ul>
+                </div>
+
+                <div class="near_etsate">
+                    <h3>Near Houses By Location</h3>
+                    <ul>
+                        <li><a href="">Houses in Nairobi</a></li>
+                        <li><a href="">Houses In kisumu</a></li>
+                        <li><a href="">Houses in juja</a></li>
+                        <li><a href="">Three room near me</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <p>
+                Trulia is a registered Trademark of Zillow, Inc. and MLS listings are provided by Zillow, Inc., a licensed real estate brokerage. See here for a list of our real estate licenses. Contact Zillow, Inc Brokerage
+            </p>
+
+            <div class="pages-navigation">
+                <ul>
+                    <li><a href="">Home</a></li>
+                    <li><a href="">New House</a></li>
+                    <li><a href="">House Mapview</a></li>
+                    <li><a href="">House List View</a></li>
+                </ul>
+            </div>
+
+            <p>
+                Zillow Group is committed to ensuring digital accessibility for individuals with disabilities.  We are continuously working to improve the accessibility of our web experience for everyone,  and we welcome feedback and accommodation requests. If you wish to report an issue or seek an  accommodation, please let us know.
+            </p>
+        </div>`)
+
+        }
+
+          
+           
+            
+
+          
+          
+        },
+        error: function (response) {
+            // alert the error if any error occured
+            alert(response["responseJSON"]["error"]);
+        }
+    })
+
+</script>
+
+
+
+<script>
+    function maximumPrice(sel) {
+            // make POST ajax call
+            var min_p =  document.getElementById('minprice');
+
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'homepage:filtered_data' %}",
+                data: {min:min_p.value, max:sel.options[sel.selectedIndex].value},
+                success: function (response) {
+                    console.log("room response",response) ;
+                    var card_containe  =  $('#card-container')
+              
+                    card_containe.empty();
+
+                    for (let i = 0; i < response.length; i++) {
+                        const resp =  response[i];
+                        var els =`
+                    <div class="box">
+            <div class="image-container">
+                <img src="${resp.room_picture}" alt="">
+                <div class="info">
+                    <h3>3 days ago</h3>
+                    <h3>for rent</h3>
+                </div>
+                <div class="icons">
+                    <a href="#" class="fas fa-film"><h3>1</h3></a>
+                      
+                    <a href="#" class="fas fa-camera"><h3>4</h3></a>
+                    
+                </div>
+            </div>
+            <div class="content">
+                <div class="price">
+                    <h3>Ksh : ${resp.rent}/mo</h3>
+                    <a href="#" class="fas fa-heart"></a>
+                    
+                </div>
+                <div class="location">
+                    <h3>${resp.building.building_name}(${resp.room_name})</h3>
+                    <p>${resp.building.location_name}</p>
+                </div>
+                <div class="details">
+                    
+
+                    
+                    ${resp.room_size ? `<h3> <i class="fas fa-expand"></i> ${resp.room_size} sqft </h3>` : null }
+                    ${resp.room_type ? `<h3> <i class="fas fa-bed"></i> ${resp.room_type} </h3>` : null}
+                    ${resp.bathtab_np ? `<h3> <i class="fas fa-bath"></i> ${resp.bathtab_np} bathtab </h3>` : null } 
+                    ${resp.balcony ? `<h3> <i class="fas fa-door-closed"></i>balcony </h3>` : null} 
+                    ${resp.building.tv_connection? `<h3> <i class="fas fa-tv"></i> tv connection </h3>` : null}
+                    ${resp.building.security ? `<h3> <i class="fas fa-key"></i> security </h3>`:null}
+                    
+                  
+                
+                </div>
+                <div class="buttons">
+                    <a href="#" class="btn">request info</a>
+                    <a href="/room_detailed/${resp.id}/" class="btn">view details</a>
+                </div>
+            </div>
+        </div>`;
+                    // on successfull creating object
+                  
+                   
+                card_containe.append(els) 
+                        console.log(resp);
+
+                    };
+                    
+                    // display the newly friend to table.
+                    
+                },
+                error: function (response) {
+                    // alert the error if any error occured
+                    console.log(response["responseJSON"]["error"]);
+                }
+            })
+        
+
+       
+
+}
+
+
+
+</script>
+
+<script>
+    function minimumPrice(sel) {
+            // make POST ajax call
+            var min_p =  document.getElementById('maxprice');
+
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'homepage:filtered_data' %}",
+                data: {max:min_p.value, min:sel.options[sel.selectedIndex].value},
+                success: function (response) {
+                    console.log(response) ;
+                    var card_containe  =  $('#card-container')
+              
+                    card_containe.empty();
+
+                    for (let i = 0; i < response.length; i++) {
+                        const resp =  response[i];
+                        var els =`
+                    <div class="box">
+            <div class="image-container">
+                <img src="${resp.room_picture}" alt="">
+                <div class="info">
+                    <h3>3 days ago</h3>
+                    <h3>for rent</h3>
+                </div>
+                <div class="icons">
+                    <a href="#" class="fas fa-film"><h3>1</h3></a>
+                      
+                    <a href="#" class="fas fa-camera"><h3>4</h3></a>
+                    
+                </div>
+            </div>
+            <div class="content">
+                <div class="price">
+                    <h3>Ksh : ${resp.rent}/mo</h3>
+                    <a href="#" class="fas fa-heart"></a>
+                    
+                </div>
+                <div class="location">
+                    <h3>${resp.building.building_name}(${resp.room_name})</h3>
+                    <p>${resp.building.location_name}</p>
+                </div>
+                <div class="details">
+                    
+
+                    
+                    ${resp.room_size ? `<h3> <i class="fas fa-expand"></i> ${resp.room_size} sqft </h3>` : null }
+                    ${resp.room_type ? `<h3> <i class="fas fa-bed"></i> ${resp.room_type} </h3>` : null}
+                    ${resp.bathtab_np ? `<h3> <i class="fas fa-bath"></i> ${resp.bathtab_np} bathtab </h3>` : null } 
+                    ${resp.balcony ? `<h3> <i class="fas fa-door-closed"></i>balcony </h3>` : null} 
+                    ${resp.building.tv_connection? `<h3> <i class="fas fa-tv"></i> tv connection </h3>` : null}
+                    ${resp.building.security ? `<h3> <i class="fas fa-key"></i> security </h3>`:null}
+                    
+                  
+                
+                </div>
+                <div class="buttons">
+                    <a href="#" class="btn">request info</a>
+                    <a href="/room_detailed/${resp.id}/" class="btn">view details</a>
+                </div>
+            </div>
+        </div>`;
+                    // on successfull creating object
+                  
+                   
+                card_containe.append(els) 
+                        console.log(resp);
+
+                    };
+                    
+                    // display the newly friend to table.
+                    
+                },
+                error: function (response) {
+                    // alert the error if any error occured
+                    console.log(response["responseJSON"]["error"]);
+                }
+            })
+        
+
+       
+
+}
+
+</script>
+
+
+<script>
+    function changeRoom(sel){
+        alert(sel.options[sel.selectedIndex].value)
+    }
+</script>
+
+<script>
+
+</script>
+
+
+<script>
+
+let mm = null;
+ function bigImg(x) {
+
+    // console.log(String(x.innerHTML))
+
+ const doc = new DOMParser().parseFromString(String(x.innerHTML), "text/xml");
+  const ele = doc.getElementById("hidden_id").getAttribute("value")
+  console.log(ele)
+
+  const li_holder = []
+  if(all_rooms_list !== null){
+    all_rooms_list.forEach(element => {
+        if(parseInt(element.id) === parseInt(ele)){
+            li_holder.push(element)
+
+        }
+          
+      });
+  }
+
+  const hovered_element = li_holder[0]
+  console.log(li_holder[0])
+
+  var cusp = `<div style="display: flex;flex-wrap: wrap;gap:1.5rem;width: 250px;height: 200px;">
+
+
+<div style="border:.1rem solid #000;box-shadow: 0 .5rem 1rem #000;border-radius: .5rem;overflow:hidden;background:#fff;flex:1 1 15rem;">
+    <div style="overflow:hidden;position: relative;width: 100%;height: 10rem;">
+        <img style="width: 100%;height: 200px;object-fit: cover;transition: .2s linear;" src="${hovered_element.room_picture}" alt="">
+        <div style="position: absolute;top:10px; left:0;display: flex;">
+          
+            <h3 style="font-weight: 500;
+            font-size: 10px;
+            color:white;
+            background:red;
+            border-radius: .5rem;
+            padding:.5rem ;
+            margin-left: 1rem;">for rent</h3>
+        </div>
+       
+    </div>
+ 
+    <div >
+            
+        <div style=" display: flex;
+        align-items: center;justify-content: space-between;margin-left: 20px;margin-right: 20px;">
+            <h3 style="font-size:12px;">${hovered_element.room_name}</h3>
+            <h3 style="font-size:12px;">Ksh${hovered_element.rent}/mo</h3>
+            <div style="font-size:12px;" href="#" class="fas fa-heart shinning"></div>
+          
+        </div>
+     
+    
+        <div style="display: flex;align-items: center; justify-content: space-evenly;margin-left: 10px;margin-right: 10px;">
+                    <a style="padding:0.4rem; 0.8rem;font-size:1.3rem" href="book_request/${hovered_element.id}/" class="btn">Book Tour</a>
+                    <a style="padding:0.4rem; 0.8rem;font-size:1.3rem" href="room_detailed/${hovered_element.id}/" class="btn">view details</a>
+               
+                </div>
+    </div>
+</div>
+
+</div>
+`
+
+    
+
+
+          var smallIcon = new L.Icon({
+        iconSize: [27, 27],
+        iconAnchor: [13, 27],
+        popupAnchor:  [1, -24],
+        iconUrl: '{% static "images/mk.png" %}'
+    });
+    
+
+    const lat_long = [hovered_element.building.geom.coordinates[1],hovered_element.building.geom.coordinates[0]]
+    mm = new L.marker(lat_long,{icon:smallIcon }).addTo(map).bindPopup(cusp);
+    map.invalidateSize();
+    mm.openPopup();
+    mm.on("mouseover",(e)=>{
+        mm.openPopup();
+    })
+
+
+}
+</script>
+
+
+<script>
+    function normalImg(x) {
+    // map.removeLayer(mm)
+}
+</script>
+
+
+
+{% endblock extra_js %}

@@ -135,28 +135,31 @@ def map_search_view(request):
         
         app = LocationQuery(location.replace(" ","%20"))
         dataa =  app.resp()
+        print("dataa",dataa)
         results =  dataa['results'][0]['formatted']
         latitude = dataa['results'][0]['geometry']['lat']
         longitude =  dataa['results'][0]['geometry']['lng']
 
         radius =  100
         point = Point(longitude,latitude)
-        buildings =  Building.objects.filter(geom__distance_lt=(point, Distance(km=radius)))
+        # buildings =  Building.objects.filter(geom__distance_lt=(point, Distance(km=radius)))
     
+        buildings =  Building.objects.all()
     
-        all_rooms =  Room.objects.filter(approved = True,paid = False,building__geom__distance_lt=(point, Distance(km=radius)) )
-        
+        # all_rooms =  Room.objects.filter(approved = True,paid = False,building__geom__distance_lt=(point, Distance(km=radius)) )
+        all_rooms =  Room.objects.filter(approved = True,paid = False)
         context= {
             'zoom_lat':latitude,
             'zoom_lng': longitude,
             'zoom_rad' : radius,
             'type': building,
+            'dataa_tyoe': dataa,
             'criteria_mk' : location,
             'formatted' : f"Search for : {location}",
             'all_rooms'  : all_rooms
         }
         
-        return render(request,'map.html',context)
+        return render(request,'map_edited.html',context)
     all_rooms =  Room.objects.filter(approved = True,paid = False)
 
     context= {
@@ -203,7 +206,8 @@ class GetRoomAl(APIView):
         radius = 500
         
         point = Point(float(latitude),float(longitude))
-        all_rooms =  Room.objects.filter(approved = True,paid = False,building__geom__distance_lte=(point, Distance(km=radius)) )
+        # all_rooms =  Room.objects.filter(approved = True,paid = False,building__geom__distance_lte=(point, Distance(km=radius)) )
+        all_rooms =  Room.objects.filter(approved = True,paid = False)
         
         # if (typee == "building"):
             # buidling = Building.objects.filter()
