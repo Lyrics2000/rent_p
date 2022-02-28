@@ -176,7 +176,8 @@ def map_search_view(request):
             context= {
                 
                 'type': building,
-            
+                'main_lat': float(-1.2640263),
+                'main_lng': float(36.7472448),
                 'coordinates' : [],
                 'criteria_mk' : location,
                 'formatted' : f"Search for : {location}",
