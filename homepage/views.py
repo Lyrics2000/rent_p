@@ -154,13 +154,16 @@ def map_search_view(request):
             filered_m = Coordinated.objects.filter(map_frame = map_l)
 
             print("checking 1")
+
+            print("llooa",float(map_l.main_lat))
+
        
             all_rooms =  Room.objects.filter(approved = True,paid = False)
             context= {
                 
                 'type': building,
-                'main_lat': map_l.main_lat,
-                'main_lng': map_l.main_lng,
+                'main_lat': float(map_l.main_lat),
+                'main_lng': float(map_l.main_lng),
                 'coordinates' : filered_m,
                 'criteria_mk' : location,
                 'formatted' : f"Search for : {location}",
