@@ -653,6 +653,26 @@ class SendContactMail(APIView):
         SendEmailKanzi(f"Inquiry {subject}","thomasambetsa@gmail.com","admin@kanzischool.sc.ke",d,htmly,plaintext).start()
         return Response({"success":True})
 
+class SendContactAdminMail(APIView):
+    def post(self,request):
+        plaintext = str(request.data)
+        htmly     = get_template('app_copy.html')
+
+        name =  request.data['name']
+        email =  request.data['email']
+        message =  request.data['message']
+        subject =  request.data['subject']
+    
+        d = {"fname":name,
+        "email":email,
+        "message":message,
+     
+        }
+
+        print(d)
+
+        SendEmailKanzi(f"Inquiry {subject}","thomasambetsa@gmail.com","admin@ghecko.africa",d,htmly,plaintext).start()
+        return Response({"success":True})
 
 @login_required(login_url="account:sign_in")
 def map_search_view_authenticated(request):

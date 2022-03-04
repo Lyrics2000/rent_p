@@ -881,10 +881,13 @@ L.mask(latl).addTo(map);
                 <div class="near_etsate">
                     <h3>Near Houses</h3>
                     <ul>
-                        <li><a href="">Single room near me</a></li>
-                        <li><a href="">One room near me</a></li>
-                        <li><a href="">Two room near me</a></li>
-                        <li><a href="">Three room near me</a></li>
+                        <li onclick="getLocation("Single Room")" ><a   >Single room near me</a></li>
+                        <li><a onclick="return getLocation("Bouble Room");" href="">Bouble Room room near me</a></li>
+                        <li><a onclick="return getLocation("BedSitter");" href="">BedSitter room near me</a></li>
+                        <li><a onclick="return getLocation("1 Bedroom");" href="">1 Bedroom room near me</a></li>
+                        <li><a onclick="return getLocation("2 Bedroom");" href="">2 Bedroom room near me</a></li>
+                        <li><a onclick="return getLocation("3 Bedroom");" href="">3 Bedroom room near me</a></li>
+                        <li><a onclick="return getLocation("4 Bedroom");" href="">4 Bedroom room near me</a></li>
                     </ul>
                 </div>
 
@@ -1400,6 +1403,36 @@ let mm = null;
 }
 </script>
 
+
+
+<script>
+
+
+function getLocation(bedroom) {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition, showError);
+        } else {
+          alert(`The Browser Does not Support Geolocation`)
+        }
+      }
+
+      function showPosition(position) {
+          
+        var innerHTML = "Latitude: " + position.coords.latitude + "<br>Longitude: " + position.coords.longitude;
+
+        console.log(innerHTML)
+        console.log(bedroom)
+      }
+
+      function showError(error) {
+        if(error.PERMISSION_DENIED){
+            alert("The User have denied the request for Geolocation.")
+   
+        }
+      }
+     
+
+</script>
 
 
 {% endblock extra_js %}
