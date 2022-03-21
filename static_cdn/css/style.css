@@ -145,7 +145,37 @@ header .logo img {
   height: 5.5rem;
 }
 
+header form {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+header form .inputBox input {
+  border: 0.1rem solid #262626;
+  -webkit-box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
+          box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
+  font-size: 1.5rem;
+  padding: 0.5rem;
+  text-transform: none;
+}
+
+header form .btn {
+  margin-top: 0px;
+  width: 35px;
+  font-size: 1.5rem;
+  padding: 1.0rem;
+  margin-left: 5px;
+}
+
 header .navbar ul {
+  margin-top: .7rem;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -162,7 +192,7 @@ header .navbar ul li:hover .dropdown {
 
 header .navbar ul li a {
   color: #262626;
-  font-size: 2rem;
+  font-size: 1.7rem;
   padding: 0 1.5rem;
 }
 
@@ -1173,6 +1203,33 @@ header .icons #menu-bars {
 .information .pages-navigation ul li a:hover {
   text-decoration: underline;
   color: #fb4e2e;
+}
+
+.button_container {
+  position: fixed;
+  z-index: 1;
+  width: 100%;
+  height: 74px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding-top: 10px;
+  padding-bottom: 16px;
+  margin-left: 3rem;
+}
+
+.button_container .unordered1 {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  list-style: none;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  position: fixed;
 }
 
 .footer .footer-container {

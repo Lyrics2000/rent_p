@@ -1,7 +1,33 @@
 {% extends 'base.html' %}
 
 {% load static %}
+
+{% block header_form %}
+
+<form method="POST" action="{% url 'homepage:map_search' %}">
+    
+    {% csrf_token %}
+        
+    <div class="inputBox">
+        <input type="search" name="location_search"  placeholder="Search..." id="">
+        
+       
+    </div>
+
+    <button type="submit"  class="btn fas fa-search"></button>
+    
+
+</form>
+
+
+
+{% endblock header_form %}
+
+
+
 {% block extra_head %}
+
+
 
   <!-- leflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
@@ -302,6 +328,8 @@
     
 
 </section>
+
+
 
 <div class="button_container">
 
