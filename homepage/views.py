@@ -23,6 +23,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from homepage.common.CallGlovo import CallGlovo
 from homepage.common.SendEmailThread import SendEmailThread
 
 from homepage.common.sendsms import sendSms
@@ -760,6 +761,16 @@ class PostLocationCoordinates(APIView):
         
      
         return Response({"success":"ok"})
+
+
+
+
+class CallGlovoAPiview(APIView):
+    def post(self,request):
+        data =  request.data['name']
+        app = CallGlovo(data)
+        resp =  app.request_data()
+        return Response(resp)
 
 
 

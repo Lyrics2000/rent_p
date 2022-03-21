@@ -62,6 +62,46 @@ section {
   color: #fff;
 }
 
+.search_info {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  background: #fff;
+  width: 30rem;
+  position: absolute;
+}
+
+.search_info .card {
+  margin: 5px;
+  background: var(--light-red);
+}
+
+.search_info .card .titlee {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.8;
+  color: #262626;
+}
+
+.search_info .card .body {
+  font-size: 10px;
+  color: #666;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.search_info .card:hover {
+  background: #fb4e2e;
+}
+
+.search_info .card:hover .titlee {
+  color: #fff;
+}
+
 .disabled {
   cursor: not-allowed;
   background: var(--light-red) !important;

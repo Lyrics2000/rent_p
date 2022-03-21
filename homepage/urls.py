@@ -5,6 +5,7 @@ from django.urls import path
 from djgeojson.views import GeoJSONLayerView
 from .models import Building,Room
 from .views import (
+    CallGlovoAPiview,
     index,
     map_search_view,
     GetBUildingAPIVIEW,
@@ -60,7 +61,8 @@ urlpatterns = [
     path("get_all_rooms/",GetRoomAl.as_view(),name="all_rm"),
     path("map_search_view_authenticated/",map_search_view_authenticated,name="map_search_view_authenticated"),
     path("post_location_coordinates/",PostLocationCoordinates.as_view()),
-    path("send_em/",SendContactAdminMail.as_view())
+    path("send_em/",SendContactAdminMail.as_view()),
+    path('call_glovo/',CallGlovoAPiview.as_view(),name="call_glovo")
 
   
 ]
