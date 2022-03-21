@@ -14,6 +14,10 @@
 
   <link rel="stylesheet" href="{% static '/dist/MarkerCluster.css' %}" />
   <link rel="stylesheet" href="{% static '/dist/MarkerCluster.Default.css' %}" />
+  <link rel="stylesheet" href="{% static 'dist/leaflet.extra-markers.min.css' %}">
+  <link rel="stylesheet" href="{% static 'dist/marker.css' %}">
+
+
 
 
 {% endblock extra_head %}
@@ -450,6 +454,7 @@
 
 <!-- markercluster  -->
 <script src="{% static '/dist/leaflet.markercluster.js' %}"></script>
+<script src="{% static '/dist/leaflet.extra-markers.min.js' %}"></script>
 <script
 src="http://leaflet.github.io/Leaflet.draw/leaflet.draw.js">
 </script>
@@ -539,7 +544,7 @@ L.mask = function (latLngs, options) {
     var map = L.map( 'map', {
         center: [{{main_lat}},{{main_lng}}],
         minZoom: 1,
-        zoom: 9.5,
+        zoom: 11,
         zoomControl: true
     
         });
@@ -555,8 +560,27 @@ L.mask = function (latLngs, options) {
         popupAnchor:  [1, -24],
         iconUrl: '{% static "images/mk.png" %}'
     });
+
+   
     
-     const markers = L.markerClusterGroup();
+     const markers = L.markerClusterGroup({
+	spiderfyShapePositions: function(count, centerPt) {
+                var distanceFromCenter = 75,
+                    markerDistance = 70,
+                    lineLength = markerDistance * (count - 1),
+                    lineStart = centerPt.y - lineLength / 2,
+                    res = [],
+                    i;
+
+                res.length = count;
+
+                for (i = count - 1; i >= 0; i--) {
+                    res[i] = new Point(centerPt.x + distanceFromCenter, lineStart + markerDistance * i);
+                }
+
+                return res;
+            }
+});
      
 
      const empty_l = []
@@ -661,7 +685,21 @@ onEachFeature: function(feature, layer) {
 
     },
 pointToLayer: function (feature, latlng) {
-    return markers.addLayer(L.marker(latlng, {icon: smallIcon}).on('mouseover',(e)=>{
+    var redMarker = L.ExtraMarkers.icon({
+        icon: `Ksh${feature.properties.rent}/mo`,
+        markerColor: 'black',
+        shape: 'square',
+        prefix: 'fa'
+      });
+   const mark = markers.addLayer(L.marker(latlng, {icon: new L.divIcon({
+    className: 'location-pin',
+    html: `<div style="display:flex;align-items:center;justify-content:center;background:#fb4e2e;padding:1.5px;width:3.5vw;border-radius: 5px;">
+        <div class="getUiSvgContainer__SvgContainer-sc-1cdn1ln-0 bDMRDK">
+         
+        </div><div style="font-size:10px;color:#fff;font-weight:400;line-height:1.8;">${feature.properties.rent > 1000 ? `${feature.properties.rent / 1000}K` : feature.properties.rent }/m</div></div>`,
+    iconSize: [30, 30],
+    iconAnchor: [18, 30]
+  })}).on('mouseover',(e)=>{
         console.log(latlng)
       //  this.target.openPopup()
 
@@ -721,6 +759,8 @@ pointToLayer: function (feature, latlng) {
         // card_container.append(element) {% endcomment %}
 
     }));
+
+    return mark
   }
 });
 
@@ -1376,12 +1416,16 @@ let mm = null;
     
 
 
-          var smallIcon = new L.Icon({
-        iconSize: [27, 27],
-        iconAnchor: [13, 27],
-        popupAnchor:  [1, -24],
-        iconUrl: '{% static "images/mk.png" %}'
-    });
+          var smallIcon = L.divIcon({
+            className: 'location-pin',
+            html: `<div style="display:flex;align-items:center;justify-content:center;background:#fb4e2e;padding:1.5px;width:3.5vw;border-radius: 5px;">
+                <div class="getUiSvgContainer__SvgContainer-sc-1cdn1ln-0 bDMRDK">
+                 
+                </div><div style="font-size:10px;color:#fff;font-weight:400;line-height:1.8;">${parseFloat(hovered_element.rent) > 1000 ? `${parseFloat(hovered_element.rent) / 1000}K` : parseFloat(hovered_element.rent) }/m</div></div>`,
+            iconSize: [30, 30],
+            iconAnchor: [18, 30]
+          })
+    
     
 
     const lat_long = [hovered_element.building.geom.coordinates[1],hovered_element.building.geom.coordinates[0]]
