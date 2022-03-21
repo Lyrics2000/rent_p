@@ -545,7 +545,7 @@ src="http://leaflet.github.io/Leaflet.draw/leaflet.draw.js">
             for (let n = 0; n < addresses.length; n++) {
                 const el = addresses[n];
     
-                const element = `<div onclick="passToIput(this)" class="card">
+                const element = `<div style="cursor:pointer;" onclick="passToIput(this)" class="card">
                     <input id="hidden_id" type="hidden" value="${el.title}" >
                     <p class="titlee">${el.title}</p>
                     <p  class ="body" >${el.subtitle}</p>
