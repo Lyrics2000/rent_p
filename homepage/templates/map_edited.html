@@ -685,12 +685,7 @@ onEachFeature: function(feature, layer) {
 
     },
 pointToLayer: function (feature, latlng) {
-    var redMarker = L.ExtraMarkers.icon({
-        icon: `Ksh${feature.properties.rent}/mo`,
-        markerColor: 'black',
-        shape: 'square',
-        prefix: 'fa'
-      });
+  
    const mark = markers.addLayer(L.marker(latlng, {icon: new L.divIcon({
     className: 'location-pin',
     html: `<div style="display:flex;align-items:center;justify-content:center;background:#fb4e2e;padding:1.5px;width:3.5vw;border-radius: 5px;">
