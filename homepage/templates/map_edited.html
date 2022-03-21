@@ -508,10 +508,7 @@ src="http://leaflet.github.io/Leaflet.draw/leaflet.draw.js">
         const value = document.getElementById('search_id').value
         console.log(value)
 
-        const card_holder = $("#info-holder")
-        card_holder.empty();
-    
-
+       
         const appended = $("#appended")
 
         const list = `<div id="info-holder" class="search_info">
@@ -530,6 +527,11 @@ src="http://leaflet.github.io/Leaflet.draw/leaflet.draw.js">
         </div>`
 
         appended.append(list)
+
+        const card_holder = $("#info-holder")
+        card_holder.empty();
+    
+
 
         
 
