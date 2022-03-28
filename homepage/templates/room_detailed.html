@@ -411,9 +411,10 @@
              // 1. clear the form.
             var dataa = response.geometry.coordinates
             console.log(dataa)
+            console.log(dataa[0])
 
 
-          var map = L.map('map_building').setView(dataa, 5);
+          var map = L.map('map_building').setView([dataa[1],dataa[0]], 13);
 
           var tiles = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
             maxZoom: 18,
@@ -431,7 +432,7 @@
                 iconUrl: '{% static "images/mk.png" %}'
             });
 
-            L.marker(dataa,{icon: smallIcon}).addTo(map).bindPopup(`<h3>ksh {{rooms_data.rent}}</h3>`)
+            L.marker([dataa[1],dataa[0]],{icon: smallIcon}).addTo(map).bindPopup(`<h3>ksh {{rooms_data.rent}}</h3>`)
         
   
 
