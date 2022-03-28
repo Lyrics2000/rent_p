@@ -303,21 +303,7 @@
 
 
 <!-- breadbrump -->
-<section class="breadbrump">
-    <div>
-       <div >
-          <h1 class="page-title">Map View</h1>
-          <div>
-             <ul>
-                <li><a href="#/"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="#/"><i class="fas fa-angle-double-right"></i> map view </a></li>
-             </ul>
-          </div>
-       </div>
-    </div>
-    </div>
-  </section>
-  
+
 <!-- endbread brump -->
 
 <section class="map_started">
@@ -331,7 +317,7 @@
 
 
 
-<div class="button_container">
+<div style="position:relative;" class="button_container">
 
     <ul class="unordered1">
         <li class="unorderd_list selecthover">
@@ -376,7 +362,7 @@
         </li>
 
         <li>
-            <button class="btn_submit" type="button"> Save </button>
+            <button onclick="changeRoom(this)" class="btn_submit" type="button"> Save </button>
 
         </li>
 
@@ -984,14 +970,14 @@ L.mask(latl).addTo(map);
                     <p>${r.building.location_name}</p>
                 </div>
                 <div style="flex-wrap:wrap;" class="details">
-                    ${r.room_size ? `<h3> <i class="fas fa-expand"></i> ${r.room_size} sqft </h3>` : null}
-                    ${r.room_type ? `<h3> <i class="fas fa-bed"></i> ${r.room_type} </h3>` : null }
+                    ${r.room_size ? `<h3> <i class="fas fa-expand"></i> ${r.room_size} sqft </h3>` : `` }
+                    ${r.room_type ? `<h3> <i class="fas fa-bed"></i> ${r.room_type} </h3>` : `` }
                 
-                    ${r.bathtab_np ? `<h3> <i class="fas fa-bath"></i> ${ r.bathtab_np} bathtab </h3>` : null }
+                    ${r.bathtab_np ? `<h3> <i class="fas fa-bath"></i> ${ r.bathtab_np} bathtab </h3>` : `` }
                 
-                    ${r.balcony ? `<h3> <i class="fas fa-door-closed"></i>balcony </h3>` : null}
-                    ${r.building.tv_connection ? `<h3> <i class="fas fa-tv"></i> tv connection </h3>` : null}
-                    ${r.building.security ? `<h3> <i class="fas fa-key"></i> security </h3> ` : null}
+                    ${r.balcony ? `<h3> <i class="fas fa-door-closed"></i>balcony </h3>` : `` }
+                    ${r.building.tv_connection ? `<h3> <i class="fas fa-tv"></i> tv connection </h3>` : ``}
+                    ${r.building.security ? `<h3> <i class="fas fa-key"></i> security </h3> ` : `` }
 
                 </div>
                 <div class="buttons">
@@ -1134,7 +1120,7 @@ L.mask(latl).addTo(map);
             $.ajax({
                 type: 'POST',
                 url: "{% url 'homepage:filtered_data' %}",
-                data: {min:min_price.value, max:max_price.value,beds:bb.value,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                data: {min:min_p.value, max:max_price.value,beds:bb.value,'csrfmiddlewaretoken': '{{ csrf_token }}'},
                 success: function (response) {
                     console.log("room response",response) ;
                     var card_containe  =  $('#card-container')
@@ -1257,7 +1243,7 @@ L.mask(latl).addTo(map);
             $.ajax({
                 type: 'POST',
                 url: "{% url 'homepage:filtered_data' %}",
-                data: {min:min_price.value, max:max_price.value,beds:bb.value,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                data: {min:min_p.value, max:max_price.value,beds:bb.value,'csrfmiddlewaretoken': '{{ csrf_token }}'},
                 success: function (response) {
                     console.log(response) ;
                     var card_containe  =  $('#card-container')
@@ -1379,7 +1365,7 @@ L.mask(latl).addTo(map);
             $.ajax({
                 type: 'POST',
                 url: "{% url 'homepage:filtered_data' %}",
-                data: {min:min_price.value, max:max_price.value,beds:bb.value,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                data: {min:min_p.value, max:max_price.value,beds:bb.value,'csrfmiddlewaretoken': '{{ csrf_token }}'},
                 success: function (response) {
                     console.log(response) ;
                     var card_containe  =  $('#card-container')

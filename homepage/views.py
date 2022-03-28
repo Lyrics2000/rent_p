@@ -1,3 +1,4 @@
+from audioop import maxpp
 from cgitb import html
 from http.client import HTTPResponse
 import json
@@ -268,9 +269,29 @@ class FilterRoom(APIView):
         print("beds : ",beds)
         
         print("running 1")
-        all_roo =  Room.objects.filter(rent__range = [float(min_price),float(max_price)],room_type = beds,approved = True,paid = False)
-        serializer = RoomSerializer(all_roo, many=True)
-        return Response(serializer.data)
+
+        if max_price == "Maximum Price" and min_price != "Minimum Price":
+            print("running 2")
+            all_roo =  Room.objects.filter(rent__gte = float(min_price),room_type = beds,approved = True,paid = False)
+            serializer = RoomSerializer(all_roo, many=True)
+            return Response(serializer.data)
+        elif min_price == "Minimum Price" and max_price !="Maximum Price":
+            print("running 3")
+            all_roo =  Room.objects.filter(rent__lte = float(max_price),room_type = beds,approved = True,paid = False)
+            serializer = RoomSerializer(all_roo, many=True)
+            return Response(serializer.data)
+
+        elif min_price != "Minimum Price" and max_price !="Maximum Price":
+            print("running 4")
+            all_roo =  Room.objects.filter(rent__range = [float(min_price),float(max_price)],room_type = beds,approved = True,paid = False)
+            serializer = RoomSerializer(all_roo, many=True)
+            return Response(serializer.data)
+
+
+      
+                
+
+
 
 
 
