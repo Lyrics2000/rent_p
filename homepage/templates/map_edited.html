@@ -1133,7 +1133,8 @@ L.mask(latl).addTo(map);
                     for (let i = 0; i < response.length; i++) {
                         const resp =  response[i];
                         var els =`
-                    <div class="box">
+                        <div onmouseover="bigImg(this)" onmouseout="normalImg(this)" class="box">
+                            <input type="hidden" id="hidden_id" value="${resp.id}">
             <div class="image-container">
                 <img src="${resp.room_picture}" alt="">
                 <div class="info">
@@ -1256,7 +1257,8 @@ L.mask(latl).addTo(map);
                     for (let i = 0; i < response.length; i++) {
                         const resp =  response[i];
                         var els =`
-                    <div class="box">
+                        <div onmouseover="bigImg(this)" onmouseout="normalImg(this)" class="box">
+                            <input type="hidden" id="hidden_id" value="${resp.id}">
             <div class="image-container">
                 <img src="${resp.room_picture}" alt="">
                 <div class="info">
@@ -1336,7 +1338,7 @@ L.mask(latl).addTo(map);
             var card_containe  =  $('#card-container')
               
               card_containe.empty();
-            const holder = ` <div style="height: 400px;" class="box">
+            const holder = ` <div style="height: 400px;"  class="box">
                 <div class="image-container skeleton">
                     <div style="width:100px;height:200px" class="image_holder skeleton"></div>
                    
@@ -1378,7 +1380,8 @@ L.mask(latl).addTo(map);
                     for (let i = 0; i < response.length; i++) {
                         const resp =  response[i];
                         var els =`
-                    <div class="box">
+                    <div onmouseover="bigImg(this)" onmouseout="normalImg(this)" class="box">
+                        <input type="hidden" id="hidden_id" value="${resp.id}">
             <div class="image-container">
                 <img src="${resp.room_picture}" alt="">
                 <div class="info">
