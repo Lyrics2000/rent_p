@@ -136,10 +136,10 @@ def map_search_view(request):
         rms =  Room.objects.filter(approved = True,paid = False)
         empty_list = []
         for i in rms:
-            if i.building.l_name:
-                ratio = fuzz.partial_ratio(i.building.l_name.area_name.lower(),location.lower())
-                if (ratio >=70):
-                    empty_list.append(i)
+            # if i.building.l_name:
+            #     ratio = fuzz.partial_ratio(i.building.l_name.area_name.lower(),location.lower())
+            #     if (ratio >=70):
+            empty_list.append(i)
 
 
         oo = MapLocations.objects.all()

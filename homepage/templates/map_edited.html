@@ -648,12 +648,12 @@ L.mask = function (latLngs, options) {
     var map = L.map( 'map', {
         center: [{{main_lat}},{{main_lng}}],
         minZoom: 1,
-        zoom: 11,
+        zoom: 5,
         zoomControl: true
     
         });
     L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
-        maxZoom: 20,
+        maxZoom: 14,
         subdomains:['mt0','mt1','mt2','mt3']
     }).addTo(map);
 
@@ -865,8 +865,12 @@ pointToLayer: function (feature, latlng) {
 
 
 geojson.addTo(map);
+map.fitBounds(geojson.getBounds())
+
+
 
 L.mask(latl).addTo(map);
+
 
 
           
@@ -880,8 +884,7 @@ L.mask(latl).addTo(map);
     
     
     map.addLayer(markers);
-
-
+   
   
 
     
