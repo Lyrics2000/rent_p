@@ -144,13 +144,7 @@ def map_search_view(request):
             print("jsp",geojson)
             print("boundingbox",boundingbox)
             
-            bbf = {
-                "xmin":float(boundingbox[0]),
-                "xmax":float(boundingbox[1]),
-                "ymin" : float(boundingbox[2]),
-                "ymax" : float(boundingbox[3])
-
-            } 
+      
 
         else:
             geojson = []

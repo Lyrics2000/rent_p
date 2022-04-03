@@ -7,17 +7,31 @@ class GetLeafletDate:
         self.quer =  quer
 
     def get_data(self):
-        rep = self.quer.split(",")[0]
-        print(rep)
-  
-        url = f"https://nominatim.openstreetmap.org/search?q={rep}&format=json&countrycodes=254"
+        try:
+            rep = self.quer.replace(" ","%20")
+            print(rep)
+    
+            url = f"https://nominatim.openstreetmap.org/search?q={rep}&format=json&countrycodes=254"
 
-        payload={}
-        headers = {}
+            payload={}
+            headers = {}
 
-        response = requests.request("GET", url, headers=headers, data=payload)
+            response = requests.request("GET", url, headers=headers, data=payload)
 
-        return response.json()
+            return response.json()
+        except:
+            rep = self.quer.split(",")[0]
+            print(rep)
+    
+            url = f"https://nominatim.openstreetmap.org/search?q={rep}&format=json&countrycodes=254"
+
+            payload={}
+            headers = {}
+
+            response = requests.request("GET", url, headers=headers, data=payload)
+
+            return response.json()
+            
     def get_osm(self,osm):
         url = f"https://www.openstreetmap.org/api/0.6/way/{osm}/full"
         payload={}
