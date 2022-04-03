@@ -139,9 +139,17 @@ def map_search_view(request):
              if len(m['geojson']['coordinates']) < 2:
                  empty_list_2.append(m)
         print("jjs",empty_list_2)
-        geojson = empty_list_2[0]['geojson']['coordinates']
-        boundingbox = empty_list_2[0]['boundingbox']
-        print("jsp",geojson)
+    
+        if len(empty_list_2) >0:
+            geojson = empty_list_2[0]['geojson']['coordinates']
+            boundingbox = empty_list_2[0]['boundingbox']
+            print("jsp",geojson)
+
+        else:
+            geojson = []
+            boundingbox = []
+            print("jsp",geojson)
+
 
     
         # print("pp",loc['osm_id'])
