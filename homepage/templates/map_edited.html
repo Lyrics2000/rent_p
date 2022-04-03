@@ -704,7 +704,7 @@ L.mask = function (latLngs, options) {
 
      $.ajax({
         type: 'POST',
-        data : {"criteria_location":'{{criteria_mk}}','csrfmiddlewaretoken': '{{ csrf_token }}'},
+        data : {"criteria_location":'{{criteria_mk}}',"xminm":'{{xmin}}',"xmaxm":'{{xmax}}',"yminm":'{{ymin}}',"ymaxm":'{{ymax}}','csrfmiddlewaretoken': '{{ csrf_token }}'},
         url: "{% url 'homepage:all_rm' %}",
         success: function (data) {
 
@@ -963,7 +963,7 @@ if(latl.length > 0){
 
     $.ajax({
         type: 'POST',
-        data : {"criteria_location":'{{criteria_mk}}','csrfmiddlewaretoken': '{{ csrf_token }}'},
+        data : {"criteria_location":'{{criteria_mk}}',"xminm":'{{xmin}}',"xmaxm":'{{xmax}}',"yminm":'{{ymin}}',"ymaxm":'{{ymax}}','csrfmiddlewaretoken': '{{ csrf_token }}'},
         url: "{% url 'homepage:all_rm' %}",
         success: function (response) {
             console.log(response)

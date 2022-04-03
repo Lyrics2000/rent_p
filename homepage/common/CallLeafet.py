@@ -7,7 +7,7 @@ class GetLeafletDate:
         self.quer =  quer
 
     def get_data(self):
-        rep = self.quer.replace(" ","%20")
+        rep = self.quer.split(",")[0]
         print(rep)
   
         url = f"https://nominatim.openstreetmap.org/search?q={rep}&format=json&countrycodes=254"

@@ -1,4 +1,6 @@
 
+import json
+# from django.contrib.gis.geos import Polygon
 from fuzzywuzzy import fuzz
 
 from django.contrib.auth.decorators import login_required
@@ -25,6 +27,7 @@ from .serializers import BuildingSerializer, CoordinatedSerializer, RoomSerializ
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from django.template import Context
+from shapely.geometry import Point, Polygon 
 
 
 # Create your views here.
@@ -119,8 +122,7 @@ def index(request):
 def map_search_view(request):
     if request.is_ajax and request.method == "POST":
         location =  request.POST.get("location_search")
-        building =  request.POST.get('building')
-        hidden =request.POST.get("hidden_iddd")
+        
         
         app =  GetLeafletDate(location)
         
@@ -128,11 +130,7 @@ def map_search_view(request):
         osm_id = loc['osm_id']
 
         js_p = app.getLeafletPolygon()
-        place_ranks = []
-        for l in js_p:
-            place_ranks.append(l['importance'])
-
-        print(max(place_ranks))
+     
         empty_list_2 = []
 
         for m in js_p:
@@ -144,6 +142,15 @@ def map_search_view(request):
             geojson = empty_list_2[0]['geojson']['coordinates']
             boundingbox = empty_list_2[0]['boundingbox']
             print("jsp",geojson)
+            print("boundingbox",boundingbox)
+            
+            bbf = {
+                "xmin":float(boundingbox[0]),
+                "xmax":float(boundingbox[1]),
+                "ymin" : float(boundingbox[2]),
+                "ymax" : float(boundingbox[3])
+
+            } 
 
         else:
             geojson = []
@@ -166,52 +173,43 @@ def map_search_view(request):
             empty_list.append(i)
 
 
-        # oo = MapLocations.objects.all()
-        # empty_list_two = []
-        # for l in oo:
-        #     print(l)
-        #     ratio = fuzz.partial_ratio(l.area_name.lower(),location.lower())
-        #     if (ratio >=70):
-        #             empty_list_two.append(l.id)
 
-        # try:
-            # print(empty_list_two[0])  
-            # map_l = MapLocations.objects.get(id = int(empty_list_two[0]) )
-            # filered_m = Coordinated.objects.filter(map_frame = map_l)
-
-            # print("checking 1",filered_m)
-
-            # print("llooa",float(map_l.main_lat))
-
-            # all_rooms =  Room.objects.filter(approved = True,paid = False)
-           
-            # context= {
-            #     'type': building,
-            #     'main_lat': float(loc['lat']),
-            #     'main_lng': float(loc['lon']),
-            #     'coordinates' : nodes,
-            #     'criteria_mk' : location,
-            #     'formatted' : f"Search for : {location}",
-            #     'all_rooms'  : all_rooms
-            # }
-        
-            # return render(request,'map_edited.html',context)
-        # except:
         all_rooms =  Room.objects.filter(approved = True,paid = False)
         split_loc = location.split(",")[0]
-        context= {
+        if len(boundingbox) > 0:
+            context= {
+                'boundingbox':boundingbox,
+                'main_lat': float(loc['lat']),
+                'main_lng': float(loc['lon']),
+                'coordinates' : geojson,
+                'criteria_mk' : location,
+                "xmin":float(boundingbox[0]),
+                "xmax":float(boundingbox[1]),
+                "ymin" : float(boundingbox[2]),
+                "ymax" : float(boundingbox[3]),
+                'formatted' : f"Search for : {split_loc}",
+                'all_rooms'  : all_rooms
+            }
+            return render(request,'map_edited.html',context)
+        
+        else:
+            context= {
+                
             
-            'type': building,
-            'boundingbox':boundingbox,
-            'main_lat': float(loc['lat']),
-            'main_lng': float(loc['lon']),
-            'coordinates' : geojson,
-            'criteria_mk' : location,
-            'formatted' : f"Search for : {split_loc}",
-            'all_rooms'  : all_rooms
-        }
-    
-        return render(request,'map_edited.html',context)
+                'boundingbox':boundingbox,
+                'main_lat': float(loc['lat']),
+                'main_lng': float(loc['lon']),
+                'coordinates' : geojson,
+                'criteria_mk' : location,
+                "xmin":float(0),
+                "xmax":float(0),
+                "ymin" : float(0),
+                "ymax" : float(0),
+                'formatted' : f"Search for : {split_loc}",
+                'all_rooms'  : all_rooms
+            }
+
+            return render(request,'map_edited.html',context)
         
     all_rooms =  Room.objects.filter(approved = True,paid = False)
 
@@ -254,16 +252,37 @@ class GetRoomAl(APIView):
     def post(self,request):
       
         criteria_location =  request.data['criteria_location']
-        print("lloo",criteria_location)
+        xmin =  request.data['xminm']
+        xmax =  request.data['xmaxm']
+        ymin =  request.data['yminm']
+        ymax =  request.data['ymaxm']
+
+        bbbox = (float(xmin),float(ymin),float(ymax),float(xmax))
+
+        pp =  Polygon.from_bounds(xmin=float(xmin),ymin=float(ymin),xmax=float(xmax),ymax=float(ymax))
+        print("oo",pp)
+        print("xmin",xmin)
+        print("lloo",json.loads(json.dumps((criteria_location))))
+
+        building_filter  = Building.objects.all()
+        print("buiding filter",building_filter)
    
 
         rms =  Room.objects.filter(approved = True,paid = False)
         empty_list = []
         for i in rms:
-            if i.building.l_name:
-                ratio = fuzz.partial_ratio(i.building.l_name.area_name.lower(),criteria_location.lower())
-                if (ratio >=70):
-                    empty_list.append(i)
+            for j in building_filter:
+                point = Point(j.geom.y,j.geom.x)
+                print("point",point)
+                if(pp.contains(point)):
+                    if(i.building.id) == j.id:
+
+                        point = Point(j.geom.x,j.geom.y)
+            # if i.building.l_name:
+            #     ratio = fuzz.partial_ratio(i.building.l_name.area_name.lower(),criteria_location.lower())
+            #     if (ratio >=70):
+                        print("jgeom",j.geom.x,j.geom.y)
+                        empty_list.append(i)
 
         print(empty_list)
         room_serializer =  RoomSerializer(empty_list,many = True)
