@@ -572,7 +572,7 @@ function passToIput(data){
     const mmm = []
     {% for o in coordinates  %}
     
-    mmm.push([parseFloat({{o.lng}}),parseFloat({{o.lat}})])
+    mmm.push([parseFloat({{o.lon}}),parseFloat({{o.lat}})])
     {% endfor %}
 
     console.log("qqqq",mmm)
@@ -596,6 +596,8 @@ function passToIput(data){
     ]
   };
 
+  console.log("bounds",bounds)
+
   
  
  
@@ -610,7 +612,7 @@ for (i=0; i<coordinates.length; i++) {
 console.log("ppp",latl)
 
 
-L.Mask = L.Polygon.extend({
+    L.Mask = L.Polygon.extend({
     options: {
         stroke: true,
         color: '#333',
@@ -648,12 +650,12 @@ L.mask = function (latLngs, options) {
     var map = L.map( 'map', {
         center: [{{main_lat}},{{main_lng}}],
         minZoom: 1,
-        zoom: 5,
+        zoom: 12,
         zoomControl: true
     
         });
     L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
-        maxZoom: 14,
+        maxZoom: 15,
         subdomains:['mt0','mt1','mt2','mt3']
     }).addTo(map);
 
@@ -668,7 +670,7 @@ L.mask = function (latLngs, options) {
    
     
      const markers = L.markerClusterGroup({
-	spiderfyShapePositions: function(count, centerPt) {
+	    spiderfyShapePositions: function(count, centerPt) {
                 var distanceFromCenter = 75,
                     markerDistance = 70,
                     lineLength = markerDistance * (count - 1),
@@ -865,13 +867,42 @@ pointToLayer: function (feature, latlng) {
 
 
 geojson.addTo(map);
-map.fitBounds(geojson.getBounds())
+
+const boun = L.latLngBounds(mmm.map((c) => { 
+    return [c[1], c[0]]; 
+  }));
+
+console.log("nn",boun)
+
+{% comment %} var firstpolyline = new L.polygon(boun, {
+    stroke: true,
+    color: '#333',
+    fillOpacity: 0.6,
+    clickable: true,
+    outerBounds: new L.LatLngBounds([-90, -360], [90, 360])
+});
+
+firstpolatllyline.addTo(map);  {% endcomment %}
+
+if(latl.length > 0){
+    L.mask(latl).addTo(map);
+
+}else{
+
+    var circle = L.circle([{{main_lat}},{{main_lng}}], {
+        color: 'red',
+        fillColor: '#f03',
+        fillOpacity: 0,
+        radius: 6000
+    }).addTo(map);
+    
+
+}
 
 
 
-L.mask(latl).addTo(map);
 
-
+{% comment %} L.polyline(mmm).addTo(map); {% endcomment %}
 
           
         },
@@ -1043,11 +1074,11 @@ L.mask(latl).addTo(map);
                     </ul>
                 </div>
             </div>
-
+{% comment %} 
             <p>
                 Trulia is a registered Trademark of Zillow, Inc. and MLS listings are provided by Zillow, Inc., a licensed real estate brokerage. See here for a list of our real estate licenses. Contact Zillow, Inc Brokerage
-            </p>
-
+            </p> {% endcomment %}
+{% comment %} 
             <div class="pages-navigation">
                 <ul>
                     <li><a href="">Home</a></li>
@@ -1055,11 +1086,11 @@ L.mask(latl).addTo(map);
                     <li><a href="">House Mapview</a></li>
                     <li><a href="">House List View</a></li>
                 </ul>
-            </div>
+            </div> {% endcomment %}
 
-            <p>
+            {% comment %} <p>
                 Zillow Group is committed to ensuring digital accessibility for individuals with disabilities.  We are continuously working to improve the accessibility of our web experience for everyone,  and we welcome feedback and accommodation requests. If you wish to report an issue or seek an  accommodation, please let us know.
-            </p>
+            </p> {% endcomment %}
         </div>`)
 
         }
@@ -1540,7 +1571,6 @@ let mm = null;
     mm.on("mouseover",(e)=>{
         mm.openPopup();
     })
-
 
 }
 </script>

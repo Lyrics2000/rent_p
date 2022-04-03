@@ -1,36 +1,24 @@
-from audioop import maxpp
-from cgitb import html
-from http.client import HTTPResponse
-import json
-from django.db.models import Q
-from threading import Thread
-from urllib import request
 
 from fuzzywuzzy import fuzz
-from fuzzywuzzy import process
 
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from account.models import Agent, User
+from account.models import  User
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Min,Max
 
-from django.http import HttpResponse
-from django.contrib.gis.geos import Point
-from django.contrib.gis.measure import Distance
-from django.core import serializers
 from django.forms.models import model_to_dict
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import redirect, render
+from django.http import JsonResponse
+from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from homepage.common.CallGlovo import CallGlovo
+from homepage.common.CallLeafet import GetLeafletDate
 from homepage.common.SendEmailThread import SendEmailThread
 
 from homepage.common.sendsms import sendSms
 from homepage.sendEmailT import SendEmailKanzi
 
-from .LOc import LocationQuery
 from .models import BookingRequest, Building, BuildingMorePic, Coordinated, MapLocations, Room, RoomMorePic, SavedRooms, SlidingImages,BookTour
 from .serializers import BuildingSerializer, CoordinatedSerializer, RoomSerializer, SavedRoomSerializers
 
@@ -132,6 +120,18 @@ def map_search_view(request):
     if request.is_ajax and request.method == "POST":
         location =  request.POST.get("location_search")
         building =  request.POST.get('building')
+        hidden =request.POST.get("hidden_iddd")
+        
+        app =  GetLeafletDate(location)
+        
+        loc= app.get_data()[0]
+        osm_id = loc['osm_id']
+
+        nodes = app.get_osm(osm_id)
+        print("pp",loc['osm_id'])
+        print("nodes",nodes)
+    
+
         
         rms =  Room.objects.filter(approved = True,paid = False)
         empty_list = []
@@ -142,52 +142,52 @@ def map_search_view(request):
             empty_list.append(i)
 
 
-        oo = MapLocations.objects.all()
-        empty_list_two = []
-        for l in oo:
-            print(l)
-            ratio = fuzz.partial_ratio(l.area_name.lower(),location.lower())
-            if (ratio >=70):
-                    empty_list_two.append(l.id)
+        # oo = MapLocations.objects.all()
+        # empty_list_two = []
+        # for l in oo:
+        #     print(l)
+        #     ratio = fuzz.partial_ratio(l.area_name.lower(),location.lower())
+        #     if (ratio >=70):
+        #             empty_list_two.append(l.id)
 
-        try:
-            print(empty_list_two[0])  
-            map_l = MapLocations.objects.get(id = int(empty_list_two[0]) )
-            filered_m = Coordinated.objects.filter(map_frame = map_l)
+        # try:
+            # print(empty_list_two[0])  
+            # map_l = MapLocations.objects.get(id = int(empty_list_two[0]) )
+            # filered_m = Coordinated.objects.filter(map_frame = map_l)
 
-            print("checking 1")
+            # print("checking 1",filered_m)
 
-            print("llooa",float(map_l.main_lat))
+            # print("llooa",float(map_l.main_lat))
 
-       
-            all_rooms =  Room.objects.filter(approved = True,paid = False)
-            context= {
-                
-                'type': building,
-                'main_lat': float(map_l.main_lat),
-                'main_lng': float(map_l.main_lng),
-                'coordinates' : filered_m,
-                'criteria_mk' : location,
-                'formatted' : f"Search for : {location}",
-                'all_rooms'  : all_rooms
-            }
+            # all_rooms =  Room.objects.filter(approved = True,paid = False)
+           
+            # context= {
+            #     'type': building,
+            #     'main_lat': float(loc['lat']),
+            #     'main_lng': float(loc['lon']),
+            #     'coordinates' : nodes,
+            #     'criteria_mk' : location,
+            #     'formatted' : f"Search for : {location}",
+            #     'all_rooms'  : all_rooms
+            # }
         
-            return render(request,'map_edited.html',context)
-        except:
-            all_rooms =  Room.objects.filter(approved = True,paid = False)
-            context= {
-                
-                'type': building,
-                'main_lat': float(-1.2640263),
-                'main_lng': float(36.7472448),
-                'coordinates' : [],
-                'criteria_mk' : location,
-                'formatted' : f"Search for : {location}",
-                'all_rooms'  : all_rooms
-            }
-        
-            return render(request,'map_edited.html',context)
+            # return render(request,'map_edited.html',context)
+        # except:
+        all_rooms =  Room.objects.filter(approved = True,paid = False)
+        split_loc = location.split(",")[0]
+        context= {
             
+            'type': building,
+            'main_lat': float(loc['lat']),
+            'main_lng': float(loc['lon']),
+            'coordinates' : nodes,
+            'criteria_mk' : location,
+            'formatted' : f"Search for : {split_loc}",
+            'all_rooms'  : all_rooms
+        }
+    
+        return render(request,'map_edited.html',context)
+        
     all_rooms =  Room.objects.filter(approved = True,paid = False)
 
     context= {

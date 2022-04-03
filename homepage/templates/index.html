@@ -17,21 +17,6 @@
 </script> {% endcomment %}
 
 
-<script>
-    var openstre = require('leaflet-geosearch')
-    // import { OpenStreetMapProvider } from 'leaflet-geosearch';
-
-$('#location_search').on('input', function(e) { 
-    // Your code here
-    const value = $('#location_search').val()
-    const provider = new OpenStreetMapProvider();
-    const results = provider.search({ query: value });
-    
-    console.log(results)
-});
-
-</script>
-
 
 <script>
     function callingEXternalApi(){
@@ -49,32 +34,18 @@ $('#location_search').on('input', function(e) {
 
         const card_holder = $("#info-holder")
          card_holder.empty();
-     
- 
+
+
+        
+          
+    
 
  
  
-
          var settings = {
-            "url": "https://nominatim.openstreetmap.org/search.php?q=waruku&polygon_geojson=1&format=jsonv2",
+            "url": `https://nominatim.openstreetmap.org/search?q=${value}&format=json&countrycodes=254`,
             "method": "GET",
             "timeout": 0,
-            "headers": {
-              "authority": "nominatim.openstreetmap.org",
-              "pragma": "no-cache",
-              "cache-control": "no-cache",
-              "sec-ch-ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"99\", \"Google Chrome\";v=\"99\"",
-              "dnt": "1",
-              "sec-ch-ua-mobile": "?0",
-              "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.82 Safari/537.36",
-              "sec-ch-ua-platform": "\"Linux\"",
-              "accept": "*/*",
-              "sec-fetch-site": "same-origin",
-              "sec-fetch-mode": "cors",
-              "sec-fetch-dest": "empty",
-              "referer": "https://nominatim.openstreetmap.org/ui/search.html?q=waruku",
-              "accept-language": "en-US,en;q=0.9"
-            },
           };
           
           $.ajax(settings).done(function (response) {
@@ -119,6 +90,8 @@ $('#location_search').on('input', function(e) {
         const ele = doc.getElementById("hidden_id").getAttribute("value")
         console.log(ele)
         document.getElementById('search_id').value=ele ; 
+        document.getElementById('hidden_iddd').value=ele ;
+        
     
     }
     </script>
