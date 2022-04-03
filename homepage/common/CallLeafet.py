@@ -59,6 +59,33 @@ class GetLeafletDate:
         return data
 
 
+    def getLeafletPolygon(self):
+        rep = self.quer.replace(" ","%20")
+        url = f"https://nominatim.openstreetmap.org/search.php?q={rep}&polygon_geojson=1&format=jsonv2"
+        payload={}
+        headers = {
+        'authority': 'nominatim.openstreetmap.org',
+        'pragma': 'no-cache',
+        'cache-control': 'no-cache',
+        'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="99", "Google Chrome";v="99"',
+        'dnt': '1',
+        'sec-ch-ua-mobile': '?0',
+        'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.82 Safari/537.36',
+        'sec-ch-ua-platform': '"Linux"',
+        'accept': '*/*',
+        'sec-fetch-site': 'same-origin',
+        'sec-fetch-mode': 'cors',
+        'sec-fetch-dest': 'empty',
+        'referer': 'https://nominatim.openstreetmap.org/ui/search.html?q=juja',
+        'accept-language': 'en-US,en;q=0.9'
+        }
+
+        response = requests.request("GET", url, headers=headers, data=payload)
+
+        return response.json()
+
+
+
 
 
 

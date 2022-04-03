@@ -569,10 +569,12 @@ function passToIput(data){
 </script>
 <script>
 
+    console.log("coordinates",{{coordinates}})
     const mmm = []
     {% for o in coordinates  %}
     
-    mmm.push([parseFloat({{o.lon}}),parseFloat({{o.lat}})])
+    //mmm.push([parseFloat({{o.lon}}),parseFloat({{o.lat}})])
+    mmm.push({{o}})
     {% endfor %}
 
     console.log("qqqq",mmm)
@@ -605,9 +607,17 @@ function passToIput(data){
 
 const latl = []
 var coordinates = bounds.features[0].geometry.coordinates[0];
-for (i=0; i<coordinates.length; i++) {
-    latl.push(new L.LatLng(coordinates[i][1], coordinates[i][0]));
-}
+
+{% for k in coordinates  %}
+    const l = {{k}}
+    l.forEach(element => {
+
+        latl.push(new L.LatLng(parseFloat(element[1]), parseFloat(element[0])));
+    });
+    console.log("ll",l)
+    
+{% endfor %}
+
 
 console.log("ppp",latl)
 
@@ -650,12 +660,12 @@ L.mask = function (latLngs, options) {
     var map = L.map( 'map', {
         center: [{{main_lat}},{{main_lng}}],
         minZoom: 1,
-        zoom: 12,
+        zoom: 15,
         zoomControl: true
     
         });
     L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
-        maxZoom: 15,
+        maxZoom: 14,
         subdomains:['mt0','mt1','mt2','mt3']
     }).addTo(map);
 
@@ -868,21 +878,8 @@ pointToLayer: function (feature, latlng) {
 
 geojson.addTo(map);
 
-const boun = L.latLngBounds(mmm.map((c) => { 
-    return [c[1], c[0]]; 
-  }));
+map.fitBounds(latl); 
 
-console.log("nn",boun)
-
-{% comment %} var firstpolyline = new L.polygon(boun, {
-    stroke: true,
-    color: '#333',
-    fillOpacity: 0.6,
-    clickable: true,
-    outerBounds: new L.LatLngBounds([-90, -360], [90, 360])
-});
-
-firstpolatllyline.addTo(map);  {% endcomment %}
 
 if(latl.length > 0){
     L.mask(latl).addTo(map);

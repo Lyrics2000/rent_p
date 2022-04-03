@@ -127,9 +127,25 @@ def map_search_view(request):
         loc= app.get_data()[0]
         osm_id = loc['osm_id']
 
-        nodes = app.get_osm(osm_id)
-        print("pp",loc['osm_id'])
-        print("nodes",nodes)
+        js_p = app.getLeafletPolygon()
+        place_ranks = []
+        for l in js_p:
+            place_ranks.append(l['importance'])
+
+        print(max(place_ranks))
+        empty_list_2 = []
+
+        for m in js_p:
+             if len(m['geojson']['coordinates']) < 2:
+                 empty_list_2.append(m)
+        print("jjs",empty_list_2)
+        geojson = empty_list_2[0]['geojson']['coordinates']
+        boundingbox = empty_list_2[0]['boundingbox']
+        print("jsp",geojson)
+
+    
+        # print("pp",loc['osm_id'])
+        # print("nodes",nodes)
     
 
         
@@ -178,9 +194,10 @@ def map_search_view(request):
         context= {
             
             'type': building,
+            'boundingbox':boundingbox,
             'main_lat': float(loc['lat']),
             'main_lng': float(loc['lon']),
-            'coordinates' : nodes,
+            'coordinates' : geojson,
             'criteria_mk' : location,
             'formatted' : f"Search for : {split_loc}",
             'all_rooms'  : all_rooms
