@@ -82,7 +82,29 @@ class GetLeafletDate:
 
         response = requests.request("GET", url, headers=headers, data=payload)
 
+    
+
         return response.json()
+
+
+    def leafletReverse(self,lat,lon):
+        url = f"https://nominatim.openstreetmap.org/reverse?lat={lat}&lon={lon}"
+
+        payload={}
+        headers = {}
+
+        response = requests.request("GET", url, headers=headers, data=payload)
+
+        myroot = ET.fromstring(response.text)
+        print(myroot[0].attrib)
+        data  = []
+        for x in myroot:
+            if(str(x.tag) == "node"):
+                data.append(x.attrib)
+                
+        return data
+
+
 
 
 

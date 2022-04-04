@@ -833,4 +833,59 @@ class CallGlovoAPiview(APIView):
 
 
 
+class FilterWithCurrentLocation(APIView):
+    def get(self,request):
+        criteria = request.query_params
+        print(criteria)
+        all_roomms = Room.objects.filter(approved = True,paid = False)
+        room_serializer =  RoomSerializer(all_roomms,many = True)
+        return Response(room_serializer.data)
+
+
+    def post(self,request):
+      
+        latitude =  request.data['lat']
+        longitude = request.data['lon']
+
+        app = GetLeafletDate("nairobi").leafletReverse(lat=latitude,lon=longitude)
+        boundingbox = app['boundingbox']
+
+        xmin  = float(boundingbox[0])
+        xmax = float(boundingbox[1])
+        ymin   = float(boundingbox[2])
+        ymax = float(boundingbox[3])
+
+   
+        pp =  Polygon.from_bounds(xmin=float(xmin),ymin=float(ymin),xmax=float(xmax),ymax=float(ymax))
+        print("oo",pp)
+        print("xmin",xmin)
+
+        building_filter  = Building.objects.all()
+        print("buiding filter",building_filter)
+   
+
+        rms =  Room.objects.filter(approved = True,paid = False)
+        empty_list = []
+        for i in rms:
+            for j in building_filter:
+                point = Point(j.geom.y,j.geom.x)
+                print("point",point)
+                if(pp.contains(point)):
+                    if(i.building.id) == j.id:
+
+                        point = Point(j.geom.x,j.geom.y)
+            # if i.building.l_name:
+            #     ratio = fuzz.partial_ratio(i.building.l_name.area_name.lower(),criteria_location.lower())
+            #     if (ratio >=70):
+                        print("jgeom",j.geom.x,j.geom.y)
+                        empty_list.append(i)
+
+        print(empty_list)
+        room_serializer =  RoomSerializer(empty_list,many = True)
+        return Response(room_serializer.data)
+
+
+
+
+
 

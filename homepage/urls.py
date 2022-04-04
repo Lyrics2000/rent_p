@@ -6,6 +6,7 @@ from djgeojson.views import GeoJSONLayerView
 from .models import Building,Room
 from .views import (
     CallGlovoAPiview,
+    FilterWithCurrentLocation,
     index,
     map_search_view,
     GetBUildingAPIVIEW,
@@ -62,7 +63,8 @@ urlpatterns = [
     path("map_search_view_authenticated/",map_search_view_authenticated,name="map_search_view_authenticated"),
     path("post_location_coordinates/",PostLocationCoordinates.as_view()),
     path("send_em/",SendContactAdminMail.as_view()),
-    path('call_glovo/',CallGlovoAPiview.as_view(),name="call_glovo")
+    path('call_glovo/',CallGlovoAPiview.as_view(),name="call_glovo"),
+    path("search_with_lat/",FilterWithCurrentLocation.as_view(),name="search_with_lat_and_lon")
 
   
 ]
