@@ -11,13 +11,7 @@ var MAPINITIALIZER = MAPINITIALIZER || (function(){
 
         },
         initializeMap : function() {
-            var map = L.map( 'map', {
-                center: [_args[0],_args[1]],
-                minZoom: 1,
-                zoom: 15,
-                zoomControl: true
-            
-                });
+         
             L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
                 maxZoom: 14,
                 subdomains:['mt0','mt1','mt2','mt3']
