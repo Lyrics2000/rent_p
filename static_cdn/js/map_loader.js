@@ -138,12 +138,12 @@ $.ajax({
                 <h3>Near Houses</h3>
                 <ul>
                     <li onclick="getLocation("Single Room")" ><a   >Single room near me</a></li>
-                    <li><button onclick="getLocation();" style="cursor:pointer">Bouble Room room near me</button></li>
-                    <li><a onclick="return getLocation("BedSitter");" href="">BedSitter room near me</a></li>
-                    <li><a onclick="return getLocation("1 Bedroom");" href="">1 Bedroom room near me</a></li>
-                    <li><a onclick="return getLocation("2 Bedroom");" href="">2 Bedroom room near me</a></li>
-                    <li><a onclick="return getLocation("3 Bedroom");" href="">3 Bedroom room near me</a></li>
-                    <li><a onclick="return getLocation("4 Bedroom");" href="">4 Bedroom room near me</a></li>
+                    <li><button onclick="getLocation('Double Room')" style="cursor:pointer"> Bouble Room room near me</button></li>
+                    <li><button onclick="getLocation('BedSitter')" style="cursor:pointer">BedSitter room near me</button></li>
+                    <li><button onclick="getLocation('1 Bedroom')" style="cursor:pointer">1 Bedroom room near me</button></li>
+                    <li><button onclick="getLocation('2 Bedroom')" style="cursor:pointer">2 Bedroom room near me</button></li>
+                    <li><button onclick="getLocation('3 Bedroom')" style="cursor:pointer">3 Bedroom room near me</button></li>
+                    <li><button onclick="getLocation('4 Bedroom')" style="cursor:pointer">4 Bedroom room near me</button></li>
                 </ul>
             </div>
 
