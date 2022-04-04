@@ -1168,8 +1168,13 @@ let mm = null;
 
 <script>
 
-
+    var bedroom = "1 Bedroom";
 function getLocation(bedroom) {
+
+    map.off();
+    map.remove();
+   
+     bedroom =  bedroom;
     console.log(bedroom)
         if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, showError);
@@ -1179,11 +1184,45 @@ function getLocation(bedroom) {
           alert(`The Browser Does not Support Geolocation`)
         }
       }
-
+      map = map;
       function showPosition(position) {
           
         var innerHTML = "Latitude: " + position.coords.latitude + "<br>Longitude: " + position.coords.longitude;
 
+        map = L.map( 'map', {
+            center: [parseFloat(position.coords.latitude),parseFloat(position.coords.longitude)],
+            minZoom: 1,
+            zoom: 15,
+            zoomControl: true
+        
+            });
+
+            L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
+                maxZoom: 14,
+                subdomains:['mt0','mt1','mt2','mt3']
+            }).addTo(map);
+
+
+       
+       
+
+
+        
+      
+        var smallIcon = new L.Icon({
+            iconSize: [27, 27],
+            iconAnchor: [13, 27],
+            popupAnchor:  [1, -24],
+            iconUrl: '{% static "images/mk.png" %}'
+        });
+
+        L.marker([parseFloat(position.coords.latitude),parseFloat(position.coords.longitude)],{icon:smallIcon}) .addTo(map)
+
+
+    
+        MYLIBRARY.init([{"lat":position.coords.latitude,"lon":position.coords.longitude,"room_type":`${bedroom}`,'csrfmiddlewaretoken': '{{ csrf_token }}'
+    },"{% url 'homepage:search_with_lat_and_lon' %}", "controlId"]);
+        MYLIBRARY.getALlCards();
         console.log(innerHTML)
        
       }

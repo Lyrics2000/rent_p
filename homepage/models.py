@@ -77,7 +77,7 @@ class Building(BaseModel):
     
 ROOM_TYPES = (
     ('Single Room', 'Single Room'),
-    ('Bouble Room', 'Bouble Room'),
+    ('Double Room', 'Double Room'),
     ('BedSitter', 'BedSitter'),
     ('1 Bedroom', '1 Bedroom'),
     ('2 Bedroom', '2 Bedroom'),

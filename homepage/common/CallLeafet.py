@@ -99,8 +99,7 @@ class GetLeafletDate:
         print(myroot[0].attrib)
         data  = []
         for x in myroot:
-            if(str(x.tag) == "node"):
-                data.append(x.attrib)
+            data.append(x.attrib)
                 
         return data
 

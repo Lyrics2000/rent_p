@@ -846,14 +846,18 @@ class FilterWithCurrentLocation(APIView):
       
         latitude =  request.data['lat']
         longitude = request.data['lon']
+        room_type = request.data['room_type']
+        print("room type",room_type)
 
         app = GetLeafletDate("nairobi").leafletReverse(lat=latitude,lon=longitude)
-        boundingbox = app['boundingbox']
+        print("app",app)
+        boundingbox = app[0]['boundingbox']
+        print("bounding box",boundingbox)
 
-        xmin  = float(boundingbox[0])
-        xmax = float(boundingbox[1])
-        ymin   = float(boundingbox[2])
-        ymax = float(boundingbox[3])
+        xmin  = float(boundingbox.split(",")[0])
+        xmax = float(boundingbox.split(",")[1])
+        ymin   = float(boundingbox.split(",")[2])
+        ymax = float(boundingbox.split(",")[3])
 
    
         pp =  Polygon.from_bounds(xmin=float(xmin),ymin=float(ymin),xmax=float(xmax),ymax=float(ymax))
@@ -864,7 +868,7 @@ class FilterWithCurrentLocation(APIView):
         print("buiding filter",building_filter)
    
 
-        rms =  Room.objects.filter(approved = True,paid = False)
+        rms =  Room.objects.filter(approved = True,paid = False,room_type__contains = room_type)
         empty_list = []
         for i in rms:
             for j in building_filter:
@@ -874,9 +878,7 @@ class FilterWithCurrentLocation(APIView):
                     if(i.building.id) == j.id:
 
                         point = Point(j.geom.x,j.geom.y)
-            # if i.building.l_name:
-            #     ratio = fuzz.partial_ratio(i.building.l_name.area_name.lower(),criteria_location.lower())
-            #     if (ratio >=70):
+         
                         print("jgeom",j.geom.x,j.geom.y)
                         empty_list.append(i)
 
