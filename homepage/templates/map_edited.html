@@ -654,6 +654,14 @@ L.mask = function (latLngs, options) {
 
 <script src="{% static '/js/map_initializer.js' %}"></script>
 <script type="text/javascript">
+    var map = L.map( 'map', {
+        center: [{{main_lat}},{{main_lng}}],
+        minZoom: 1,
+        zoom: 15,
+        zoomControl: true
+    
+        });
+
     MAPINITIALIZER.init([{{main_lat}},{{main_lng}}, '{% static "images/mk.png" %}',{"criteria_location":'{{criteria_mk}}',"xminm":'{{xmin}}',"xmaxm":'{{xmax}}',"yminm":'{{ymin}}',"ymaxm":'{{ymax}}','csrfmiddlewaretoken': '{{ csrf_token }}'},"{% url 'homepage:all_rm' %}"]);
     MAPINITIALIZER.initializeMap();
  </script>
@@ -661,6 +669,8 @@ L.mask = function (latLngs, options) {
 <script type = "text/javascript" src="{% static '/js/map_loader.js' %}" ></script>
 
 <script type="text/javascript">
+    var all_rooms_list = null
+
     MYLIBRARY.init([{"criteria_location":'{{criteria_mk}}',"xminm":'{{xmin}}',"xmaxm":'{{xmax}}',"yminm":'{{ymin}}',"ymaxm":'{{ymax}}','csrfmiddlewaretoken': '{{ csrf_token }}'
 },"{% url 'homepage:all_rm' %}", "controlId"]);
     MYLIBRARY.getALlCards();
@@ -1047,12 +1057,13 @@ let mm = null;
 
  const doc = new DOMParser().parseFromString(String(x.innerHTML), "text/xml");
   const ele = doc.getElementById("hidden_id").getAttribute("value")
-  console.log(ele)
+  console.log("element",doc)
 
   const li_holder = []
   if(all_rooms_list !== null){
     all_rooms_list.forEach(element => {
         if(parseInt(element.id) === parseInt(ele)){
+            console.log(element)
             li_holder.push(element)
 
         }
@@ -1061,7 +1072,7 @@ let mm = null;
   }
 
   const hovered_element = li_holder[0]
-  console.log(li_holder[0])
+  console.log("hovered",li_holder[0])
 
   var cusp = `<div style="display: flex;flex-wrap: wrap;gap:1.5rem;width: 250px;height: 200px;">
 
@@ -1120,6 +1131,7 @@ let mm = null;
     
 
     const lat_long = [hovered_element.building.geom.coordinates[1],hovered_element.building.geom.coordinates[0]]
+    console.log("jie",lat_long)
     mm = new L.marker(lat_long,{icon:smallIcon }).addTo(map).bindPopup(cusp);
     map.invalidateSize();
     mm.openPopup();

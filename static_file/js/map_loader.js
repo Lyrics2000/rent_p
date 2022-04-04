@@ -11,8 +11,7 @@
         getALlCards : function() {
             var card_container  =  $('#card-container')
             var cont = $("#cont")
-            let all_rooms_list = null
-
+         
                   
  
 
