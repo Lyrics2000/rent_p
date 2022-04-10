@@ -3,24 +3,6 @@
 
 <section class="home" id="home">
 
-    {% if user.is_authenticated %}
-
-    <form action="{% url 'homepage:map_search_view_authenticated' %}"  method = "POST" id="search-location-form">
-        {% csrf_token %}
-
-        <h3>find your perfect home</h3>
-
-        <div class="inputBox">
-            <input  type="search" name="location_search"  placeholder="Search for City, Neighborhood, County" id="location_search">
-        </div>
-
-        <input type="submit" value="search property" class="btn">
-
-    </form>
-
-
-    {% else %}
-
     <form action="{% url 'homepage:map_search' %}"  method = "POST" id="search-location-form">
         {% csrf_token %}
 
@@ -39,8 +21,5 @@
     </form>
 
 
-    {% endif %}
-    
-   
 </section>
 
