@@ -161,9 +161,7 @@ def map_search_view(request):
         rms =  Room.objects.filter(approved = True,paid = False)
         empty_list = []
         for i in rms:
-            # if i.building.l_name:
-            #     ratio = fuzz.partial_ratio(i.building.l_name.area_name.lower(),location.lower())
-            #     if (ratio >=70):
+        
             empty_list.append(i)
 
 
@@ -205,14 +203,82 @@ def map_search_view(request):
 
             return render(request,'map_edited.html',context)
         
-    all_rooms =  Room.objects.filter(approved = True,paid = False)
+    app =  GetLeafletDate("Kenya")
+        
+    loc= app.get_data()[0]
+    osm_id = loc['osm_id']
 
-    context= {
-        'rooms' :  all_rooms
-    }
+    js_p = app.getLeafletPolygon()
     
-    return render(request,'fullmap.html',context)
+    empty_list_2 = []
 
+    for m in js_p:
+            if len(m['geojson']['coordinates']) < 2:
+                empty_list_2.append(m)
+    print("jjs",empty_list_2)
+
+    if len(empty_list_2) >0:
+        geojson = empty_list_2[0]['geojson']['coordinates']
+        boundingbox = empty_list_2[0]['boundingbox']
+        print("jsp",geojson)
+        print("boundingbox",boundingbox)
+        
+    
+
+    else:
+        geojson = []
+        boundingbox = []
+        print("jsp",geojson)
+
+
+
+    # print("pp",loc['osm_id'])
+    # print("nodes",nodes)
+
+
+    
+    rms =  Room.objects.filter(approved = True,paid = False)
+    empty_list = []
+    for i in rms:
+    
+        empty_list.append(i)
+
+
+
+    all_rooms =  Room.objects.filter(approved = True,paid = False)
+    if len(boundingbox) > 0:
+        context= {
+            'boundingbox':boundingbox,
+            'main_lat': float(loc['lat']),
+            'main_lng': float(loc['lon']),
+            'coordinates' : geojson,
+            "xmin":float(boundingbox[0]),
+            "xmax":float(boundingbox[1]),
+            "ymin" : float(boundingbox[2]),
+            "ymax" : float(boundingbox[3]),
+            
+            'all_rooms'  : all_rooms
+        }
+        return render(request,'map_edited.html',context)
+    
+    else:
+        context= {
+            
+        
+            'boundingbox':boundingbox,
+            'main_lat': float(loc['lat']),
+            'main_lng': float(loc['lon']),
+            'coordinates' : geojson,
+            "xmin":float(0),
+            "xmax":float(0),
+            "ymin" : float(0),
+            "ymax" : float(0),
+         
+            'all_rooms'  : all_rooms
+        }
+
+        return render(request,'map_edited.html',context)
+    
 
 class GetBUildingAPIVIEW(APIView):
     def get(self, request):
