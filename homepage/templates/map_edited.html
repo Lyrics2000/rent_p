@@ -407,8 +407,7 @@
     
         </div>
 
-        <div  id="warning"></div>
-
+     
 
         
         
@@ -584,86 +583,10 @@ function passToIput(data){
 </script>
 <script>
 
-    console.log("coordinates",{{coordinates}})
-    const mmm = []
-    {% for o in coordinates  %}
     
-    //mmm.push([parseFloat({{o.lon}}),parseFloat({{o.lat}})])
-    mmm.push({{o}})
-    {% endfor %}
-
-    console.log("qqqq",mmm)
 </script>
 
 <script>
- const bounds  = {
-    "type": "FeatureCollection",
-    "features": [
-      {
-        "type": "Feature",
-        "properties": {},
-        "geometry": {
-          "type": "Polygon",
-          "coordinates":[
-          mmm
-               ]
-       
-        }
-      }
-    ]
-  };
-
-  console.log("bounds",bounds)
-
-  
- 
- 
-  const b = bounds.features[0].geometry.coordinates[0];
-
-const latl = []
-var coordinates = bounds.features[0].geometry.coordinates[0];
-
-{% for k in coordinates  %}
-    const l = {{k}}
-    l.forEach(element => {
-
-        latl.push(new L.LatLng(parseFloat(element[1]), parseFloat(element[0])));
-    });
-    console.log("ll",l)
-    
-{% endfor %}
-
-
-console.log("ppp",latl)
-
-
-    L.Mask = L.Polygon.extend({
-    options: {
-        stroke: true,
-        color: '#333',
-        fillOpacity: 0.6,
-        clickable: true,
-
-
-        outerBounds: new L.LatLngBounds([-90, -360], [90, 360])
-    },
-
-    initialize: function (latLngs, options) {
-
-         var outerBoundsLatLngs = [
-            this.options.outerBounds.getSouthWest(),
-            this.options.outerBounds.getNorthWest(),
-            this.options.outerBounds.getNorthEast(),
-            this.options.outerBounds.getSouthEast()
-        ];
-        L.Polygon.prototype.initialize.call(this, [outerBoundsLatLngs, latLngs], options);  
-    },
-
-});
-L.mask = function (latLngs, options) {
-    return new L.Mask(latLngs, options);
-};
-
 
 </script>
 
@@ -677,7 +600,7 @@ L.mask = function (latLngs, options) {
     
         });
 
-    MAPINITIALIZER.init([{{main_lat}},{{main_lng}}, '{% static "images/mk.png" %}',{"criteria_location":'{{criteria_mk}}',"xminm":'{{xmin}}',"xmaxm":'{{xmax}}',"yminm":'{{ymin}}',"ymaxm":'{{ymax}}','csrfmiddlewaretoken': '{{ csrf_token }}'},"{% url 'homepage:all_rm' %}"]);
+    MAPINITIALIZER.init([{{main_lat}},{{main_lng}}, '{% static "images/mk.png" %}',{"criteria_location":'{{criteria_mk}}',"xminm":'{{xmin}}',"xmaxm":'{{xmax}}',"yminm":'{{ymin}}',"ymaxm":'{{ymax}}','csrfmiddlewaretoken': '{{ csrf_token }}'},"{% url 'homepage:all_rm' %}",{{coordinates}}]);
     MAPINITIALIZER.initializeMap();
  </script>
 
@@ -1203,12 +1126,6 @@ function getLocation(bedroom) {
             }).addTo(map);
 
 
-       
-       
-
-
-        
-      
         var smallIcon = new L.Icon({
             iconSize: [27, 27],
             iconAnchor: [13, 27],
@@ -1223,6 +1140,10 @@ function getLocation(bedroom) {
         MYLIBRARY.init([{"lat":position.coords.latitude,"lon":position.coords.longitude,"room_type":`${bedroom}`,'csrfmiddlewaretoken': '{{ csrf_token }}'
     },"{% url 'homepage:search_with_lat_and_lon' %}", "controlId"]);
         MYLIBRARY.getALlCards();
+
+        MAPINITIALIZER.init([parseFloat(position.coords.latitude),parseFloat(position.coords.longitude), '{% static "images/mk.png" %}',{"lat":position.coords.latitude,"lon":position.coords.longitude,"room_type":`${bedroom}`,'csrfmiddlewaretoken': '{{ csrf_token }}'
+    },"{% url 'homepage:search_with_lat_and_lon' %}"]);
+        MAPINITIALIZER.initializeMap();
         console.log(innerHTML)
        
       }
@@ -1236,6 +1157,79 @@ function getLocation(bedroom) {
      
 
 </script>
+
+
+
+<script>
+
+function getBuildingbyLocation(latitude,longitude,location_name) {
+    map.off();
+    map.remove();
+
+
+    var settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": "{% url 'homepage:get_coordinates_and_bounds' %}",
+        "method": "POST",
+        "headers": {
+          "content-type": "application/json",
+          "cache-control": "no-cache",
+          "postman-token": "8b11bd2f-3332-9f06-c2c0-84f243954d9f"
+        },
+        "processData": false,
+        "data": `{\n\n\"criteria_location\":\"${location_name}\"\n}`
+      }
+      
+      $.ajax(settings).done(function (response) {
+        console.log(response);
+        map = L.map( 'map', {
+            center: [parseFloat(response.main_lat),parseFloat(response.main_lng)],
+            minZoom: 1,
+            zoom: 15,
+            zoomControl: true
+        
+            });
+    
+            L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
+                maxZoom: 14,
+                subdomains:['mt0','mt1','mt2','mt3']
+            }).addTo(map);
+    
+    
+        var smallIcon = new L.Icon({
+            iconSize: [27, 27],
+            iconAnchor: [13, 27],
+            popupAnchor:  [1, -24],
+            iconUrl: '{% static "images/mk.png" %}'
+        });
+    
+        MAPINITIALIZER.init([parseFloat(response.main_lat),parseFloat(response.main_lng), '{% static "images/mk.png" %}',{"criteria_location":response.criteria_mk,"xminm":response.xmin,"xmaxm":response.xmax,"yminm":response.ymin,"ymaxm":response.ymax,'csrfmiddlewaretoken': '{{ csrf_token }}'},"{% url 'homepage:all_rm' %}",response.coordinates]);
+        MAPINITIALIZER.initializeMap();
+    
+        MYLIBRARY.init([{"criteria_location":response.criteria_mk,"xminm":response.xmin,"xmaxm":response.xmax,"yminm":response.ymin,"ymaxm":response.ymax,'csrfmiddlewaretoken': '{{ csrf_token }}'
+    },"{% url 'homepage:all_rm' %}", "controlId"]);
+        MYLIBRARY.getALlCards();
+    
+      });
+
+
+
+
+   
+
+
+
+
+
+      }
+     
+
+
+
+    </script>
+
+
 
 
 

@@ -31,7 +31,8 @@ from .views import (
     GetRoomAl,
     map_search_view_authenticated,
     PostLocationCoordinates,
-    SendContactAdminMail
+    SendContactAdminMail,
+    GetCoordinatesAndBounds
 )
 
 app_name = "homepage"
@@ -64,7 +65,8 @@ urlpatterns = [
     path("post_location_coordinates/",PostLocationCoordinates.as_view()),
     path("send_em/",SendContactAdminMail.as_view()),
     path('call_glovo/',CallGlovoAPiview.as_view(),name="call_glovo"),
-    path("search_with_lat/",FilterWithCurrentLocation.as_view(),name="search_with_lat_and_lon")
+    path("search_with_lat/",FilterWithCurrentLocation.as_view(),name="search_with_lat_and_lon"),
+    path("get_coordinates_and_bounds/",GetCoordinatesAndBounds.as_view(),name="get_coordinates_and_bounds")
 
   
 ]

@@ -835,7 +835,7 @@ class CallGlovoAPiview(APIView):
 
 class FilterWithCurrentLocation(APIView):
     def get(self,request):
-        criteria = request.query_params
+        criteria = request
         print(criteria)
         all_roomms = Room.objects.filter(approved = True,paid = False)
         room_serializer =  RoomSerializer(all_roomms,many = True)
@@ -843,48 +843,164 @@ class FilterWithCurrentLocation(APIView):
 
 
     def post(self,request):
-      
-        latitude =  request.data['lat']
-        longitude = request.data['lon']
         room_type = request.data['room_type']
-        print("room type",room_type)
+      
 
-        app = GetLeafletDate("nairobi").leafletReverse(lat=latitude,lon=longitude)
-        print("app",app)
-        boundingbox = app[0]['boundingbox']
-        print("bounding box",boundingbox)
 
-        xmin  = float(boundingbox.split(",")[0])
-        xmax = float(boundingbox.split(",")[1])
-        ymin   = float(boundingbox.split(",")[2])
-        ymax = float(boundingbox.split(",")[3])
+        if room_type == "RM":
+                    criteria_location =  request.data['criteria_location']
+                    print(criteria_location)
+                    app =  GetLeafletDate(criteria_location)
+    
+                    loc= app.get_data()[0]
+                    osm_id = loc['osm_id']
 
-   
-        pp =  Polygon.from_bounds(xmin=float(xmin),ymin=float(ymin),xmax=float(xmax),ymax=float(ymax))
-        print("oo",pp)
-        print("xmin",xmin)
+                    js_p = app.getLeafletPolygon()
+                    print("jspp",js_p)
+                
+                    empty_list_2 = []
 
-        building_filter  = Building.objects.all()
-        print("buiding filter",building_filter)
-   
+                    for m in js_p:
+                        if len(m['geojson']['coordinates']) < 2:
+                            empty_list_2.append(m)
+                    print("jjs",empty_list_2)
+                
+                    
+                    geojson = empty_list_2[0]['geojson']['coordinates']
+                    boundingbox = empty_list_2[0]['boundingbox']
+                    print("jsp",geojson)
+                    print("boundingbox",boundingbox)
+                    xminn =  float(boundingbox[0])
+                    xmaxx =  float(boundingbox[1])
+                    yminn =  float(boundingbox[2])
+                    ymaxx =  float(boundingbox[3])
+                  
 
-        rms =  Room.objects.filter(approved = True,paid = False,room_type__contains = room_type)
-        empty_list = []
-        for i in rms:
-            for j in building_filter:
-                point = Point(j.geom.y,j.geom.x)
-                print("point",point)
-                if(pp.contains(point)):
-                    if(i.building.id) == j.id:
+                    bbbox = (float(xminn),float(yminn),float(ymaxx),float(xmaxx))
 
-                        point = Point(j.geom.x,j.geom.y)
-         
-                        print("jgeom",j.geom.x,j.geom.y)
-                        empty_list.append(i)
+                    pp =  Polygon.from_bounds(xmin=float(xminn),ymin=float(yminn),xmax=float(xmaxx),ymax=float(ymaxx))
+                    print("oo",pp)
+                    print("xmin",xminn)
+                    print("lloo",json.loads(json.dumps((criteria_location))))
 
-        print(empty_list)
-        room_serializer =  RoomSerializer(empty_list,many = True)
+                    building_filter  = Building.objects.all()
+                    print("buiding filter",building_filter)
+            
+
+                    rms =  Room.objects.filter(approved = True,paid = False)
+                    empty_list = []
+                    for i in rms:
+                        for j in building_filter:
+                            point = Point(j.geom.y,j.geom.x)
+                            print("point",point)
+                            if(pp.contains(point)):
+                                if(i.building.id) == j.id:
+
+                                    point = Point(j.geom.x,j.geom.y)
+                        # if i.building.l_name:
+                        #     ratio = fuzz.partial_ratio(i.building.l_name.area_name.lower(),criteria_location.lower())
+                        #     if (ratio >=70):
+                                    print("jgeom",j.geom.x,j.geom.y)
+                                    empty_list.append(i)
+
+                    print(empty_list)
+                    room_serializer =  RoomSerializer(empty_list,many = True)
+                    return Response(room_serializer.data)
+
+
+        
+        else:
+            latitude =  request.data['lat']
+            longitude = request.data['lon']
+            room_type = request.data['room_type']
+            print("room type",room_type)
+
+            app = GetLeafletDate("nairobi").leafletReverse(lat=latitude,lon=longitude)
+            print("app",app)
+            boundingbox = app[0]['boundingbox']
+            print("bounding box",boundingbox)
+
+            xmin  = float(boundingbox.split(",")[0])
+            xmax = float(boundingbox.split(",")[1])
+            ymin   = float(boundingbox.split(",")[2])
+            ymax = float(boundingbox.split(",")[3])
+
+    
+            pp =  Polygon.from_bounds(xmin=float(xmin),ymin=float(ymin),xmax=float(xmax),ymax=float(ymax))
+            print("oo",pp)
+            print("xmin",xmin)
+
+            building_filter  = Building.objects.all()
+            print("buiding filter",building_filter)
+
+            rms =  Room.objects.filter(approved = True,paid = False,room_type__contains = room_type)
+            empty_list = []
+            for i in rms:
+                for j in building_filter:
+                    point = Point(j.geom.y,j.geom.x)
+                    print("point",point)
+                    if(pp.contains(point)):
+                        if(i.building.id) == j.id:
+
+                            point = Point(j.geom.x,j.geom.y)
+            
+                            print("jgeom",j.geom.x,j.geom.y)
+                            empty_list.append(i)
+
+            print(empty_list)
+            room_serializer =  RoomSerializer(empty_list,many = True)
+            return Response(room_serializer.data)
+
+
+
+
+class GetCoordinatesAndBounds(APIView):
+    def get(self,request):
+        criteria = request
+        print(criteria)
+        all_roomms = Room.objects.filter(approved = True,paid = False)
+        room_serializer =  RoomSerializer(all_roomms,many = True)
         return Response(room_serializer.data)
+
+
+    def post(self,request):
+        criteria_location =  request.data['criteria_location']
+        print(criteria_location)
+        app =  GetLeafletDate(criteria_location)
+
+        loc= app.get_data()[0]
+        osm_id = loc['osm_id']
+
+        js_p = app.getLeafletPolygon()
+        print("jspp",js_p)
+    
+        empty_list_2 = []
+
+        for m in js_p:
+            if len(m['geojson']['coordinates']) < 2:
+                empty_list_2.append(m)
+        print("jjs",empty_list_2)
+    
+        
+        geojson = empty_list_2[0]['geojson']['coordinates']
+        boundingbox = empty_list_2[0]['boundingbox']
+        print("jsp",geojson)
+        print("boundingbox",boundingbox)
+        context = {
+            'boundingbox':boundingbox,
+            'main_lat': float(loc['lat']),
+            'main_lng': float(loc['lon']),
+            'coordinates' : geojson,
+            'criteria_mk' : criteria_location,
+            "xmin":float(boundingbox[0]),
+            "xmax":float(boundingbox[1]),
+            "ymin" : float(boundingbox[2]),
+            "ymax" : float(boundingbox[3]),
+        }
+        
+        return Response(context)
+
+
 
 
 

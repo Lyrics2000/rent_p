@@ -8,6 +8,7 @@ var MAPINITIALIZER = MAPINITIALIZER || (function(){
             // main lat [{{main_lat}},{{main_lng}}],icon '{% static "images/mk.png" %}'
             // data {"criteria_location":'{{criteria_mk}}',"xminm":'{{xmin}}',"xmaxm":'{{xmax}}',"yminm":'{{ymin}}',"ymaxm":'{{ymax}}','csrfmiddlewaretoken': '{{ csrf_token }}'}
             //url "{% url 'homepage:all_rm' %}"
+            //coordinates = {{coordinates}}
 
         },
         initializeMap : function() {
@@ -18,7 +19,89 @@ var MAPINITIALIZER = MAPINITIALIZER || (function(){
             //     zoomControl: true
             
             //     });
-         
+            coordinates = _args[5]
+            
+            console.log("coordinates",coordinates)
+            const mmm = []
+            coordinates.forEach(element => {
+                mmm.push(element)
+                
+            });
+
+
+            const bounds  = {
+                "type": "FeatureCollection",
+                "features": [
+                  {
+                    "type": "Feature",
+                    "properties": {},
+                    "geometry": {
+                      "type": "Polygon",
+                      "coordinates":[
+                      mmm
+                           ]
+                   
+                    }
+                  }
+                ]
+              };
+            
+              console.log("bounds",bounds)
+            
+              
+             
+             
+              const b = bounds.features[0].geometry.coordinates[0];
+            
+            const latl = []
+            var coordinates = bounds.features[0].geometry.coordinates[0];
+
+
+            coordinates.forEach(eleme=> {
+                const l = eleme;
+                l.forEach(element => {
+            
+                    latl.push(new L.LatLng(parseFloat(element[1]), parseFloat(element[0])));
+                });
+                console.log("ll",l);
+                
+            });
+            
+            
+            console.log("ppp",latl)
+            
+            
+                L.Mask = L.Polygon.extend({
+                options: {
+                    stroke: true,
+                    color: '#333',
+                    fillOpacity: 0.6,
+                    clickable: true,
+            
+            
+                    outerBounds: new L.LatLngBounds([-90, -360], [90, 360])
+                },
+            
+                initialize: function (latLngs, options) {
+            
+                     var outerBoundsLatLngs = [
+                        this.options.outerBounds.getSouthWest(),
+                        this.options.outerBounds.getNorthWest(),
+                        this.options.outerBounds.getNorthEast(),
+                        this.options.outerBounds.getSouthEast()
+                    ];
+                    L.Polygon.prototype.initialize.call(this, [outerBoundsLatLngs, latLngs], options);  
+                },
+            
+            });
+            L.mask = function (latLngs, options) {
+                return new L.Mask(latLngs, options);
+            };
+            
+            
+            
+        
+            console.log("qqqq",mmm)
             L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
                 maxZoom: 14,
                 subdomains:['mt0','mt1','mt2','mt3']

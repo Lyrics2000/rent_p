@@ -9,13 +9,10 @@
             // some other initialising
         },
         getALlCards : function() {
-            var card_container  =  $('#card-container')
-            var cont = $("#cont")
-         
-                  
- 
-
-    card_container.empty();
+        $("#warning").empty()
+        var card_container  =  $('#card-container')
+        var cont = $("#cont")
+        card_container.empty();
 
     const holder = ` <div style="height: 400px;" class="box">
             <div class="image-container skeleton">
@@ -123,7 +120,7 @@ $.ajax({
         // var instance = JSON.parse(response);
 
     }else{
-       const w =  $("#warning").empty()
+       const w =  $("#card-container").empty()
        card_container.empty();
        w.append(`<div  class="information">
         <h1>Our servers had some issues with your request</h1>
@@ -137,7 +134,7 @@ $.ajax({
             <div class="near_etsate">
                 <h3>Near Houses</h3>
                 <ul>
-                    <li onclick="getLocation("Single Room")" ><a   >Single room near me</a></li>
+                    <li ><button onclick="getLocation('Single Room')"  style="cursor:pointer" >Single room near me</button></li>
                     <li><button onclick="getLocation('Double Room')" style="cursor:pointer"> Bouble Room room near me</button></li>
                     <li><button onclick="getLocation('BedSitter')" style="cursor:pointer">BedSitter room near me</button></li>
                     <li><button onclick="getLocation('1 Bedroom')" style="cursor:pointer">1 Bedroom room near me</button></li>
@@ -150,10 +147,10 @@ $.ajax({
             <div class="near_etsate">
                 <h3>Near Houses By Location</h3>
                 <ul>
-                    <li><a href="">Houses in Nairobi</a></li>
-                    <li><a href="">Houses In kisumu</a></li>
-                    <li><a href="">Houses in juja</a></li>
-                    <li><a href="">Three room near me</a></li>
+                    <li><button onclick="getBuildingbyLocation(-1.286389,36.817223,'Nairobi, Kenya')" style="cursor:pointer;">Houses in Nairobi</button></li>
+                    <li><button  onclick="getBuildingbyLocation(-1.286389,36.817223,'Kisumu,Nyanza, Kenya')"  style="cursor:pointer;">Houses In kisumu</button></li>
+                    <li><button onclick="getBuildingbyLocation(-1.286389,36.817223,'Mombasa, Coastal Kenya, Kenya')"  style="cursor:pointer;">Houses in Mombasa</button></li>
+                    <li><button onclick="getBuildingbyLocation(-1.286389,36.817223,'Nakuru,Kenya')"  style="cursor:pointer;">Houses in Nakuru</button></li>
                 </ul>
             </div>
         </div>
