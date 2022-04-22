@@ -82,7 +82,7 @@ def index(request):
             # get current ip
             
             context = {
-                'rooms' :  empty_list,
+                'rooms' :  empty_list[:6],
                 'sliding' :  all_sliding,
                 'all_room_pic_count' : all_room_pic_count,
                 'all_room_pic' : all_room_pic,
@@ -109,7 +109,7 @@ def index(request):
 
     
     context = {
-        'rooms' :  empty_list,
+        'rooms' :  empty_list[:6],
         'sliding' :  all_sliding,
         'all_room_pic_count' : all_room_pic_count,
         'all_room_pic' : all_room_pic,

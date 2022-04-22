@@ -123,7 +123,7 @@ $.ajax({
        const w =  $("#card-container").empty()
        card_container.empty();
        w.append(`<div  class="information">
-        <h1>Our servers had some issues with your request</h1>
+        <h1>We don't have houses in this area at this time</h1>
         <P>Please try to search again</P>
 
         <div class="image-container">
