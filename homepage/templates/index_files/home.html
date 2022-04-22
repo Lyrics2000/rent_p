@@ -3,7 +3,7 @@
 
 <section class="home" id="home">
 
-    <form action="{% url 'homepage:map_search' %}"  method = "POST" id="search-location-form">
+    <form autocomplete="off" action="{% url 'homepage:map_search' %}"  method = "POST" id="search-location-form">
         {% csrf_token %}
 
         <h3>find your perfect home</h3>

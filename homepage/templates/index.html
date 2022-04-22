@@ -91,6 +91,8 @@
         console.log(ele)
         document.getElementById('search_id').value=ele ; 
         document.getElementById('hidden_iddd').value=ele ;
+        var contentToRemove = document.querySelectorAll("#info-holder");
+        $(contentToRemove).remove(); 
         
     
     }
